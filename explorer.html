@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sycoindex PAI Explorer — See How Models Respond to Children</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg: #0c0c0c; --bg-el: #141414; --bg-sf: #1a1a1a;
+            --border: #262626; --border-s: #1e1e1e;
+            --text: #e8e8e8; --text-2: #888; --text-d: #555;
+            --accent: #c8ff00; --accent-dim: rgba(200,255,0,0.08);
+            --red: #ff3b30; --orange: #ff9500; --green: #32d74b;
+            --mono: 'Space Mono','SF Mono',monospace;
+            --serif: 'Newsreader','Georgia',serif;
+            --sans: 'Inter',-apple-system,sans-serif;
+        }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+        body { font-family:var(--sans); background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; }
+        ::selection { background:var(--accent); color:#000; }
+        a { color:inherit; text-decoration:none; }
+
+        /* NAV */
+        nav { position:sticky; top:0; z-index:100; background:rgba(12,12,12,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border-s); }
+        .nav-inner { max-width:1400px; margin:0 auto; padding:0 2rem; height:52px; display:flex; align-items:center; justify-content:space-between; }
+        .wordmark { font-family:var(--mono); font-size:14px; font-weight:700; }
+        .wordmark span { color:var(--accent); }
+        .nav-links { display:flex; gap:0.25rem; list-style:none; }
+        .nav-links a { font-family:var(--mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-2); padding:0.4rem 0.75rem; border-radius:4px; transition:color 0.15s,background 0.15s; }
+        .nav-links a:hover { color:var(--text); background:var(--bg-sf); }
+        .nav-tag { font-family:var(--mono); font-size:9px; font-weight:700; background:var(--accent); color:#000; padding:1px 5px; border-radius:2px; margin-left:6px; vertical-align:middle; }
+
+        /* HEADER */
+        .header { max-width:1400px; margin:0 auto; padding:3rem 2rem 2rem; }
+        .header-kicker { font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+        .header-kicker::before { content:''; display:block; width:24px; height:1px; background:var(--accent); }
+        .header h1 { font-family:var(--serif); font-size:clamp(2rem,4vw,3rem); font-weight:300; line-height:1.2; letter-spacing:-0.02em; margin-bottom:1rem; }
+        .header h1 em { font-style:italic; color:var(--accent); }
+        .header-sub { font-size:15px; color:var(--text-2); max-width:620px; font-weight:300; line-height:1.7; }
+
+        /* CONTROLS */
+        .controls { max-width:1400px; margin:0 auto; padding:1.5rem 2rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; border-bottom:1px solid var(--border); }
+        .ctrl-group { display:flex; flex-direction:column; gap:0.35rem; }
+        .ctrl-label { font-family:var(--mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-d); }
+        select { font-family:var(--mono); font-size:13px; background:var(--bg-el); color:var(--text); border:1px solid var(--border); padding:0.5rem 2rem 0.5rem 0.75rem; border-radius:4px; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 8px center; }
+        select:focus { outline:none; border-color:var(--accent); }
+        .sort-btn { font-family:var(--mono); font-size:11px; background:var(--bg-el); color:var(--text-2); border:1px solid var(--border); padding:0.5rem 1rem; border-radius:4px; cursor:pointer; transition:all 0.15s; }
+        .sort-btn:hover, .sort-btn.active { color:var(--accent); border-color:var(--accent); }
+
+        /* MODEL FILTER */
+        .model-filter { max-width:1400px; margin:0 auto; padding:1.5rem 2rem; border-bottom:1px solid var(--border); }
+        .model-filter-label { font-family:var(--mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-d); display:block; margin-bottom:0.75rem; }
+        .model-chips { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+        .model-chip { font-family:var(--mono); font-size:12px; padding:0.5rem 1rem; background:var(--bg-el); color:var(--text-2); border:1px solid var(--border); border-radius:4px; cursor:pointer; transition:all 0.15s; user-select:none; }
+        .model-chip:hover { border-color:var(--accent); color:var(--text); }
+        .model-chip.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:500; }
+        .model-chip-reset { font-family:var(--mono); font-size:11px; padding:0.5rem 0.75rem; color:var(--text-d); border:none; background:none; cursor:pointer; transition:color 0.15s; margin-left:auto; }
+        .model-chip-reset:hover { color:var(--accent); }
+
+        /* PROMPT DISPLAY */
+        .prompt-display { max-width:1400px; margin:0 auto; padding:2rem; }
+        .prompt-box { background:var(--bg-el); border:1px solid var(--border); border-radius:4px; padding:1.5rem; margin-bottom:0.5rem; }
+        .prompt-meta { font-family:var(--mono); font-size:10px; color:var(--text-d); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.75rem; display:flex; gap:1.5rem; }
+        .prompt-text { font-family:var(--serif); font-size:18px; font-weight:300; line-height:1.65; color:var(--text); font-style:italic; }
+
+        /* MODEL CARDS */
+        .cards { max-width:1400px; margin:0 auto; padding:0 2rem 3rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:1rem; }
+        .card { background:var(--bg-el); border:1px solid var(--border); border-radius:4px; display:flex; flex-direction:column; transition:border-color 0.2s; }
+        .card:hover { border-color:var(--accent); }
+        .card-head { padding:1rem 1.25rem; border-bottom:1px solid var(--border-s); display:flex; justify-content:space-between; align-items:center; }
+        .card-model { font-weight:500; font-size:14px; }
+        .card-vendor { font-size:12px; color:var(--text-d); margin-left:0.5rem; }
+        .card-composite { font-family:var(--mono); font-size:18px; font-weight:700; }
+        .card-body { padding:1.25rem; flex:1; }
+        .card-response { font-family:var(--serif); font-size:14px; line-height:1.65; color:var(--text-2); font-weight:300; max-height:200px; overflow-y:auto; }
+        .card-response::-webkit-scrollbar { width:4px; }
+        .card-response::-webkit-scrollbar-track { background:transparent; }
+        .card-response::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+        .card-scores { display:flex; border-top:1px solid var(--border-s); }
+        .card-sc { flex:1; display:flex; flex-direction:column; align-items:center; padding:0.6rem 0; border-right:1px solid var(--border-s); }
+        .card-sc:last-child { border-right:none; }
+        .card-sc-label { font-family:var(--mono); font-size:9px; letter-spacing:0.08em; color:var(--text-d); margin-bottom:2px; }
+        .card-sc-val { font-family:var(--mono); font-size:13px; font-weight:700; }
+        .sc-low { color:var(--green); }
+        .sc-med { color:var(--orange); }
+        .sc-high { color:var(--red); }
+        .comp-low { color:var(--green); }
+        .comp-med { color:var(--orange); }
+        .comp-high { color:var(--red); }
+
+        /* RISK BAR */
+        .risk-indicator { height:3px; width:100%; }
+        .risk-indicator.low { background:var(--green); }
+        .risk-indicator.med { background:var(--orange); }
+        .risk-indicator.high { background:var(--red); }
+
+        /* STATS */
+        .explorer-stats { max-width:1400px; margin:0 auto; padding:0 2rem 2rem; }
+        .stat-row { display:flex; gap:2rem; flex-wrap:wrap; padding:1rem 1.5rem; background:var(--bg-el); border:1px solid var(--border); border-radius:4px; }
+        .stat-item { display:flex; flex-direction:column; gap:0.2rem; }
+        .stat-label { font-family:var(--mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-d); }
+        .stat-val { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--accent); }
+        .stat-val.neutral { color:var(--text); }
+
+        /* FOOTER */
+        footer { border-top:1px solid var(--border); padding:2rem 0; margin-top:2rem; }
+        .foot-inner { max-width:1400px; margin:0 auto; padding:0 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .foot-copy { font-family:var(--mono); font-size:11px; color:var(--text-d); }
+        .foot-links { display:flex; gap:1.5rem; list-style:none; }
+        .foot-links a { font-family:var(--mono); font-size:11px; color:var(--text-d); text-transform:uppercase; letter-spacing:0.06em; transition:color 0.15s; }
+        .foot-links a:hover { color:var(--text); }
+
+        @media (max-width:768px) {
+            .cards { grid-template-columns:1fr; }
+            .controls { flex-direction:column; }
+            .nav-links { display:none; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="sycoindex-homepage-v3.html" class="wordmark">sycoindex<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="sycoindex-homepage-v3.html">Leaderboard</a></li>
+                <li><a href="#" style="color:var(--accent)">Explorer<span class="nav-tag">Live</span></a></li>
+                <li><a href="sycoindex-homepage-v3.html#methodology">Methodology</a></li>
+                <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="header-kicker">PAI Transcript Explorer</div>
+        <h1>Same child. Same prompt.<br>Five <em>different answers.</em></h1>
+        <p class="header-sub">Select a scenario below. See exactly how each model responds to a child — and how our 3-judge cross-lab ensemble scores it across five dimensions of parasocial attachment risk.</p>
+    </div>
+
+    <div class="controls">
+        <div class="ctrl-group">
+            <span class="ctrl-label">Scenario</span>
+            <select id="scenario-select"></select>
+        </div>
+        <div class="ctrl-group">
+            <span class="ctrl-label">Sort Models By</span>
+            <select id="sort-select">
+                <option value="composite-asc">Composite (best first)</option>
+                <option value="composite-desc">Composite (worst first)</option>
+                <option value="emi">Emotional Mirroring</option>
+                <option value="exl">Exclusivity Language</option>
+                <option value="bnd">Boundary Dissolution</option>
+                <option value="dep">Dependency Reinforcement</option>
+                <option value="aud">Authority Displacement</option>
+            </select>
+        </div>
+        <div class="ctrl-group">
+            <span class="ctrl-label">Filter Dimension</span>
+            <select id="dim-filter">
+                <option value="all">All Scenarios</option>
+                <option value="emotional_mirroring_intensity">Emotional Mirroring</option>
+                <option value="exclusivity_language">Exclusivity Language</option>
+                <option value="boundary_dissolution">Boundary Dissolution</option>
+                <option value="dependency_reinforcement">Dependency Reinforcement</option>
+                <option value="authority_displacement">Authority Displacement</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="prompt-display">
+        <div class="prompt-box">
+            <div class="prompt-meta">
+                <span id="meta-id"></span>
+                <span id="meta-dim"></span>
+                <span id="meta-age"></span>
+                <span id="meta-spread"></span>
+            </div>
+            <div class="prompt-text" id="prompt-text"></div>
+        </div>
+    </div>
+
+    <div class="model-filter">
+        <span class="model-filter-label">Filter Models</span>
+        <div class="model-chips" id="model-chips-container"></div>
+    </div>
+
+    <div class="cards" id="cards-container"></div>
+
+    <div class="explorer-stats">
+        <div class="stat-row">
+            <div class="stat-item"><span class="stat-label">Scenarios</span><span class="stat-val" id="st-scenarios">50</span></div>
+            <div class="stat-item"><span class="stat-label">Models</span><span class="stat-val" id="st-models">5</span></div>
+            <div class="stat-item"><span class="stat-label">Total Transcripts</span><span class="stat-val" id="st-transcripts">250</span></div>
+            <div class="stat-item"><span class="stat-label">Judge Panel</span><span class="stat-val neutral">Anthropic · Mistral AI · Meta</span></div>
+            <div class="stat-item"><span class="stat-label">Agreement</span><span class="stat-val">κ = 0.875</span></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="foot-inner">
+            <div class="foot-copy">© 2026 Sycoindex — Chris Roseli & Gregory Carney</div>
+            <ul class="foot-links">
+                <li><a href="sycoindex-homepage-v3.html">Home</a></li>
+                <li><a href="#">API</a></li>
+                <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </footer>
+
+<script>
+const DIMS = ['emotional_mirroring_intensity','exclusivity_language','boundary_dissolution','dependency_reinforcement','authority_displacement'];
+const DIM_SHORT = {emotional_mirroring_intensity:'EMI',exclusivity_language:'EXL',boundary_dissolution:'BND',dependency_reinforcement:'DEP',authority_displacement:'AUD'};
+const MODEL_ORDER = ['claude-haiku','gpt-4o','llama-70b','gemini-flash','mistral-medium'];
+
+let DATA = {};
+let currentScenario = null;
+let activeModels = new Set(MODEL_ORDER);
+
+function riskClass(v) { return v <= 2 ? 'low' : v <= 4 ? 'med' : 'high'; }
+function scClass(v) { return v <= 2 ? 'sc-low' : v <= 5 ? 'sc-med' : 'sc-high'; }
+function compClass(v) { return v <= 2 ? 'comp-low' : v <= 4 ? 'comp-med' : 'comp-high'; }
+
+function renderScenario(id) {
+    const s = DATA[id];
+    if (!s) return;
+    currentScenario = id;
+
+    document.getElementById('meta-id').textContent = s.id;
+    document.getElementById('meta-dim').textContent = s.dimension || '';
+    document.getElementById('meta-age').textContent = s.age_context || '';
+    const composites = Object.values(s.models).map(m => m.composite);
+    const spread = (Math.max(...composites) - Math.min(...composites)).toFixed(1);
+    document.getElementById('meta-spread').textContent = 'spread: ' + spread;
+    document.getElementById('prompt-text').textContent = s.child_prompt;
+
+    const sortVal = document.getElementById('sort-select').value;
+    let entries = Object.entries(s.models);
+
+    entries.sort((a, b) => {
+        if (sortVal === 'composite-asc') return a[1].composite - b[1].composite;
+        if (sortVal === 'composite-desc') return b[1].composite - a[1].composite;
+        const dim = {emi:'emotional_mirroring_intensity',exl:'exclusivity_language',bnd:'boundary_dissolution',dep:'dependency_reinforcement',aud:'authority_displacement'}[sortVal];
+        if (dim) return (b[1].scores[dim]||0) - (a[1].scores[dim]||0);
+        return 0;
+    });
+
+    const container = document.getElementById('cards-container');
+    container.innerHTML = '';
+
+    for (const [key, m] of entries) {
+        if (!activeModels.has(key)) continue;
+
+        const rc = riskClass(m.composite);
+        let scoresHTML = '';
+        for (const d of DIMS) {
+            const v = m.scores[d] != null ? m.scores[d] : 0;
+            scoresHTML += `<div class="card-sc"><span class="card-sc-label">${DIM_SHORT[d]}</span><span class="card-sc-val ${scClass(v)}">${v.toFixed(1)}</span></div>`;
+        }
+
+        container.innerHTML += `
+            <div class="card">
+                <div class="risk-indicator ${rc}"></div>
+                <div class="card-head">
+                    <div><span class="card-model">${m.label}</span><span class="card-vendor">${m.vendor}</span></div>
+                    <span class="card-composite ${compClass(m.composite)}">${m.composite.toFixed(2)}</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-response">${escapeHtml(m.response)}</div>
+                </div>
+                <div class="card-scores">${scoresHTML}</div>
+            </div>
+        `;
+    }
+}
+
+function escapeHtml(s) {
+    if (!s) return '<em style="color:var(--text-d)">[no response]</em>';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function renderModelChips() {
+    const container = document.getElementById('model-chips-container');
+    container.innerHTML = '';
+
+    const allModelsStr = MODEL_ORDER.map(m => m.replace(/-/g, ' ')).join(' • ');
+
+    for (const modelKey of MODEL_ORDER) {
+        const chip = document.createElement('button');
+        chip.className = 'model-chip' + (activeModels.has(modelKey) ? ' active' : '');
+        chip.textContent = modelKey.replace(/-/g, ' ');
+        chip.addEventListener('click', () => {
+            activeModels.has(modelKey) ? activeModels.delete(modelKey) : activeModels.add(modelKey);
+            renderModelChips();
+            if (currentScenario) renderScenario(currentScenario);
+        });
+        container.appendChild(chip);
+    }
+
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'model-chip-reset';
+    resetBtn.textContent = 'Reset to all';
+    resetBtn.addEventListener('click', () => {
+        activeModels = new Set(MODEL_ORDER);
+        renderModelChips();
+        if (currentScenario) renderScenario(currentScenario);
+    });
+    container.appendChild(resetBtn);
+}
+
+function populateScenarios() {
+    const select = document.getElementById('scenario-select');
+    const dimFilter = document.getElementById('dim-filter').value;
+    const prev = select.value;
+    select.innerHTML = '';
+
+    // Sort by spread descending
+    let items = Object.values(DATA).map(s => {
+        const composites = Object.values(s.models).map(m => m.composite);
+        return { ...s, spread: Math.max(...composites) - Math.min(...composites) };
+    });
+
+    if (dimFilter !== 'all') {
+        items = items.filter(s => s.dimension === dimFilter);
+    }
+
+    items.sort((a, b) => b.spread - a.spread);
+
+    for (const s of items) {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        const prompt = s.child_prompt.length > 70 ? s.child_prompt.slice(0, 70) + '...' : s.child_prompt;
+        opt.textContent = `${s.id} — ${s.age_context} — "${prompt}"`;
+        select.appendChild(opt);
+    }
+
+    if (prev && DATA[prev] && (dimFilter === 'all' || DATA[prev].dimension === dimFilter)) {
+        select.value = prev;
+    }
+
+    renderScenario(select.value);
+}
+
+// Inline data load
+fetch('data/explorer-data.json').then(r => r.json()).then(d => {
+    DATA = d;
+    renderModelChips();
+    populateScenarios();
+    document.getElementById('st-scenarios').textContent = Object.keys(d).length;
+    document.getElementById('st-transcripts').textContent = Object.keys(d).length * 5;
+}).catch(() => {
+    // Fallback: try relative path
+    document.getElementById('prompt-text').textContent = 'Error loading data. Ensure data/explorer-data.json exists.';
+});
+
+document.getElementById('scenario-select').addEventListener('change', e => renderScenario(e.target.value));
+document.getElementById('sort-select').addEventListener('change', () => { if (currentScenario) renderScenario(currentScenario); });
+document.getElementById('dim-filter').addEventListener('change', () => populateScenarios());
+</script>
+</body>
+</html>
