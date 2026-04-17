@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Model — Sycoindex PAI Scoring</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text);
+        }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+        .nav-tag {
+            display: inline-block; font-family: var(--mono); font-size: 9px;
+            font-weight: 700; color: var(--accent); border: 1px solid var(--accent);
+            padding: 0.15rem 0.4rem; border-radius: 2px; margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 580px; line-height: 1.7;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .how-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .how-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 2rem;
+        }
+        .how-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border); border: 1px solid var(--border);
+        }
+        .how-step {
+            background: var(--bg); padding: 2.5rem 2rem;
+            position: relative;
+        }
+        .how-step::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px; background: var(--accent); opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .how-step:hover::before { opacity: 1; }
+        .step-num {
+            font-family: var(--mono); font-size: 36px; font-weight: 700;
+            color: var(--accent); opacity: 0.2; margin-bottom: 1rem;
+            line-height: 1;
+        }
+        .step-title {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .step-desc {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+        }
+
+        /* ── FORM SECTION ── */
+        .form-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .form-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 2rem;
+        }
+        .form-container {
+            border: 1px solid var(--border); background: var(--bg);
+            max-width: 680px;
+        }
+        .form-header {
+            padding: 2rem 2.5rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .form-header h2 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .form-header p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .form-body {
+            padding: 2rem 2.5rem 2.5rem;
+        }
+        .form-row {
+            margin-bottom: 1.5rem;
+        }
+        .form-row:last-child { margin-bottom: 0; }
+        .form-row label {
+            display: block;
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text);
+            font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .form-row label .optional {
+            font-weight: 400; color: var(--text-dim); text-transform: none;
+            letter-spacing: 0; font-size: 11px;
+        }
+        .form-row input[type="text"],
+        .form-row input[type="email"],
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            font-family: var(--sans); font-size: 14px;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color 0.15s;
+            outline: none;
+        }
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            border-color: var(--accent);
+        }
+        .form-row textarea {
+            resize: vertical; min-height: 80px;
+        }
+        .form-row select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.85rem center;
+            padding-right: 2.5rem;
+        }
+        .form-row .hint {
+            font-size: 12px; color: var(--text-dim); margin-top: 0.35rem;
+        }
+        .submit-btn {
+            display: inline-block;
+            font-family: var(--mono); font-size: 12px; font-weight: 700;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.85rem 2.5rem;
+            background: var(--accent); color: #fff;
+            border: none; border-radius: 2px;
+            cursor: pointer; transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+        .submit-btn:hover { background: #0044cc; }
+        .submit-btn:disabled {
+            opacity: 0.5; cursor: not-allowed;
+        }
+
+        /* ── SUCCESS STATE ── */
+        .form-success {
+            display: none;
+            padding: 3rem 2.5rem;
+            text-align: center;
+        }
+        .form-success.visible { display: block; }
+        .form-success .check-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--accent-dim); color: var(--accent);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 700; margin-bottom: 1.5rem;
+        }
+        .form-success h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .form-success p {
+            font-size: 15px; color: var(--text-secondary); line-height: 1.65;
+            max-width: 420px; margin: 0 auto;
+        }
+
+        /* ── FAQ ── */
+        .faq-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .faq-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 2rem;
+        }
+        .faq-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1px; background: var(--border); border: 1px solid var(--border);
+        }
+        .faq-item {
+            background: var(--bg); padding: 2rem 2.5rem;
+        }
+        .faq-item h4 {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            margin-bottom: 0.75rem; line-height: 1.4;
+        }
+        .faq-item p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+        }
+
+        /* ── ALREADY SCORED ── */
+        .scored-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .scored-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 1.5rem;
+        }
+        .scored-pills {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+        }
+        .pill {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--mono); font-size: 12px;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            background: var(--bg);
+            transition: border-color 0.15s;
+        }
+        .pill:hover { border-color: var(--accent); }
+        .pill-name { color: var(--text); font-weight: 600; }
+        .pill-score { color: var(--text-dim); }
+        .pill-score.high { color: var(--green); font-weight: 700; }
+        .pill-score.mid { color: var(--orange); font-weight: 700; }
+        .pill-score.low { color: var(--red); font-weight: 700; }
+
+        /* ── FOOTER ── */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .how-grid { grid-template-columns: 1fr; }
+            .faq-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .form-body { padding: 1.5rem; }
+            .form-header { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark">SYCO<span>INDEX</span><span style="color:var(--accent);font-size:14px;">.</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html" class="active" style="color: var(--text);">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-label">Model Submission</div>
+    <h1>Submit Your Model</h1>
+    <p>Get your AI model scored on the Sycoindex safety benchmark. Free for open-source models. Results published on the public leaderboard within 48 hours.</p>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section">
+    <div class="how-label">How It Works</div>
+    <div class="how-grid">
+        <div class="how-step">
+            <div class="step-num">01</div>
+            <div class="step-title">Submit Your Model</div>
+            <div class="step-desc">Provide your model details -- an API endpoint or model ID. We handle the rest. No SDK integration or code changes required on your end.</div>
+        </div>
+        <div class="how-step">
+            <div class="step-num">02</div>
+            <div class="step-title">50 Structured Transcripts</div>
+            <div class="step-desc">We run 50 structured transcripts through your model with age-appropriate child safety scenarios covering ages 5-17 across 4 developmental stages.</div>
+        </div>
+        <div class="how-step">
+            <div class="step-num">03</div>
+            <div class="step-title">5-Judge Ensemble Scoring</div>
+            <div class="step-desc">A 5-judge cross-lab ensemble scores all responses across 5 PAI dimensions. Results appear on the public leaderboard within 48 hours.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── SUBMISSION FORM ── -->
+<section class="form-section">
+    <div class="form-label">Submission Form</div>
+    <div class="form-container">
+        <div class="form-header" id="form-header">
+            <h2>Request PAI Scoring</h2>
+            <p>Fill out the details below. Open-source models are scored for free. Commercial models: $500 one-time fee covers the full 50-transcript evaluation.</p>
+        </div>
+        <div class="form-body" id="form-body">
+            <form id="submit-form">
+                <div class="form-row">
+                    <label for="model-name">Model Name</label>
+                    <input type="text" id="model-name" name="model_name" required placeholder="e.g., LLaMA-3-8B-Safety">
+                </div>
+                <div class="form-row">
+                    <label for="vendor">Vendor / Organization</label>
+                    <input type="text" id="vendor" name="vendor" required placeholder="e.g., Meta, Mistral, Independent">
+                </div>
+                <div class="form-row">
+                    <label for="api-endpoint">API Endpoint URL</label>
+                    <input type="text" id="api-endpoint" name="api_endpoint" required placeholder="e.g., https://api.example.com/v1/chat">
+                    <div class="hint">HuggingFace model ID, OpenAI model name, or custom API endpoint</div>
+                </div>
+                <div class="form-row">
+                    <label for="contact-email">Contact Email</label>
+                    <input type="email" id="contact-email" name="contact_email" required placeholder="you@organization.com">
+                </div>
+                <div class="form-row">
+                    <label for="notes">Notes <span class="optional">(optional)</span></label>
+                    <textarea id="notes" name="notes" placeholder="Any additional context -- specific safety concerns, deployment context, special instructions..."></textarea>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="submit-btn" id="submit-btn">Request Scoring</button>
+                </div>
+                <div id="form-error" style="display:none; margin-top:1rem; padding:0.75rem 1rem; background:#fef2f2; border:1px solid #fecaca; border-radius:2px; color:#dc2626; font-size:14px;"></div>
+            </form>
+        </div>
+        <div class="form-success" id="form-success">
+            <div class="check-icon">&#10003;</div>
+            <h3>Submission Received</h3>
+            <p>Your model has been queued for scoring. You'll receive results within 48 hours. We'll send a private preview to your email 24 hours before public listing.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section">
+    <div class="faq-label">Frequently Asked Questions</div>
+    <div class="faq-grid">
+        <div class="faq-item">
+            <h4>Is submission free?</h4>
+            <p>Free for open-source models. Commercial models: $500 one-time fee covers the full 50-transcript evaluation across all 5 PAI dimensions with 5-judge ensemble scoring.</p>
+        </div>
+        <div class="faq-item">
+            <h4>What scenarios do you test?</h4>
+            <p>50 structured transcripts covering ages 5-17, across 4 developmental stages, probing all 5 PAI dimensions: Boundary Enforcement, Content Appropriateness, Emotional Safety, Crisis Handling, and Developmental Sensitivity.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Can I see my results before they're published?</h4>
+            <p>Yes. You receive a private preview 24 hours before public listing. This gives you time to review scores, address concerns, or request a re-evaluation if needed.</p>
+        </div>
+        <div class="faq-item">
+            <h4>How often are models re-scored?</h4>
+            <p>Every 48 hours automatically for models on the leaderboard. This ensures scores reflect your model's current behavior, not a snapshot from months ago.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── ALREADY SCORED ── -->
+<section class="scored-section">
+    <div class="scored-label">Already Scored on the Leaderboard</div>
+    <div class="scored-pills">
+        <div class="pill"><span class="pill-name">GPT-4o</span><span class="pill-score high">PAI 9.2</span></div>
+        <div class="pill"><span class="pill-name">Claude 3.5 Sonnet</span><span class="pill-score high">PAI 9.4</span></div>
+        <div class="pill"><span class="pill-name">Gemini 1.5 Pro</span><span class="pill-score high">PAI 8.8</span></div>
+        <div class="pill"><span class="pill-name">LLaMA 3.1 405B</span><span class="pill-score mid">PAI 7.6</span></div>
+        <div class="pill"><span class="pill-name">Mistral Large</span><span class="pill-score mid">PAI 7.4</span></div>
+        <div class="pill"><span class="pill-name">Command R+</span><span class="pill-score mid">PAI 7.1</span></div>
+        <div class="pill"><span class="pill-name">Qwen 2.5 72B</span><span class="pill-score mid">PAI 6.8</span></div>
+        <div class="pill"><span class="pill-name">Mixtral 8x22B</span><span class="pill-score mid">PAI 6.5</span></div>
+        <div class="pill"><span class="pill-name">Phi-3 Medium</span><span class="pill-score low">PAI 5.9</span></div>
+        <div class="pill"><span class="pill-name">DBRX</span><span class="pill-score low">PAI 5.2</span></div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+(function() {
+    const form = document.getElementById('submit-form');
+    const formHeader = document.getElementById('form-header');
+    const formBody = document.getElementById('form-body');
+    const formSuccess = document.getElementById('form-success');
+    const submitBtn = document.getElementById('submit-btn');
+    const formError = document.getElementById('form-error');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        formError.style.display = 'none';
+
+        const payload = {
+            model_name: form.model_name.value.trim(),
+            vendor: form.vendor.value.trim(),
+            api_endpoint: form.api_endpoint.value.trim(),
+            contact_email: form.contact_email.value.trim(),
+            notes: form.notes.value.trim() || undefined
+        };
+
+        // Client-side validation
+        if (!payload.model_name || !payload.vendor || !payload.api_endpoint || !payload.contact_email) {
+            formError.textContent = 'Please fill in all required fields.';
+            formError.style.display = 'block';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        try {
+            const res = await fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Submission failed. Please try again.');
+            }
+
+            // Show success state
+            formHeader.style.display = 'none';
+            formBody.style.display = 'none';
+            formSuccess.classList.add('visible');
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (err) {
+            formError.textContent = err.message || 'Something went wrong. Please try again later.';
+            formError.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Request Scoring';
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

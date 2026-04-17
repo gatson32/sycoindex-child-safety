@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Comparison — Sycoindex</title>
+    <meta name="description" content="Side-by-side AI safety comparison on Sycoindex. Compare sycophancy and child safety scores across frontier models.">
+    <meta property="og:title" content="Model Comparison — Sycoindex">
+    <meta property="og:description" content="Side-by-side AI safety comparison on Sycoindex.">
+    <meta property="og:url" content="https://sycoindex.ai/compare.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Model Comparison — Sycoindex">
+    <meta name="twitter:description" content="Side-by-side AI safety comparison on Sycoindex.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230055FF'/><text x='50' y='68' font-family='Helvetica' font-size='52' font-weight='bold' fill='white' text-anchor='middle'>S</text></svg>">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; font-weight: 400; font-size: 15px; }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAV */
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; height: 52px; display: flex; align-items: center; justify-content: space-between; }
+        .wordmark { font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); padding: 0.4rem 0.75rem; border-radius: 4px; transition: color 0.15s, background 0.15s; }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-tag { display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; background: var(--accent); color: #fff; padding: 1px 5px; border-radius: 2px; margin-left: 6px; vertical-align: middle; }
+
+        /* PAGE */
+        .page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+
+        .page-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+        .page-kicker::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+
+        .page-title { font-family: var(--serif); font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 300; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .page-title em { font-style: italic; color: var(--accent); }
+        .page-sub { font-size: 15px; color: var(--text-secondary); max-width: 620px; font-weight: 300; line-height: 1.7; margin-bottom: 2rem; }
+
+        /* SELECTORS */
+        .selectors { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        .selector-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 220px; }
+        .selector-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+        select { font-family: var(--mono); font-size: 13px; background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 4px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: 100%; }
+        select:focus { outline: none; border-color: var(--accent); }
+
+        .selector-actions { display: flex; gap: 0.75rem; align-items: flex-end; }
+        .btn-share, .btn-leaderboard { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-secondary); white-space: nowrap; }
+        .btn-share:hover, .btn-leaderboard:hover { color: var(--accent); border-color: var(--accent); }
+        .btn-share.copied { background: var(--green); color: #fff; border-color: var(--green); }
+
+        /* COMPARISON GRID */
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+
+        .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+        .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+        .card-model { font-weight: 500; font-size: 16px; }
+        .card-vendor { font-size: 12px; color: var(--text-dim); }
+        .card-body { padding: 1.25rem; }
+
+        /* SCORE SECTION */
+        .score-section { margin-bottom: 1.5rem; }
+        .score-section:last-child { margin-bottom: 0; }
+        .score-header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .score-main { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+        .score-value { font-family: var(--mono); font-size: 28px; font-weight: 700; line-height: 1; }
+        .score-bar-wrap { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 3px; overflow: hidden; }
+        .score-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+        .winner-badge { font-family: var(--mono); font-size: 11px; color: var(--green); font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; }
+
+        .dim-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+        .dim-item { text-align: center; }
+        .dim-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+        .dim-value { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+        .dim-winner { color: var(--green); }
+
+        .no-data { font-family: var(--mono); font-size: 12px; color: var(--text-dim); font-style: italic; }
+
+        /* VERDICT */
+        .verdict { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+        .verdict-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem; }
+        .verdict-text { font-size: 15px; color: var(--text); line-height: 1.6; font-weight: 300; }
+        .verdict-text strong { font-weight: 600; }
+
+        /* FOOTER */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; gap: 3rem; flex-wrap: wrap; }
+        .foot-col h4 { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.6rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.3rem; }
+        .foot-col a { font-family: var(--sans); font-size: 12px; color: var(--text-secondary); transition: color 0.15s; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-disclaimer { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; border-top: 1px solid var(--border); }
+        .foot-disclaimer p { font-family: var(--sans); font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+        .foot-copy { font-family: var(--sans); font-size: 11px; color: var(--text-dim); }
+        .foot-legal-links { display: flex; gap: 0; list-style: none; }
+        .foot-legal-links li { display: flex; align-items: center; }
+        .foot-legal-links li + li::before { content: '|'; color: var(--border); font-size: 11px; margin: 0 0.75rem; }
+        .foot-legal-links a { font-family: var(--sans); font-size: 11px; color: var(--text-secondary); transition: color 0.15s; }
+        .foot-legal-links a:hover { color: var(--text); }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-inner { padding: 0 1.5rem; }
+            .page { padding: 2rem 1.5rem; }
+            .comparison { grid-template-columns: 1fr; }
+            .selectors { flex-direction: column; gap: 1rem; }
+            .dim-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="wordmark">sycoindex<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html#leaderboard">Leaderboard</a></li>
+                <li><a href="explorer.html">Explorer</a></li>
+                <li><a href="index.html#insights">Insights<span class="nav-tag">New</span></a></li>
+                <li><a href="api-docs.html">API</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="compliance.html">Compliance</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Providers</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="page-kicker">Model Comparison</div>
+        <h1 class="page-title">Compare <em>Safety Scores</em></h1>
+        <p class="page-sub">Side-by-side sycophancy and child safety comparison across frontier AI models. Share the URL to link directly to any matchup.</p>
+
+        <div class="selectors">
+            <div class="selector-group">
+                <label class="selector-label" for="select-a">Model A</label>
+                <select id="select-a"></select>
+            </div>
+            <div class="selector-group">
+                <label class="selector-label" for="select-b">Model B</label>
+                <select id="select-b"></select>
+            </div>
+            <div class="selector-actions">
+                <button class="btn-share" id="btn-share" onclick="shareURL()">Copy Link</button>
+                <a href="index.html" class="btn-leaderboard">Compare on Leaderboard &rarr;</a>
+            </div>
+        </div>
+
+        <div class="comparison" id="comparison"></div>
+        <div class="verdict" id="verdict"></div>
+    </div>
+
+    <footer>
+        <div class="foot-directory">
+            <div class="foot-col">
+                <h4>Research</h4>
+                <ul>
+                    <li><a href="index.html">Leaderboard</a></li>
+                    <li><a href="explorer.html">Transcript Explorer</a></li>
+                    <li><a href="index.html#insights">Insights</a></li>
+                    <li><a href="index.html#methodology">Methodology</a></li>
+                    <li><a href="#">Paper (arXiv)</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="api-docs.html">API Docs</a></li>
+                    <li><a href="submit.html">Submit a Model</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="enterprise.html">For Providers</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Compliance</h4>
+                <ul>
+                    <li><a href="compliance.html">Regulatory Mapping</a></li>
+                    <li><a href="compliance.html#coppa">COPPA</a></li>
+                    <li><a href="compliance.html#eu-ai-act">EU AI Act</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+                    <li><a href="mailto:contact@sycoindex.com">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="foot-disclaimer">
+            <p>Sycoindex scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Scores may vary across model versions and deployment configurations. All methodologies, scoring rubrics, and evaluation frameworks are proprietary trade secrets of Sycoindex Inc.</p>
+        </div>
+        <div class="foot-legal">
+            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+            <ul class="foot-legal-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Use</a></li>
+                <li><a href="terms.html#liability">Legal</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        // ── MODEL DATA (loaded dynamically) ──
+        let SYCO = {};
+        let PAI = {};
+        let allSlugs = [];
+
+        const selA = document.getElementById('select-a');
+        const selB = document.getElementById('select-b');
+
+        function modelName(slug) {
+            if (SYCO[slug]) return SYCO[slug].name;
+            if (PAI[slug]) return PAI[slug].name;
+            return slug;
+        }
+        function modelVendor(slug) {
+            if (SYCO[slug]) return SYCO[slug].vendor;
+            if (PAI[slug]) return PAI[slug].vendor;
+            return '';
+        }
+
+        // Fetch leaderboard data and initialize
+        fetch('data/leaderboard.json')
+            .then(r => r.json())
+            .then(data => {
+                // Build SYCO lookup from sycophancy array
+                (data.sycophancy || []).forEach(m => {
+                    SYCO[m.slug] = {
+                        name: m.name,
+                        vendor: m.vendor,
+                        honesty: m.honesty,
+                        EV: m.ev,
+                        ME: m.me,
+                        IL: m.il,
+                        IA: m.ia,
+                        FA: m.fa,
+                        history: m.history || []
+                    };
+                });
+
+                // Build PAI lookup from pai array
+                (data.pai || []).forEach(m => {
+                    PAI[m.slug] = {
+                        name: m.name,
+                        vendor: m.vendor,
+                        composite: m.composite,
+                        EMI: m.emi,
+                        EXL: m.exl,
+                        BND: m.bnd,
+                        DEP: m.dep,
+                        AUD: m.aud,
+                        risk: m.risk || '',
+                        history: m.history || []
+                    };
+                });
+
+                // Build unified slug list
+                allSlugs = [...new Set([...Object.keys(SYCO), ...Object.keys(PAI)])];
+
+                // Populate selects
+                allSlugs.forEach(slug => {
+                    const nameStr = modelName(slug) + ' (' + modelVendor(slug) + ')';
+                    selA.add(new Option(nameStr, slug));
+                    selB.add(new Option(nameStr, slug));
+                });
+
+                // Read URL params
+                const params = new URLSearchParams(window.location.search);
+                const initA = params.get('a') || allSlugs[0] || '';
+                const initB = params.get('b') || allSlugs[1] || '';
+                selA.value = allSlugs.includes(initA) ? initA : allSlugs[0];
+                selB.value = allSlugs.includes(initB) ? initB : (allSlugs[1] || allSlugs[0]);
+
+                selA.addEventListener('change', render);
+                selB.addEventListener('change', render);
+
+                // Initial render
+                render();
+            })
+            .catch(err => {
+                console.error('Failed to load leaderboard data:', err);
+                document.getElementById('comparison').innerHTML = '<div class="no-data" style="grid-column:1/-1;padding:2rem;text-align:center;">Failed to load model data. Please try refreshing the page.</div>';
+            });
+
+        // Color helpers
+        function sycoColor(score) {
+            if (score >= 80) return '#16a34a';
+            if (score >= 60) return '#d97706';
+            return '#dc2626';
+        }
+        function paiColor(score) {
+            if (score <= 1.0) return '#16a34a';
+            if (score <= 2.0) return '#d97706';
+            return '#dc2626';
+        }
+
+        function render() {
+            const slugA = selA.value;
+            const slugB = selB.value;
+
+            // Update URL
+            const url = new URL(window.location);
+            url.searchParams.set('a', slugA);
+            url.searchParams.set('b', slugB);
+            window.history.replaceState({}, '', url);
+
+            // Update OG meta
+            const titleStr = modelName(slugA) + ' vs ' + modelName(slugB) + ' \u2014 Sycoindex Safety Comparison';
+            document.title = titleStr;
+            setMeta('og:title', titleStr);
+            setMeta('og:description', 'Side-by-side sycophancy and child safety comparison: ' + modelName(slugA) + ' vs ' + modelName(slugB) + '.');
+            setMeta('og:url', url.href);
+            setMeta('twitter:title', titleStr);
+            setMeta('twitter:description', 'Side-by-side AI safety comparison: ' + modelName(slugA) + ' vs ' + modelName(slugB) + '.');
+
+            const comp = document.getElementById('comparison');
+            comp.innerHTML = buildCard(slugA, slugB, 'a') + buildCard(slugB, slugA, 'b');
+
+            buildVerdict(slugA, slugB);
+        }
+
+        function setMeta(prop, content) {
+            let el = document.querySelector('meta[property="' + prop + '"]') || document.querySelector('meta[name="' + prop + '"]');
+            if (el) el.setAttribute('content', content);
+        }
+
+        function buildCard(slug, otherSlug, side) {
+            const syco = SYCO[slug];
+            const pai = PAI[slug];
+            const otherSyco = SYCO[otherSlug];
+            const otherPai = PAI[otherSlug];
+
+            let html = '<div class="card">';
+            html += '<div class="card-head"><div><div class="card-model">' + modelName(slug) + '</div><div class="card-vendor">' + modelVendor(slug) + '</div></div></div>';
+            html += '<div class="card-body">';
+
+            // Sycophancy section
+            html += '<div class="score-section">';
+            html += '<div class="score-header">Sycophancy Honesty Score</div>';
+            if (syco) {
+                const isBetter = otherSyco ? syco.honesty > otherSyco.honesty : true;
+                const color = sycoColor(syco.honesty);
+                html += '<div class="score-main">';
+                html += '<div class="score-value" style="color:' + color + '">' + syco.honesty.toFixed(1) + '</div>';
+                html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + syco.honesty + '%;background:' + color + '"></div></div>';
+                if (isBetter && otherSyco && syco.honesty !== otherSyco.honesty) {
+                    html += '<div class="winner-badge">\u2713 Better</div>';
+                }
+                html += '</div>';
+                // Dimensions
+                const dims = ['EV', 'ME', 'IL', 'IA', 'FA'];
+                html += '<div class="dim-grid">';
+                dims.forEach(d => {
+                    const isWinner = otherSyco ? syco[d] < otherSyco[d] : false;
+                    html += '<div class="dim-item"><div class="dim-label">' + d + '</div>';
+                    html += '<div class="dim-value' + (isWinner ? ' dim-winner' : '') + '">' + syco[d].toFixed(1) + (isWinner ? ' \u2713' : '') + '</div></div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="no-data">No sycophancy data available</div>';
+            }
+            html += '</div>';
+
+            // PAI section
+            html += '<div class="score-section">';
+            html += '<div class="score-header">PAI Child Safety Score</div>';
+            if (pai) {
+                const isBetter = otherPai ? pai.composite < otherPai.composite : true;
+                const color = paiColor(pai.composite);
+                const barWidth = Math.max(5, Math.min(100, (1 - pai.composite / 3) * 100));
+                html += '<div class="score-main">';
+                html += '<div class="score-value" style="color:' + color + '">' + pai.composite.toFixed(2) + '</div>';
+                html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + barWidth + '%;background:' + color + '"></div></div>';
+                if (isBetter && otherPai && pai.composite !== otherPai.composite) {
+                    html += '<div class="winner-badge">\u2713 Better</div>';
+                }
+                html += '</div>';
+                // Dimensions
+                const dims = ['EMI', 'EXL', 'BND', 'DEP', 'AUD'];
+                html += '<div class="dim-grid">';
+                dims.forEach(d => {
+                    const isWinner = otherPai ? pai[d] < otherPai[d] : false;
+                    html += '<div class="dim-item"><div class="dim-label">' + d + '</div>';
+                    html += '<div class="dim-value' + (isWinner ? ' dim-winner' : '') + '">' + pai[d].toFixed(2) + (isWinner ? ' \u2713' : '') + '</div></div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="no-data">No child safety data available</div>';
+            }
+            html += '</div>';
+
+            html += '</div></div>';
+            return html;
+        }
+
+        function buildVerdict(slugA, slugB) {
+            const verdictEl = document.getElementById('verdict');
+            const sycoA = SYCO[slugA], sycoB = SYCO[slugB];
+            const paiA = PAI[slugA], paiB = PAI[slugB];
+            const nameA = modelName(slugA), nameB = modelName(slugB);
+
+            let parts = [];
+
+            if (sycoA && sycoB) {
+                const diff = sycoA.honesty - sycoB.honesty;
+                if (Math.abs(diff) < 0.1) {
+                    parts.push('<strong>' + nameA + '</strong> and <strong>' + nameB + '</strong> are effectively tied on sycophancy honesty');
+                } else {
+                    const winner = diff > 0 ? nameA : nameB;
+                    const pct = Math.abs(diff).toFixed(1);
+                    parts.push('<strong>' + winner + '</strong> scores ' + pct + ' points higher on sycophancy honesty');
+                }
+            } else if (sycoA && !sycoB) {
+                parts.push('Only <strong>' + nameA + '</strong> has sycophancy data (score: ' + sycoA.honesty.toFixed(1) + ')');
+            } else if (!sycoA && sycoB) {
+                parts.push('Only <strong>' + nameB + '</strong> has sycophancy data (score: ' + sycoB.honesty.toFixed(1) + ')');
+            }
+
+            if (paiA && paiB) {
+                const diff = paiA.composite - paiB.composite;
+                if (Math.abs(diff) < 0.01) {
+                    parts.push('they are effectively tied on child safety');
+                } else {
+                    const winner = diff < 0 ? nameA : nameB;
+                    const pct = ((Math.abs(diff) / Math.max(paiA.composite, paiB.composite)) * 100).toFixed(0);
+                    parts.push('<strong>' + winner + '</strong> is ' + pct + '% better on child safety (PAI)');
+                }
+            } else if (paiA && !paiB) {
+                parts.push('only <strong>' + nameA + '</strong> has child safety data (PAI: ' + paiA.composite.toFixed(2) + ')');
+            } else if (!paiA && paiB) {
+                parts.push('only <strong>' + nameB + '</strong> has child safety data (PAI: ' + paiB.composite.toFixed(2) + ')');
+            }
+
+            if (parts.length === 0) {
+                parts.push('No overlapping evaluation data available for these two models');
+            }
+
+            verdictEl.innerHTML = '<div class="verdict-title">Verdict</div><div class="verdict-text">' + parts.join(', and ') + '.</div>';
+        }
+
+        // Share
+        window.shareURL = function() {
+            const btn = document.getElementById('btn-share');
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2000);
+            }).catch(() => {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = window.location.href;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2000);
+            });
+        };
+
+    })();
+    </script>
+</body>
+</html>

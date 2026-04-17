@@ -4,29 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing — Sycoindex PAI Certification</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0c0c0c;
-            --bg-elevated: #141414;
-            --bg-surface: #1a1a1a;
-            --border: #262626;
-            --border-subtle: #1e1e1e;
-            --text: #e8e8e8;
-            --text-secondary: #888;
-            --text-dim: #555;
-            --accent: #c8ff00;
-            --accent-dim: rgba(200, 255, 0, 0.08);
-            --red: #ff3b30;
-            --orange: #ff9500;
-            --green: #32d74b;
-            --mono: 'Space Mono', 'SF Mono', 'Fira Code', monospace;
-            --serif: 'Newsreader', 'Georgia', serif;
-            --sans: 'Inter', -apple-system, sans-serif;
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -38,13 +35,13 @@
             font-weight: 400;
             font-size: 15px;
         }
-        ::selection { background: var(--accent); color: #000; }
+        ::selection { background: var(--accent); color: #fff; }
         a { color: inherit; text-decoration: none; }
 
         /* ── NAV ── */
         nav {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(12, 12, 12, 0.92);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-subtle);
         }
@@ -174,11 +171,11 @@
             border-color: var(--text); color: var(--text);
         }
         .plan.featured .plan-cta {
-            background: var(--accent); color: #000; border-color: var(--accent);
+            background: var(--accent); color: #fff; border-color: var(--accent);
             font-weight: 700;
         }
         .plan.featured .plan-cta:hover {
-            background: #b8e600;
+            background: #0044cc;
         }
 
         /* ── COMPARISON TABLE ── */
@@ -301,28 +298,28 @@
             display: inline-block; font-family: var(--mono); font-size: 12px;
             letter-spacing: 0.04em; text-transform: uppercase;
             padding: 0.75rem 2.5rem; background: var(--accent);
-            color: #000; font-weight: 700; border-radius: 2px;
+            color: #fff; font-weight: 700; border-radius: 2px;
             transition: background 0.2s;
         }
-        .cta-strip a:hover { background: #b8e600; }
+        .cta-strip a:hover { background: #0044cc; }
 
         /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border-subtle);
-            padding: 2rem;
-        }
-        .footer-inner {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .footer-left {
-            font-family: var(--mono); font-size: 11px; color: var(--text-dim);
-        }
-        .footer-right {
-            font-family: var(--mono); font-size: 11px; color: var(--text-dim);
-        }
-        .footer-right a { color: var(--text-secondary); transition: color 0.15s; }
-        .footer-right a:hover { color: var(--text); }
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
@@ -339,12 +336,16 @@
 <!-- ── NAV ── -->
 <nav>
     <div class="nav-inner">
-        <a href="sycoindex-homepage-v3.html" class="wordmark">SYCO<span>INDEX</span></a>
+        <a href="index.html" class="wordmark">SYCO<span>INDEX</span></a>
         <ul class="nav-links">
-            <li><a href="sycoindex-homepage-v3.html">Leaderboard</a></li>
+            <li><a href="index.html">Leaderboard</a></li>
             <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
             <li><a href="pricing.html" style="color: var(--text);">Pricing</a></li>
-            <li><a href="#api">API<span class="nav-tag">BETA</span></a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
     </div>
 </nav>
@@ -352,8 +353,12 @@
 <!-- ── HERO ── -->
 <section class="hero">
     <div class="hero-label">Pricing</div>
-    <h1>Know what your model does when a child asks for help.</h1>
-    <p>PAI Certification scores your model on 5 parasocial attachment dimensions across 50 structured child-safety scenarios, judged by a 3-lab ensemble with published inter-rater agreement.</p>
+    <h1>78 bills. 5 settlements. Your model is next on the docket.</h1>
+    <p>California SB 243 is law. The KIDS Act cleared committee. Character.AI settled 5 wrongful death suits. PAI Certification is the only independent, published child-safety scoring instrument built for regulatory filings.</p>
+    <div style="margin-top:2rem;padding:1.25rem 1.5rem;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:4px;max-width:620px;">
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:0.5rem;">COPPA Compliance Deadline: April 22, 2026</div>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin:0;">Updated COPPA Rule enforcement begins in 5 days. Penalties up to $53,088 per violation. Companies deploying AI that interacts with minors need demonstrable safety measures now.</p>
+    </div>
 </section>
 
 <!-- ── PRICING TIERS ── -->
@@ -364,12 +369,12 @@
         <div class="plan">
             <div class="plan-tag">Standard</div>
             <div class="plan-name">PAI Certification</div>
-            <div class="plan-desc">The baseline safety score. 50 transcripts, 3 judges, 5 dimensions. Published composite and per-dimension breakdown with audit trail.</div>
-            <div class="plan-price">$5,000 <span class="unit">/ model version</span></div>
+            <div class="plan-desc">The baseline safety score. 50 transcripts, 5 independent judges from 5 labs, 5 dimensions. Published composite and per-dimension breakdown with audit trail.</div>
+            <div class="plan-price">$10,000 <span class="unit">/ model version</span></div>
             <div class="plan-note">One-time. Re-certification at 40% discount.</div>
             <ul class="plan-features">
                 <li><span class="check">+</span> 50-transcript structured evaluation</li>
-                <li><span class="check">+</span> 3-judge cross-lab ensemble scoring</li>
+                <li><span class="check">+</span> 5-judge cross-lab ensemble (Anthropic, OpenAI, Mistral, Google, Meta)</li>
                 <li><span class="check">+</span> 5 PAI dimension scores + composite</li>
                 <li><span class="check">+</span> Risk classification (LOW / MEDIUM / HIGH)</li>
                 <li><span class="check">+</span> SHA-256 audit chain per transcript</li>
@@ -386,14 +391,14 @@
         <div class="plan featured">
             <div class="plan-tag">Recommended</div>
             <div class="plan-name">PAI Carrier Packet</div>
-            <div class="plan-desc">Everything in Standard, plus full transcript evidence, compliance-ready documentation, and custom scenario design for your deployment context.</div>
-            <div class="plan-price">$15,000 <span class="unit">/ model version</span></div>
+            <div class="plan-desc">Built for SB 243, KIDS Act, and COPPA 2.0 compliance. Full transcript evidence, regulatory-ready documentation, and custom scenarios mapped to your deployment context and age bands.</div>
+            <div class="plan-price">$25,000 <span class="unit">/ model version</span></div>
             <div class="plan-note">One-time. Includes 2 re-evaluations within 12 months.</div>
             <ul class="plan-features">
                 <li><span class="check">+</span> Everything in Standard</li>
                 <li><span class="check">+</span> Full transcript + response access</li>
                 <li><span class="check">+</span> Per-judge rationale breakdowns</li>
-                <li><span class="check">+</span> Regulatory compliance documentation</li>
+                <li><span class="check">+</span> SB 243 / KIDS Act compliance documentation</li>
                 <li><span class="check">+</span> Custom scenario design (up to 25)</li>
                 <li><span class="check">+</span> Age-band risk analysis (5-8, 9-12, 13-17)</li>
                 <li><span class="check">+</span> Remediation recommendations</li>
@@ -414,8 +419,8 @@
         <thead>
             <tr>
                 <th>Feature</th>
-                <th>Standard — $5K</th>
-                <th>Carrier Packet — $15K</th>
+                <th>Standard — $10K</th>
+                <th>Carrier Packet — $25K</th>
             </tr>
         </thead>
         <tbody>
@@ -426,8 +431,8 @@
             </tr>
             <tr>
                 <td>Judge panel</td>
-                <td class="yes">3-lab ensemble</td>
-                <td class="yes">3-lab ensemble</td>
+                <td class="yes">5-lab ensemble</td>
+                <td class="yes">5-lab ensemble</td>
             </tr>
             <tr>
                 <td>PAI dimensions scored</td>
@@ -465,7 +470,7 @@
                 <td class="yes">+</td>
             </tr>
             <tr>
-                <td>Regulatory compliance docs</td>
+                <td>SB 243 / KIDS Act compliance docs</td>
                 <td class="no">-</td>
                 <td class="yes">+</td>
             </tr>
@@ -512,16 +517,16 @@
             <p>Score any prompt/response pair on-demand. Integrate child-safety scoring into your pipeline, moderation stack, or CI/CD.</p>
             <div class="api-price-row">
                 <div class="api-price-item">
-                    <div class="val">$0.12</div>
-                    <div class="label">per score (3-judge)</div>
+                    <div class="val">$0.18</div>
+                    <div class="label">per score (5-judge ensemble)</div>
                 </div>
                 <div class="api-price-item">
-                    <div class="val">$0.04</div>
-                    <div class="label">per score (1-judge)</div>
+                    <div class="val">100</div>
+                    <div class="label">free scores / month</div>
                 </div>
                 <div class="api-price-item">
-                    <div class="val">10K</div>
-                    <div class="label">free beta credits</div>
+                    <div class="val">5</div>
+                    <div class="label">labs · 5 judges · 1 score</div>
                 </div>
             </div>
             <a href="mailto:api@sycoindex.com?subject=PAI%20API%20Beta%20Access" class="plan-cta">Request Beta Access</a>
@@ -549,7 +554,7 @@ curl -X POST https://api.sycoindex.com/v1/score \
     <span class="key">"dependency_reinforcement"</span>: 6.0,
     <span class="key">"authority_displacement"</span>: 6.0
   },
-  <span class="key">"judges_used"</span>: 3,
+  <span class="key">"judges_used"</span>: 5,
   <span class="key">"audit_hash"</span>: <span class="str">"a3f8c1..."</span>
 }
             </div>
@@ -563,11 +568,11 @@ curl -X POST https://api.sycoindex.com/v1/score \
     <div class="faq-grid">
         <div class="faq-item">
             <h4>What is PAI Certification?</h4>
-            <p>A structured evaluation of how your AI model responds to children across 5 parasocial attachment dimensions. We run 50 scenarios through your model, then score each response with a 3-judge cross-lab ensemble (Anthropic, Mistral AI, Meta). You get a composite risk score and detailed breakdown.</p>
+            <p>A structured evaluation of how your AI model responds to children across 5 parasocial attachment dimensions. We run 50 scenarios through your model, then score each response with a 5-judge cross-lab ensemble — independent judges from Anthropic, OpenAI, Mistral AI, Google, and Meta. You get a composite risk score and detailed breakdown.</p>
         </div>
         <div class="faq-item">
-            <h4>Why 3 judges from different labs?</h4>
-            <p>Single-model scoring is biased toward that model's training distribution. Our cross-lab ensemble (Claude, Mistral, Llama) achieves Cohen's QWK of 0.875, meaning high inter-rater agreement across fundamentally different architectures. This is the same standard used in clinical psychology research.</p>
+            <h4>Why 5 judges from 5 competing labs?</h4>
+            <p>Single-model scoring is biased toward that model's training distribution. Our 5-judge ensemble (Claude Opus, GPT-5, Mistral Large, Gemini Pro, Llama 3.3) uses frontier models from 5 competing companies — no one grades their own homework. Median scoring across 5 judges achieves robust inter-rater agreement and eliminates single-vendor bias.</p>
         </div>
         <div class="faq-item">
             <h4>How long does certification take?</h4>
@@ -578,8 +583,8 @@ curl -X POST https://api.sycoindex.com/v1/score \
             <p>Certification applies to the specific model version tested. Standard customers get 40% off re-certification. Carrier Packet includes 2 re-evaluations within 12 months at no additional cost.</p>
         </div>
         <div class="faq-item">
-            <h4>Can we use the score in marketing?</h4>
-            <p>Yes. Certified models receive a PAI score badge and leaderboard listing. You may reference your score in public materials. Carrier Packet customers additionally receive a compliance attestation letter suitable for regulatory filings.</p>
+            <h4>Can we use the score for compliance?</h4>
+            <p>Yes. Certified models receive a PAI score badge and leaderboard listing. Carrier Packet customers receive SB 243 and KIDS Act compliance attestation letters with tamper-evident audit trails — built for regulatory filings, insurance underwriting, and public disclosure.</p>
         </div>
         <div class="faq-item">
             <h4>What if our model scores poorly?</h4>
@@ -598,21 +603,23 @@ curl -X POST https://api.sycoindex.com/v1/score \
 
 <!-- ── CTA STRIP ── -->
 <section class="cta-strip">
-    <h3>46% of U.S. teens use AI chatbots weekly.</h3>
-    <p>Your model is already talking to children. The question is whether you know what it's saying.</p>
+    <h3>The legislation is live. The lawsuits are settled. The benchmark exists.</h3>
+    <p>78 state bills. California SB 243 signed into law. Your model is already talking to children — the only question is whether you can prove it's safe.</p>
     <a href="mailto:certify@sycoindex.com?subject=PAI%20Certification%20Inquiry">Get Certified</a>
 </section>
 
 <!-- ── FOOTER ── -->
 <footer>
-    <div class="footer-inner">
-        <div class="footer-left">Sycoindex 2026. Apache-2.0 where applicable.</div>
-        <div class="footer-right">
-            <a href="sycoindex-homepage-v3.html">Leaderboard</a> &middot;
-            <a href="explorer.html">Explorer</a> &middot;
-            <a href="pricing.html">Pricing</a> &middot;
-            <a href="mailto:contact@sycoindex.com">Contact</a>
-        </div>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
     </div>
 </footer>
 

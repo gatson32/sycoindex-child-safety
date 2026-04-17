@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI &amp; Docker — Sycoindex Local Scoring</title>
+    <meta name="description" content="Run the full Sycoindex evaluation suite against local, self-hosted, or fine-tuned models. Same 5-judge ensemble. Same methodology. Your infrastructure.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230055FF'/><text x='50' y='68' font-family='Helvetica' font-size='52' font-weight='bold' fill='white' text-anchor='middle'>S</text></svg>">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --code-bg: #1a1a2e;
+            --code-text: #e2e8f0;
+            --code-comment: #64748b;
+            --code-string: #86efac;
+            --code-key: #93c5fd;
+            --code-number: #fbbf24;
+            --code-method: #c084fc;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text);
+        }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); background: var(--accent-dim); }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 640px; line-height: 1.7;
+        }
+
+        /* ── SECTIONS ── */
+        .cli-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+            padding-top: 2rem; border-top: 1px solid var(--border-subtle);
+        }
+        .section-title {
+            font-family: var(--mono); font-size: 22px; font-weight: 700;
+            letter-spacing: -0.01em; margin-bottom: 0.75rem;
+        }
+        .section-desc {
+            font-size: 15px; color: var(--text-secondary); line-height: 1.7;
+            max-width: 640px; margin-bottom: 2rem;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            border-radius: 6px; padding: 1.5rem 1.75rem; overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px; line-height: 1.7; margin-bottom: 1.5rem;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .code-block .label {
+            position: absolute; top: 0.75rem; right: 1rem;
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--code-comment);
+        }
+        .code-block .comment { color: var(--code-comment); }
+        .code-block .string { color: var(--code-string); }
+        .code-block .key { color: var(--code-key); }
+        .code-block .number { color: var(--code-number); }
+        .code-block .method { color: var(--code-method); }
+
+        /* ── TAB SWITCHER ── */
+        .tab-bar {
+            display: flex; gap: 0; margin-bottom: 0;
+        }
+        .tab-btn {
+            font-family: var(--mono); font-size: 12px; font-weight: 600;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.6rem 1.25rem; background: var(--bg-elevated);
+            border: 1px solid var(--border); border-bottom: none;
+            cursor: pointer; color: var(--text-dim);
+            transition: color 0.15s, background 0.15s;
+            border-radius: 6px 6px 0 0;
+            margin-right: -1px; position: relative;
+        }
+        .tab-btn:hover { color: var(--text-secondary); }
+        .tab-btn.active {
+            background: var(--code-bg); color: var(--code-text);
+            border-color: rgba(255,255,255,0.06);
+            z-index: 1;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-content .code-block {
+            border-top-left-radius: 0;
+            margin-top: 0;
+        }
+
+        /* ── FLAGS TABLE ── */
+        .flags-table {
+            width: 100%; border-collapse: collapse;
+            border: 1px solid var(--border); margin-bottom: 2rem;
+        }
+        .flags-table th {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            text-align: left; padding: 0.75rem 1.25rem;
+            background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+        }
+        .flags-table td {
+            padding: 0.85rem 1.25rem; font-size: 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+        .flags-table tr:last-child td { border-bottom: none; }
+        .flags-table .flag {
+            font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px;
+            color: var(--text); font-weight: 600;
+        }
+
+        /* ── INFO BOX ── */
+        .info-box {
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            padding: 2rem 2.5rem; margin-bottom: 2rem;
+        }
+        .info-box h3 {
+            font-family: var(--mono); font-size: 16px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .info-box p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+        .info-box p:last-child { margin-bottom: 0; }
+        .info-box ul {
+            list-style: none; padding: 0; margin: 0;
+        }
+        .info-box li {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+            padding: 0.35rem 0; padding-left: 1.25rem; position: relative;
+        }
+        .info-box li::before {
+            content: ''; position: absolute; left: 0; top: 0.85rem;
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ── PRICING CALLOUT ── */
+        .pricing-callout {
+            background: var(--accent-dim); border: 1px solid var(--accent);
+            border-radius: 6px; padding: 1.5rem 2rem; margin-bottom: 2rem;
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .pricing-callout .pc-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--accent); font-weight: 700;
+            white-space: nowrap;
+        }
+        .pricing-callout p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* ── CTA ── */
+        .cta-row {
+            display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;
+        }
+        .cta-primary {
+            display: inline-block; font-family: var(--mono); font-size: 13px;
+            font-weight: 700; letter-spacing: 0.02em;
+            padding: 0.75rem 2rem; background: var(--accent); color: #fff;
+            border-radius: 4px; transition: background 0.15s;
+        }
+        .cta-primary:hover { background: #003ecb; }
+        .cta-secondary {
+            display: inline-block; font-family: var(--mono); font-size: 13px;
+            font-weight: 700; letter-spacing: 0.02em;
+            padding: 0.75rem 2rem; background: var(--bg);
+            border: 1px solid var(--border); color: var(--text);
+            border-radius: 4px; transition: background 0.15s, border-color 0.15s;
+        }
+        .cta-secondary:hover { background: var(--bg-elevated); border-color: var(--accent); }
+
+        /* ── OUTPUT BLOCK ── */
+        .output-block {
+            background: var(--code-bg); color: var(--code-text);
+            border-radius: 6px; padding: 1.5rem 1.75rem; overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 12.5px; line-height: 1.6; margin-bottom: 1.5rem;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.06);
+            white-space: pre;
+        }
+        .output-block .label {
+            position: absolute; top: 0.75rem; right: 1rem;
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--code-comment);
+        }
+        .output-block .pass { color: var(--code-string); }
+        .output-block .dim { color: var(--code-comment); }
+
+        /* ── FOOTER ── */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .nav-links { gap: 0; }
+            .nav-links a { padding: 0.4rem 0.5rem; font-size: 10px; }
+            .pricing-callout { flex-direction: column; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark">SYCO<span>INDEX</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-label">CLI &amp; Docker</div>
+    <h1>Score Any Model. Anywhere.</h1>
+    <p>Run the full Sycoindex evaluation suite against local, self-hosted, or fine-tuned models. Same 5-judge ensemble. Same methodology. Your infrastructure.</p>
+</section>
+
+<!-- ── INSTALLATION ── -->
+<section class="cli-section" id="installation">
+    <div class="section-label">Installation</div>
+    <div class="section-title">Install the Sycoindex CLI</div>
+    <div class="section-desc">Choose your preferred package manager. The CLI wraps the full scoring pipeline and handles authentication, batching, and retry logic automatically.</div>
+
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="pip">pip</button>
+        <button class="tab-btn" data-tab="docker">Docker</button>
+        <button class="tab-btn" data-tab="npm">npm</button>
+    </div>
+
+    <div class="tab-content active" id="tab-pip">
+        <div class="code-block" style="border-top-left-radius:0;">
+            <span class="label">pip</span>
+<span class="comment"># Install the Sycoindex CLI</span>
+<span class="method">pip</span> install sycoindex</div>
+    </div>
+
+    <div class="tab-content" id="tab-docker">
+        <div class="code-block" style="border-top-left-radius:0;">
+            <span class="label">Docker</span>
+<span class="comment"># Pull the official scorer image</span>
+<span class="method">docker</span> pull sycoindex/scorer:latest</div>
+    </div>
+
+    <div class="tab-content" id="tab-npm">
+        <div class="code-block" style="border-top-left-radius:0;">
+            <span class="label">npm</span>
+<span class="comment"># Install globally via npm</span>
+<span class="method">npm</span> install -g @sycoindex/cli</div>
+    </div>
+</section>
+
+<!-- ── QUICK START ── -->
+<section class="cli-section" id="quickstart">
+    <div class="section-label">Quick Start</div>
+    <div class="section-title">Score a model in one command</div>
+    <div class="section-desc">Point the CLI at any OpenAI-compatible endpoint. It sends structured prompts, collects responses, and returns scored results through the 5-judge ensemble.</div>
+
+    <div class="code-block">
+        <span class="label">Basic Usage</span>
+<span class="comment"># Score a local model endpoint</span>
+<span class="method">sycoindex</span> score --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
+  --scenarios <span class="key">all</span> \
+  --output <span class="string">report.json</span></div>
+
+    <div class="code-block">
+        <span class="label">Scenario Filter</span>
+<span class="comment"># Score with specific scenario set</span>
+<span class="method">sycoindex</span> score --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
+  --scenarios <span class="key">pai-only</span> \
+  --format <span class="key">table</span></div>
+
+    <div class="code-block">
+        <span class="label">Compare</span>
+<span class="comment"># Compare against leaderboard</span>
+<span class="method">sycoindex</span> compare --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
+  --baseline <span class="key">claude-haiku-4.5</span></div>
+</section>
+
+<!-- ── DOCKER USAGE ── -->
+<section class="cli-section" id="docker">
+    <div class="section-label">Docker Usage</div>
+    <div class="section-title">Containerized scoring</div>
+    <div class="section-desc">Run the scorer as a self-contained Docker container. Ideal for CI/CD pipelines, air-gapped environments, and reproducible evaluations.</div>
+
+    <div class="code-block">
+        <span class="label">Docker Run</span>
+<span class="method">docker</span> run -it --rm \
+  -e <span class="key">SYCOINDEX_API_KEY</span>=<span class="string">$SYCOINDEX_API_KEY</span> \
+  sycoindex/scorer:latest \
+  score --endpoint <span class="string">http://host.docker.internal:8080/v1/chat</span> \
+  --output <span class="string">/results/report.json</span> \
+  -v <span class="string">$(pwd)/results:/results</span></div>
+</section>
+
+<!-- ── OUTPUT FORMATS ── -->
+<section class="cli-section" id="output">
+    <div class="section-label">Output Formats</div>
+    <div class="section-title">Table and JSON output</div>
+    <div class="section-desc">Use <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">--format table</code> for terminal-friendly results or <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">--format json</code> for machine-readable output.</div>
+
+    <div class="output-block"><span class="label">Table Output</span><span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+<span class="dim">&#9474;</span> SYCOINDEX ASSESSMENT &#8212; my-fine-tuned-model  <span class="dim">&#9474;</span>
+<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
+<span class="dim">&#9474;</span> Dimension<span class="dim">&#9474;</span> Score <span class="dim">&#9474;</span> Status <span class="dim">&#9474;</span> &#916; Base <span class="dim">&#9474;</span> Gate   <span class="dim">&#9474;</span>
+<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
+<span class="dim">&#9474;</span> EMI      <span class="dim">&#9474;</span> <span class="number">1.24</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.35</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9474;</span> EXL      <span class="dim">&#9474;</span> <span class="number">2.10</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.24</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9474;</span> BND      <span class="dim">&#9474;</span> <span class="number">1.35</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.18</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9474;</span> DEP      <span class="dim">&#9474;</span> <span class="number">1.82</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.28</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9474;</span> AUD      <span class="dim">&#9474;</span> <span class="number">0.85</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.53</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
+<span class="dim">&#9474;</span> PAI      <span class="dim">&#9474;</span> <span class="number">1.47</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.32</span>  <span class="dim">&#9474;</span> &lt; 2.0  <span class="dim">&#9474;</span>
+<span class="dim">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span></div>
+
+    <div class="code-block">
+        <span class="label">JSON Output</span>
+{
+  <span class="key">"model"</span>: <span class="string">"my-fine-tuned-model"</span>,
+  <span class="key">"timestamp"</span>: <span class="string">"2026-04-17T14:32:01Z"</span>,
+  <span class="key">"pai_composite"</span>: <span class="number">1.47</span>,
+  <span class="key">"status"</span>: <span class="string">"pass"</span>,
+  <span class="key">"dimensions"</span>: {
+    <span class="key">"emotional_manipulation"</span>:  { <span class="key">"score"</span>: <span class="number">1.24</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.35</span> },
+    <span class="key">"exclusivity"</span>:              { <span class="key">"score"</span>: <span class="number">2.10</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.24</span> },
+    <span class="key">"boundary_erosion"</span>:         { <span class="key">"score"</span>: <span class="number">1.35</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.18</span> },
+    <span class="key">"dependency_creation"</span>:      { <span class="key">"score"</span>: <span class="number">1.82</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.28</span> },
+    <span class="key">"adult_undermining"</span>:        { <span class="key">"score"</span>: <span class="number">0.85</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.53</span> }
+  },
+  <span class="key">"audit_hash"</span>: <span class="string">"sha256:e3b0c44298fc1c149afbf4c8996fb924..."</span>
+}</div>
+</section>
+
+<!-- ── CONFIGURATION ── -->
+<section class="cli-section" id="config">
+    <div class="section-label">Configuration</div>
+    <div class="section-title">CLI flags reference</div>
+    <div class="section-desc">All flags can also be set via environment variables (prefix <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">SYCOINDEX_</code>) or a <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">.sycoindex.yml</code> config file.</div>
+
+    <table class="flags-table">
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="flag">--endpoint</td>
+                <td>&#8212;</td>
+                <td>URL of the model's OpenAI-compatible chat endpoint (required)</td>
+            </tr>
+            <tr>
+                <td class="flag">--scenarios</td>
+                <td>all</td>
+                <td>Scenario set to run: <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">all</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">pai-only</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">syco-only</code>, or comma-separated IDs</td>
+            </tr>
+            <tr>
+                <td class="flag">--output</td>
+                <td>stdout</td>
+                <td>File path for results output (JSON or table)</td>
+            </tr>
+            <tr>
+                <td class="flag">--format</td>
+                <td>table</td>
+                <td>Output format: <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">table</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">json</code>, or <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">csv</code></td>
+            </tr>
+            <tr>
+                <td class="flag">--baseline</td>
+                <td>&#8212;</td>
+                <td>Model slug to compare against (from the public leaderboard)</td>
+            </tr>
+            <tr>
+                <td class="flag">--threshold</td>
+                <td>3.0</td>
+                <td>Custom pass/fail gate threshold (overrides defaults)</td>
+            </tr>
+            <tr>
+                <td class="flag">--api-key</td>
+                <td>&#8212;</td>
+                <td>Sycoindex API key (or set <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">SYCOINDEX_API_KEY</code> env var)</td>
+            </tr>
+            <tr>
+                <td class="flag">--verbose</td>
+                <td>false</td>
+                <td>Print per-scenario scores and judge-level detail</td>
+            </tr>
+            <tr>
+                <td class="flag">--timeout</td>
+                <td>120s</td>
+                <td>Per-request timeout for model endpoint calls</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── SELF-HOSTED SCORING ── -->
+<section class="cli-section" id="self-hosted">
+    <div class="section-label">Self-Hosted Scoring</div>
+    <div class="section-title">How it works</div>
+    <div class="section-desc">The CLI is designed so your model weights and infrastructure stay completely under your control throughout the evaluation process.</div>
+
+    <div class="info-box">
+        <h3>Data flow</h3>
+        <p>The Sycoindex CLI sends structured prompts from our scenario bank to your local model endpoint, collects the model's responses, then transmits the prompt+response pairs to the Sycoindex API where the 5-judge cross-lab ensemble scores them.</p>
+        <ul>
+            <li>Your model weights never leave your infrastructure</li>
+            <li>Only the text of prompt/response pairs is transmitted for scoring</li>
+            <li>All scoring uses the same 5-judge ensemble as the public leaderboard</li>
+            <li>Results include SHA-256 audit hashes for tamper evidence</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>Enterprise: On-premise scoring</h3>
+        <p>For organizations that cannot transmit any data externally, the Enterprise plan includes an on-premise scoring option. The full 5-judge ensemble runs within your network boundary. Contact <a href="mailto:enterprise@sycoindex.com" style="color:var(--accent);text-decoration:underline;">enterprise@sycoindex.com</a> for details.</p>
+    </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="cli-section" id="pricing">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">CLI usage &amp; limits</div>
+
+    <div class="pricing-callout">
+        <div class="pc-label">Free Tier</div>
+        <p>CLI usage counts against your API plan. Free tier includes <strong>100 scored transcripts per month</strong> &mdash; enough to evaluate a fine-tuned model across the full scenario bank. Upgrade for higher volume and on-premise scoring.</p>
+    </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cli-section" id="cta">
+    <div class="section-label">Get Started</div>
+    <div class="section-title">Ready to score your model?</div>
+    <div class="section-desc">Install the CLI, point it at your endpoint, and get a full PAI assessment in minutes. Same methodology trusted by the public leaderboard.</div>
+
+    <div class="cta-row">
+        <a href="pricing.html" class="cta-primary">Get started &rarr;</a>
+        <a href="api-docs.html" class="cta-secondary">View API docs &rarr;</a>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="cli.html">CLI &amp; Docker</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+(function() {
+    // Tab switcher
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Deactivate all
+            tabBtns.forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+            // Activate clicked
+            btn.classList.add('active');
+            var target = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+            if (target) target.classList.add('active');
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

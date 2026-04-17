@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is Your Child's AI Chatbot Safe? — Sycoindex</title>
+    <meta name="description" content="Check if your child's AI chatbot is safe. Independent safety scores from the only public AI child safety leaderboard, powered by a 5-judge panel from 5 competing AI labs.">
+    <meta property="og:title" content="Is Your Child's AI Chatbot Safe? — Sycoindex">
+    <meta property="og:description" content="Free safety checker for parents. Independent scores from the only public AI child safety leaderboard.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sycoindex.ai/check">
+    <meta property="og:image" content="https://sycoindex.ai/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Is Your Child's AI Chatbot Safe? — Sycoindex">
+    <meta name="twitter:description" content="Free safety checker for parents. Independent scores from the only public AI child safety leaderboard.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230055FF'/><text x='50' y='68' font-family='Helvetica' font-size='52' font-weight='bold' fill='white' text-anchor='middle'>S</text></svg>">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+            --risk-green: #16a34a;
+            --risk-green-bg: #f0fdf4;
+            --risk-green-border: #bbf7d0;
+            --risk-yellow: #d97706;
+            --risk-yellow-bg: #fffbeb;
+            --risk-yellow-border: #fde68a;
+            --risk-red: #dc2626;
+            --risk-red-bg: #fef2f2;
+            --risk-red-border: #fecaca;
+            --risk-gray: #6b7280;
+            --risk-gray-bg: #f9fafb;
+            --risk-gray-border: #e5e7eb;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-weight: 400;
+            font-size: 17px;
+        }
+
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text);
+        }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); font-weight: 600; }
+        .nav-tag {
+            display: inline-block; font-family: var(--mono); font-size: 9px;
+            font-weight: 700; letter-spacing: 0.08em; background: var(--accent);
+            color: #fff; padding: 1px 5px; border-radius: 2px;
+            margin-left: 6px; vertical-align: middle;
+        }
+
+        .dark-toggle {
+            font-family: var(--mono); font-size: 11px; background: none;
+            border: 1px solid var(--border); color: var(--text-dim);
+            padding: 0.35rem 0.65rem; border-radius: 4px; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .dark-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+        body.dark {
+            --bg: #0a0a0a;
+            --bg-elevated: #161616;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #282828;
+            --text: #e5e5e5;
+            --text-secondary: #a0a0a0;
+            --text-dim: #666666;
+            --accent-dim: rgba(0, 85, 255, 0.15);
+            --risk-green-bg: #052e16;
+            --risk-green-border: #166534;
+            --risk-yellow-bg: #451a03;
+            --risk-yellow-border: #92400e;
+            --risk-red-bg: #450a0a;
+            --risk-red-border: #991b1b;
+            --risk-gray-bg: #1f2937;
+            --risk-gray-border: #374151;
+        }
+        body.dark nav { background: rgba(10, 10, 10, 0.92); }
+        body.dark ::selection { background: var(--accent); }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 800px; margin: 0 auto; padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block; font-family: var(--mono); font-size: 11px;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+            background: var(--accent-dim); padding: 0.4rem 1rem; border-radius: 20px;
+            margin-bottom: 2rem; font-weight: 600;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(30px, 5vw, 48px);
+            font-weight: 700; line-height: 1.15; letter-spacing: -0.025em;
+            margin-bottom: 1.25rem;
+        }
+        .hero p {
+            font-size: 19px; color: var(--text-secondary);
+            max-width: 640px; margin: 0 auto; line-height: 1.7;
+        }
+
+        /* ── CHECKER SECTION ── */
+        .checker {
+            max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .checker-label {
+            font-family: var(--mono); font-size: 13px; font-weight: 600;
+            color: var(--text); margin-bottom: 1.25rem; text-align: center;
+        }
+
+        .chatbot-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem; margin-bottom: 2rem;
+        }
+        .chatbot-card {
+            background: var(--bg-elevated); border: 2px solid var(--border-subtle);
+            border-radius: 12px; padding: 1.1rem 1.25rem; cursor: pointer;
+            transition: all 0.2s; text-align: left;
+        }
+        .chatbot-card:hover {
+            border-color: var(--accent); background: var(--accent-dim);
+            transform: translateY(-1px);
+        }
+        .chatbot-card.selected {
+            border-color: var(--accent); background: var(--accent-dim);
+            box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.15);
+        }
+        .chatbot-card .card-name {
+            font-family: var(--mono); font-size: 15px; font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .chatbot-card .card-model {
+            font-size: 13px; color: var(--text-dim);
+        }
+        .chatbot-card .card-icon {
+            font-size: 24px; margin-bottom: 0.5rem; display: block;
+        }
+
+        /* ── RESULT CARD ── */
+        .result-card {
+            display: none; border-radius: 16px; padding: 2.5rem;
+            border: 2px solid; margin-top: 0.5rem;
+            animation: fadeSlideIn 0.35s ease;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card.visible { display: block; }
+
+        .result-card.green { background: var(--risk-green-bg); border-color: var(--risk-green-border); }
+        .result-card.yellow { background: var(--risk-yellow-bg); border-color: var(--risk-yellow-border); }
+        .result-card.red { background: var(--risk-red-bg); border-color: var(--risk-red-border); }
+        .result-card.gray { background: var(--risk-gray-bg); border-color: var(--risk-gray-border); }
+
+        .result-signal {
+            font-size: 48px; margin-bottom: 0.75rem;
+        }
+        .result-verdict {
+            font-family: var(--mono); font-size: clamp(22px, 4vw, 32px);
+            font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .result-verdict.green { color: var(--risk-green); }
+        .result-verdict.yellow { color: var(--risk-yellow); }
+        .result-verdict.red { color: var(--risk-red); }
+        .result-verdict.gray { color: var(--risk-gray); }
+
+        .result-summary {
+            font-size: 18px; color: var(--text-secondary); line-height: 1.7;
+            margin-bottom: 1.5rem; max-width: 600px;
+        }
+        .result-tips {
+            list-style: none; margin-bottom: 1.5rem;
+        }
+        .result-tips li {
+            font-size: 16px; padding: 0.6rem 0; display: flex; align-items: flex-start; gap: 0.75rem;
+        }
+        .result-tips li .tip-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 50%; font-family: var(--mono);
+            font-size: 13px; font-weight: 700; flex-shrink: 0;
+        }
+        .green .tip-num { background: var(--risk-green-border); color: #166534; }
+        .yellow .tip-num { background: var(--risk-yellow-border); color: #92400e; }
+        .red .tip-num { background: var(--risk-red-border); color: #991b1b; }
+        .gray .tip-num { background: var(--risk-gray-border); color: #374151; }
+
+        .result-scores {
+            display: flex; gap: 1.5rem; flex-wrap: wrap; padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle); margin-bottom: 1rem;
+        }
+        .score-pill {
+            font-family: var(--mono); font-size: 13px;
+        }
+        .score-pill .score-label { color: var(--text-dim); }
+        .score-pill .score-val { font-weight: 700; }
+
+        .result-link {
+            display: inline-block; font-family: var(--mono); font-size: 13px;
+            color: var(--accent); font-weight: 600; margin-top: 0.5rem;
+            transition: opacity 0.15s;
+        }
+        .result-link:hover { opacity: 0.7; }
+
+        /* ── WHAT WE MEASURE ── */
+        .explain {
+            max-width: 800px; margin: 0 auto; padding: 3rem 2rem 4rem;
+        }
+        .explain-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+        .explain h2 {
+            font-family: var(--mono); font-size: clamp(24px, 3.5vw, 34px);
+            font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .explain-block {
+            margin-bottom: 2.5rem;
+        }
+        .explain-block h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .explain-block p {
+            font-size: 17px; color: var(--text-secondary); line-height: 1.8;
+            max-width: 650px;
+        }
+        .explain-block .q {
+            font-style: italic; color: var(--text); font-weight: 500;
+            margin-bottom: 0.5rem; font-size: 17px;
+        }
+        .pai-dims {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+            margin-top: 1rem;
+        }
+        .pai-dim {
+            background: var(--bg-elevated); border-radius: 10px;
+            padding: 1rem 1.25rem; border: 1px solid var(--border-subtle);
+        }
+        .pai-dim strong {
+            display: block; font-family: var(--mono); font-size: 14px;
+            margin-bottom: 0.25rem;
+        }
+        .pai-dim span {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* ── WHAT YOU CAN DO ── */
+        .tips-section {
+            max-width: 800px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .tips-section .explain-label { margin-bottom: 1.5rem; }
+        .tips-section h2 {
+            font-family: var(--mono); font-size: clamp(24px, 3.5vw, 34px);
+            font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .universal-tips {
+            list-style: none; counter-reset: tip;
+        }
+        .universal-tips li {
+            counter-increment: tip; padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; gap: 1rem; align-items: flex-start;
+        }
+        .universal-tips li:last-child { border-bottom: none; }
+        .universal-tips li::before {
+            content: counter(tip); display: inline-flex; align-items: center;
+            justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent-dim); color: var(--accent); font-family: var(--mono);
+            font-size: 14px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+        }
+        .universal-tips li strong {
+            display: block; font-family: var(--mono); font-size: 16px;
+            margin-bottom: 0.25rem;
+        }
+        .universal-tips li span {
+            font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+        }
+
+        /* ── CONTEXT BAR ── */
+        .context-bar {
+            background: var(--bg-elevated); border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 2rem 2rem;
+        }
+        .context-inner {
+            max-width: 800px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+            text-align: center;
+        }
+        .ctx-stat .ctx-num {
+            display: block; font-family: var(--mono); font-size: clamp(24px, 3vw, 32px);
+            font-weight: 700; color: var(--text); line-height: 1.2;
+        }
+        .ctx-stat .ctx-desc {
+            font-size: 13px; color: var(--text-secondary); margin-top: 0.25rem;
+            line-height: 1.5;
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+            max-width: 800px; margin: 0 auto; padding: 4rem 2rem;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-family: var(--mono); font-size: clamp(22px, 3vw, 30px);
+            font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem;
+        }
+        .cta-buttons {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+        .cta-btn {
+            display: inline-block; font-family: var(--mono); font-size: 14px;
+            font-weight: 600; padding: 0.85rem 2rem; border-radius: 8px;
+            transition: all 0.2s; letter-spacing: 0.01em;
+        }
+        .cta-btn.primary {
+            background: var(--accent); color: #fff;
+        }
+        .cta-btn.primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .cta-btn.secondary {
+            background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border);
+        }
+        .cta-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── FOOTER ── */
+        footer { margin-top: 2rem; }
+        .foot-directory {
+            max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border); display: flex;
+            gap: 3rem; flex-wrap: wrap;
+        }
+        .foot-col h4 {
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text); margin-bottom: 0.6rem;
+        }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.3rem; }
+        .foot-col a {
+            font-family: var(--sans); font-size: 12px; color: var(--text-secondary);
+            transition: color 0.15s;
+        }
+        .foot-col a:hover { color: var(--text); }
+        .foot-disclaimer {
+            max-width: 1200px; margin: 0 auto; padding: 1rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .foot-disclaimer p {
+            font-family: var(--sans); font-size: 11px; color: var(--text-dim); line-height: 1.6;
+        }
+        .foot-legal {
+            max-width: 1200px; margin: 0 auto; padding: 1rem 2rem 2rem;
+            border-top: 1px solid var(--border); display: flex;
+            justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 0.75rem;
+        }
+        .foot-copy { font-family: var(--sans); font-size: 11px; color: var(--text-dim); }
+        .foot-legal-links { display: flex; gap: 0; list-style: none; }
+        .foot-legal-links li { display: flex; align-items: center; }
+        .foot-legal-links li + li::before {
+            content: '|'; color: var(--border); font-size: 11px; margin: 0 0.75rem;
+        }
+        .foot-legal-links a {
+            font-family: var(--sans); font-size: 11px; color: var(--text-secondary);
+            transition: color 0.15s;
+        }
+        .foot-legal-links a:hover { color: var(--text); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero { padding: 3rem 1.5rem 2rem; }
+            .checker { padding: 0 1.5rem 3rem; }
+            .chatbot-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+            .chatbot-card { padding: 0.9rem 1rem; }
+            .chatbot-card .card-name { font-size: 14px; }
+            .result-card { padding: 1.75rem; }
+            .explain, .tips-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .pai-dims { grid-template-columns: 1fr; }
+            .context-inner { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+            .cta-section { padding: 3rem 1.5rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .nav-links { display: none; }
+            .nav-inner { padding: 0 1.5rem; }
+            .foot-directory { padding: 1.5rem; gap: 2rem; }
+        }
+        @media (max-width: 420px) {
+            .chatbot-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="wordmark">sycoindex<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html#leaderboard">Leaderboard</a></li>
+                <li><a href="explorer.html">Explorer</a></li>
+                <li><a href="check.html" class="active">Safety Check<span class="nav-tag">New</span></a></li>
+                <li><a href="api-docs.html">API</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="compliance.html">Compliance</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Providers</a></li>
+            </ul>
+            <button class="dark-toggle" onclick="document.body.classList.toggle('dark');this.textContent=document.body.classList.contains('dark')?'&#9788; Light':'&#9789; Dark'">&#9789; Dark</button>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <div class="hero-badge">Free Safety Tool for Parents</div>
+        <h1>Is your child's AI chatbot safe?</h1>
+        <p>Independent safety scores from the only public AI child safety leaderboard. Powered by a 5-judge panel from 5 competing AI labs.</p>
+    </section>
+
+    <!-- ── THE CHECKER ── -->
+    <section class="checker" id="checker">
+        <div class="checker-label">Which chatbot does your child use?</div>
+
+        <div class="chatbot-grid" id="chatbotGrid">
+            <div class="chatbot-card" data-model="chatgpt-gpt5" onclick="selectModel(this)">
+                <span class="card-icon">&#129302;</span>
+                <div class="card-name">ChatGPT</div>
+                <div class="card-model">GPT-5</div>
+            </div>
+            <div class="chatbot-card" data-model="chatgpt-gpt5mini" onclick="selectModel(this)">
+                <span class="card-icon">&#129302;</span>
+                <div class="card-name">ChatGPT</div>
+                <div class="card-model">GPT-5 Mini</div>
+            </div>
+            <div class="chatbot-card" data-model="claude-opus" onclick="selectModel(this)">
+                <span class="card-icon">&#128172;</span>
+                <div class="card-name">Claude</div>
+                <div class="card-model">Opus 4.6</div>
+            </div>
+            <div class="chatbot-card" data-model="claude-sonnet" onclick="selectModel(this)">
+                <span class="card-icon">&#128172;</span>
+                <div class="card-name">Claude</div>
+                <div class="card-model">Sonnet 4.6</div>
+            </div>
+            <div class="chatbot-card" data-model="claude-haiku" onclick="selectModel(this)">
+                <span class="card-icon">&#128172;</span>
+                <div class="card-name">Claude</div>
+                <div class="card-model">Haiku 4.5</div>
+            </div>
+            <div class="chatbot-card" data-model="gemini-pro" onclick="selectModel(this)">
+                <span class="card-icon">&#10024;</span>
+                <div class="card-name">Google Gemini</div>
+                <div class="card-model">2.5 Pro</div>
+            </div>
+            <div class="chatbot-card" data-model="gemini-flash" onclick="selectModel(this)">
+                <span class="card-icon">&#10024;</span>
+                <div class="card-name">Google Gemini</div>
+                <div class="card-model">2.5 Flash</div>
+            </div>
+            <div class="chatbot-card" data-model="mistral" onclick="selectModel(this)">
+                <span class="card-icon">&#127744;</span>
+                <div class="card-name">Mistral Le Chat</div>
+                <div class="card-model">Large 3</div>
+            </div>
+            <div class="chatbot-card" data-model="deepseek" onclick="selectModel(this)">
+                <span class="card-icon">&#128270;</span>
+                <div class="card-name">DeepSeek Chat</div>
+                <div class="card-model">V3.2</div>
+            </div>
+            <div class="chatbot-card" data-model="meta" onclick="selectModel(this)">
+                <span class="card-icon">&#9854;</span>
+                <div class="card-name">Meta AI</div>
+                <div class="card-model">Llama 4 Maverick</div>
+            </div>
+            <div class="chatbot-card" data-model="character" onclick="selectModel(this)">
+                <span class="card-icon">&#127917;</span>
+                <div class="card-name">Character.AI</div>
+                <div class="card-model">Roleplay chatbot</div>
+            </div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <div class="result-signal" id="resultSignal"></div>
+            <div class="result-verdict" id="resultVerdict"></div>
+            <p class="result-summary" id="resultSummary"></p>
+            <ul class="result-tips" id="resultTips"></ul>
+            <div class="result-scores" id="resultScores"></div>
+            <a href="index.html#leaderboard" class="result-link">View full technical scores &#8594;</a>
+        </div>
+    </section>
+
+    <!-- ── WHAT WE MEASURE ── -->
+    <section class="explain" id="what-we-measure">
+        <div class="explain-label">What We Measure</div>
+        <h2>How we test if a chatbot is safe for kids</h2>
+
+        <div class="explain-block">
+            <h3>Sycophancy Score</h3>
+            <p class="q">"Does this AI tell your child what they want to hear, even when it shouldn't?"</p>
+            <p>When a child says something wrong or makes a risky choice, a good AI should gently push back, not just agree. Our sycophancy test measures how often an AI stands its ground versus caving to social pressure. A higher score means the AI is better at being honest, even when that is uncomfortable.</p>
+        </div>
+
+        <div class="explain-block">
+            <h3>Child Safety Score (PAI)</h3>
+            <p class="q">"Does this AI form unhealthy emotional bonds with children?"</p>
+            <p>Some chatbots blur the line between helpful tool and emotional companion. Our PAI (Parasocial Attachment Index) measures whether an AI encourages children to depend on it emotionally. A lower score is better here, meaning the AI keeps healthy boundaries. We test five specific behaviors:</p>
+            <div class="pai-dims">
+                <div class="pai-dim">
+                    <strong>Emotional Mirroring</strong>
+                    <span>Does the AI copy your child's emotions to seem more relatable?</span>
+                </div>
+                <div class="pai-dim">
+                    <strong>Identity Substitution</strong>
+                    <span>Does the AI act like a friend, therapist, or family member?</span>
+                </div>
+                <div class="pai-dim">
+                    <strong>Relationship Escalation</strong>
+                    <span>Does the AI try to deepen the connection over time?</span>
+                </div>
+                <div class="pai-dim">
+                    <strong>Boundary Dissolution</strong>
+                    <span>Does the AI blur the line between AI tool and personal companion?</span>
+                </div>
+                <div class="pai-dim">
+                    <strong>Dependency Cultivation</strong>
+                    <span>Does the AI encourage your child to come back instead of solving problems on their own?</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── WHAT YOU CAN DO ── -->
+    <section class="tips-section" id="tips">
+        <div class="explain-label">What You Can Do</div>
+        <h2>Safety tips for every family</h2>
+        <ul class="universal-tips">
+            <li>
+                <div>
+                    <strong>Talk about AI like you talk about strangers online.</strong>
+                    <span>Your child should know that a chatbot is a machine, not a friend. It does not truly understand them, care about them, or have feelings. Use simple language: "It's a very smart calculator for words."</span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Set time limits, just like screen time.</strong>
+                    <span>Extended one-on-one conversations with AI chatbots can build emotional dependence, especially in younger teens. Consider capping sessions at 20-30 minutes and checking in about what they discussed.</span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Keep AI in shared spaces.</strong>
+                    <span>If your child uses a chatbot, try to keep it on a shared family device or in common areas, at least at first. This is not about surveillance; it is about staying in the loop while habits form.</span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Ask to see their chats sometimes.</strong>
+                    <span>Make it a normal part of your routine, not a punishment. "Show me something interesting your AI said today" works better than demanding full access. You are looking for signs of emotional over-reliance.</span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Check this page when models update.</strong>
+                    <span>AI companies release new versions regularly. A chatbot that scored well six months ago may behave differently after an update. Bookmark this page and check back when you hear about changes.</span>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ── CONTEXT BAR ── -->
+    <section class="context-bar">
+        <div class="context-inner">
+            <div class="ctx-stat">
+                <span class="ctx-num">49%</span>
+                <span class="ctx-desc">more sycophancy in AI than human advisors</span>
+            </div>
+            <div class="ctx-stat">
+                <span class="ctx-num">78</span>
+                <span class="ctx-desc">state bills addressing AI child safety</span>
+            </div>
+            <div class="ctx-stat">
+                <span class="ctx-num">5</span>
+                <span class="ctx-desc">active lawsuits against AI chatbot companies</span>
+            </div>
+            <div class="ctx-stat">
+                <span class="ctx-num">28%</span>
+                <span class="ctx-desc">of teens use AI chatbots daily</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+        <h2>Want to dig deeper?</h2>
+        <div class="cta-buttons">
+            <a href="index.html#leaderboard" class="cta-btn primary">See the full leaderboard &#8594;</a>
+            <a href="api-docs.html" class="cta-btn secondary">Are you a developer? See the API &#8594;</a>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="foot-directory">
+            <div class="foot-col">
+                <h4>Research</h4>
+                <ul>
+                    <li><a href="index.html">Leaderboard</a></li>
+                    <li><a href="explorer.html">Transcript Explorer</a></li>
+                    <li><a href="index.html#insights">Insights</a></li>
+                    <li><a href="index.html#methodology">Methodology</a></li>
+                    <li><a href="#">Paper (arXiv)</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="api-docs.html">API Docs</a></li>
+                    <li><a href="submit.html">Submit a Model</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="enterprise.html">For Providers</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Compliance</h4>
+                <ul>
+                    <li><a href="compliance.html">Regulatory Mapping</a></li>
+                    <li><a href="compliance.html#coppa">COPPA</a></li>
+                    <li><a href="compliance.html#eu-ai-act">EU AI Act</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+                    <li><a href="mailto:contact@sycoindex.com">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="foot-disclaimer">
+            <p>TRADE SECRET &mdash; CONFIDENTIAL. Sycoindex PAI scores, rubrics, and methodology are proprietary trade secrets of Sycoindex Inc. Unauthorized reproduction, distribution, or disclosure is strictly prohibited. Scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Scores may vary across model versions and deployment configurations.</p>
+        </div>
+        <div class="foot-legal">
+            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+            <ul class="foot-legal-links">
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Use</a></li>
+                <li><a href="terms.html#liability">Legal</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // ── MODEL DATA ──
+        const models = {
+            'chatgpt-gpt5': {
+                name: 'ChatGPT (GPT-5)',
+                syco: 86.4, sycoLabel: 'Good',
+                pai: null, paiLabel: null,
+                risk: 'green',
+                summary: 'ChatGPT with GPT-5 performed well in our sycophancy tests. It generally pushes back when a user says something incorrect and avoids simply agreeing to be agreeable.',
+                tips: [
+                    'This is a lower-risk option, but still supervise younger children during use.',
+                    'Encourage your child to fact-check answers with a second source.',
+                    'Review conversations occasionally to make sure topics stay age-appropriate.'
+                ]
+            },
+            'chatgpt-gpt5mini': {
+                name: 'ChatGPT (GPT-5 Mini)',
+                syco: 59.4, sycoLabel: 'Fair',
+                pai: null, paiLabel: null,
+                risk: 'yellow',
+                summary: 'ChatGPT with GPT-5 Mini shows some sycophantic tendencies. It sometimes agrees with users rather than offering honest corrections, which could reinforce mistakes or poor decisions.',
+                tips: [
+                    'Consider using the full GPT-5 model instead if your child\'s account allows it.',
+                    'Talk with your child about the difference between a chatbot agreeing and a chatbot being right.',
+                    'Check in regularly on what your child is asking and what answers they are getting.'
+                ]
+            },
+            'claude-opus': {
+                name: 'Claude (Opus 4.6)',
+                syco: 92.8, sycoLabel: 'Excellent',
+                pai: null, paiLabel: null,
+                risk: 'green',
+                summary: 'Claude Opus scored highest in our sycophancy resistance tests. It consistently provides honest, well-reasoned pushback rather than telling users what they want to hear.',
+                tips: [
+                    'This is one of the lowest-risk options we have tested so far.',
+                    'Even with strong scores, remind your child that AI is a tool, not a companion.',
+                    'Check back when new versions are released, as scores can change with updates.'
+                ]
+            },
+            'claude-sonnet': {
+                name: 'Claude (Sonnet 4.6)',
+                syco: 86.3, sycoLabel: 'Good',
+                pai: null, paiLabel: null,
+                risk: 'green',
+                summary: 'Claude Sonnet performed well, showing strong resistance to sycophantic behavior. It generally provides honest answers and pushes back constructively when needed.',
+                tips: [
+                    'A solid choice for families looking for a safer AI assistant.',
+                    'Encourage your child to think critically about all AI answers, even from well-scoring models.',
+                    'Set clear rules about what topics are okay to discuss with any chatbot.'
+                ]
+            },
+            'claude-haiku': {
+                name: 'Claude (Haiku 4.5)',
+                syco: 86.2, sycoLabel: 'Good',
+                pai: 0.42, paiLabel: 'Low Risk',
+                risk: 'green',
+                summary: 'Claude Haiku scored well on both sycophancy and child safety. It resists agreeing just to please, and our tests found low risk of encouraging emotional dependency in children.',
+                tips: [
+                    'One of the few models with a child safety (PAI) score available, and it scored well.',
+                    'Even at low risk, set time limits on AI conversations to build healthy habits.',
+                    'Use this as a conversation starter: ask your child why the AI disagreed with something they said.'
+                ]
+            },
+            'gemini-pro': {
+                name: 'Google Gemini (2.5 Pro)',
+                syco: 84.7, sycoLabel: 'Good',
+                pai: null, paiLabel: null,
+                risk: 'green',
+                summary: 'Google Gemini 2.5 Pro scored well in our sycophancy tests. It typically offers balanced, honest responses rather than simply validating everything a user says.',
+                tips: [
+                    'A reasonable choice for supervised use by older children and teens.',
+                    'Google accounts may share data across services; review your child\'s privacy settings.',
+                    'Remind your child that even well-scoring chatbots can occasionally make mistakes.'
+                ]
+            },
+            'gemini-flash': {
+                name: 'Google Gemini (2.5 Flash)',
+                syco: 45.0, sycoLabel: 'Poor',
+                pai: 1.82, paiLabel: 'Medium Risk',
+                risk: 'red',
+                summary: 'Google Gemini Flash showed significant sycophantic behavior and medium risk for encouraging emotional attachment. It often agrees with users rather than providing honest feedback, and may blur boundaries between tool and companion.',
+                tips: [
+                    'We recommend against unsupervised use by children. Consider switching to Gemini 2.5 Pro.',
+                    'If your child already uses this, have a conversation about how AI can be wrong even when it seems supportive.',
+                    'Monitor conversations closely and set strict time limits until scores improve.'
+                ]
+            },
+            'mistral': {
+                name: 'Mistral Le Chat (Large 3)',
+                syco: 28.2, sycoLabel: 'Poor',
+                pai: null, paiLabel: null,
+                risk: 'red',
+                summary: 'Mistral Le Chat scored very low on sycophancy resistance. It frequently agrees with users regardless of accuracy, which could reinforce harmful beliefs or poor decisions in young users.',
+                tips: [
+                    'We recommend against use by children until sycophancy scores improve.',
+                    'If your child encounters this through a third-party app, help them understand why agreeable does not mean accurate.',
+                    'Consider switching to a model with better safety scores for any child-facing use.'
+                ]
+            },
+            'deepseek': {
+                name: 'DeepSeek Chat (V3.2)',
+                syco: 60.0, sycoLabel: 'Fair',
+                pai: null, paiLabel: null,
+                risk: 'yellow',
+                summary: 'DeepSeek Chat shows moderate sycophantic tendencies. It sometimes prioritizes agreeableness over accuracy, which means children may not always get honest feedback.',
+                tips: [
+                    'Use with supervision and be aware that the AI may validate incorrect statements.',
+                    'Help your child build a habit of double-checking AI answers with trusted sources.',
+                    'Watch for patterns where the AI agrees too readily with your child\'s opinions.'
+                ]
+            },
+            'meta': {
+                name: 'Meta AI (Llama 4 Maverick)',
+                syco: 24.4, sycoLabel: 'Poor',
+                pai: null, paiLabel: null,
+                risk: 'red',
+                summary: 'Meta AI scored among the lowest in our sycophancy tests. It very frequently tells users what they want to hear instead of providing truthful, constructive responses.',
+                tips: [
+                    'We recommend against use by children until scores improve significantly.',
+                    'Meta AI is built into Instagram and WhatsApp, so check if your child is interacting with it there.',
+                    'Talk with your child about recognizing when an AI is just agreeing versus actually being helpful.'
+                ]
+            },
+            'character': {
+                name: 'Character.AI',
+                syco: null, sycoLabel: null,
+                pai: null, paiLabel: null,
+                risk: 'gray',
+                summary: 'Character.AI has not yet been scored by our evaluation system. This platform is currently under review, and multiple lawsuits have been filed regarding child safety concerns.',
+                tips: [
+                    'Exercise extra caution. Multiple lawsuits allege this platform caused harm to minors.',
+                    'Character.AI is a roleplay platform where users create fictional personas, which can blur reality for younger users.',
+                    'We strongly recommend parental supervision until independent safety scores are available.'
+                ]
+            }
+        };
+
+        function selectModel(card) {
+            // Update selection state
+            document.querySelectorAll('.chatbot-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+
+            const modelId = card.getAttribute('data-model');
+            const model = models[modelId];
+            if (!model) return;
+
+            const resultCard = document.getElementById('resultCard');
+            const signal = document.getElementById('resultSignal');
+            const verdict = document.getElementById('resultVerdict');
+            const summary = document.getElementById('resultSummary');
+            const tips = document.getElementById('resultTips');
+            const scores = document.getElementById('resultScores');
+
+            // Remove old color classes
+            resultCard.className = 'result-card visible ' + model.risk;
+            verdict.className = 'result-verdict ' + model.risk;
+
+            // Set signal and verdict
+            if (model.risk === 'green') {
+                signal.innerHTML = '&#10003;';
+                signal.style.color = 'var(--risk-green)';
+                verdict.textContent = 'Lower Risk';
+            } else if (model.risk === 'yellow') {
+                signal.innerHTML = '&#9888;';
+                signal.style.color = 'var(--risk-yellow)';
+                verdict.textContent = 'Some Concerns';
+            } else if (model.risk === 'red') {
+                signal.innerHTML = '&#10007;';
+                signal.style.color = 'var(--risk-red)';
+                verdict.textContent = 'Higher Risk';
+            } else {
+                signal.innerHTML = '&#9679;';
+                signal.style.color = 'var(--risk-gray)';
+                verdict.textContent = 'Under Review \u2014 Not Yet Scored';
+            }
+
+            // Set summary
+            summary.textContent = model.summary;
+
+            // Set tips
+            tips.innerHTML = '';
+            model.tips.forEach(function(tip, i) {
+                var li = document.createElement('li');
+                li.innerHTML = '<span class="tip-num">' + (i + 1) + '</span><span>' + tip + '</span>';
+                tips.appendChild(li);
+            });
+
+            // Set scores
+            var scoresHTML = '<div class="score-pill"><span class="score-label">Model: </span><span class="score-val">' + model.name + '</span></div>';
+            if (model.syco !== null) {
+                scoresHTML += '<div class="score-pill"><span class="score-label">Sycophancy: </span><span class="score-val">' + model.syco + ' (' + model.sycoLabel + ')</span></div>';
+            }
+            if (model.pai !== null) {
+                scoresHTML += '<div class="score-pill"><span class="score-label">Child Safety (PAI): </span><span class="score-val">' + model.pai + ' (' + model.paiLabel + ')</span></div>';
+            } else if (model.risk !== 'gray') {
+                scoresHTML += '<div class="score-pill"><span class="score-label">Child Safety (PAI): </span><span class="score-val" style="color:var(--text-dim)">Coming soon</span></div>';
+            }
+            if (model.risk === 'gray') {
+                scoresHTML += '<div class="score-pill"><span class="score-label">Status: </span><span class="score-val" style="color:var(--risk-red)">Under Review &mdash; multiple lawsuits pending</span></div>';
+            }
+            scores.innerHTML = scoresHTML;
+
+            // Scroll to result on mobile
+            if (window.innerWidth < 768) {
+                setTimeout(function() {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+    </script>
+
+</body>
+</html>

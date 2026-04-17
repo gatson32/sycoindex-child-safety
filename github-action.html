@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Action — Sycoindex Safety CI/CD</title>
+    <meta name="description" content="Block deploys that regress on child safety. Sycoindex GitHub Action runs 50 safety scenarios on every PR — one YAML file, zero configuration.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230055FF'/><text x='50' y='68' font-family='Helvetica' font-size='52' font-weight='bold' fill='white' text-anchor='middle'>S</text></svg>">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --code-bg: #1a1a2e;
+            --code-text: #e2e8f0;
+            --code-comment: #64748b;
+            --code-string: #86efac;
+            --code-key: #93c5fd;
+            --code-number: #fbbf24;
+            --code-method: #c084fc;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text);
+        }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); background: var(--accent-dim); }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+
+        /* ── SECTIONS ── */
+        .section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+            padding-top: 2rem; border-top: 1px solid var(--border-subtle);
+        }
+        .section-title {
+            font-family: var(--mono); font-size: 22px; font-weight: 700;
+            letter-spacing: -0.01em; margin-bottom: 0.75rem;
+        }
+        .section-desc {
+            font-size: 15px; color: var(--text-secondary); line-height: 1.7;
+            max-width: 640px; margin-bottom: 2rem;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            border-radius: 6px; padding: 1.5rem 1.75rem; overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px; line-height: 1.7; margin-bottom: 1.5rem;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .code-block .label {
+            position: absolute; top: 0.75rem; right: 1rem;
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--code-comment);
+        }
+        .code-block .comment { color: var(--code-comment); }
+        .code-block .string { color: var(--code-string); }
+        .code-block .key { color: var(--code-key); }
+        .code-block .number { color: var(--code-number); }
+        .code-block .method { color: var(--code-method); }
+
+        /* ── INLINE CODE ── */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px; background: var(--bg-elevated); padding: 0.15rem 0.45rem;
+            border-radius: 3px; border: 1px solid var(--border-subtle);
+        }
+
+        /* ── FLOW STEPS ── */
+        .flow-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 0; margin-bottom: 2rem;
+            border: 1px solid var(--border); background: var(--border);
+        }
+        .flow-step {
+            background: var(--bg); padding: 2rem 1.5rem;
+            position: relative;
+        }
+        .flow-step + .flow-step { border-left: 1px solid var(--border); }
+        .flow-number {
+            font-family: var(--mono); font-size: 28px; font-weight: 700;
+            color: var(--accent); margin-bottom: 0.75rem; line-height: 1;
+        }
+        .flow-title {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            margin-bottom: 0.5rem; line-height: 1.3;
+        }
+        .flow-desc {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .flow-arrow {
+            position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+            z-index: 2; width: 18px; height: 18px; background: var(--bg);
+            border: 1px solid var(--border); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: var(--accent);
+        }
+
+        /* ── CONFIG TABLE ── */
+        .config-table {
+            width: 100%; border-collapse: collapse;
+            border: 1px solid var(--border); margin-bottom: 2rem;
+        }
+        .config-table th {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            text-align: left; padding: 0.75rem 1.25rem;
+            background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+        }
+        .config-table td {
+            padding: 0.85rem 1.25rem; font-size: 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary); vertical-align: top;
+        }
+        .config-table tr:last-child td { border-bottom: none; }
+        .config-table td:first-child {
+            font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px;
+            color: var(--text); white-space: nowrap;
+        }
+        .config-badge {
+            display: inline-block; font-family: var(--mono); font-size: 9px;
+            font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 2px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            vertical-align: middle; margin-left: 0.5rem;
+        }
+        .badge-required { color: var(--red); border: 1px solid var(--red); }
+        .badge-optional { color: var(--text-dim); border: 1px solid var(--border); }
+
+        /* ── PR MOCK ── */
+        .pr-mock {
+            border: 1px solid var(--border); border-radius: 6px;
+            margin-bottom: 1.5rem; overflow: hidden;
+        }
+        .pr-mock-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.85rem 1.25rem; background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+        }
+        .pr-mock-header .status-icon {
+            width: 20px; height: 20px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+        .status-pass { background: var(--green); }
+        .status-fail { background: var(--red); }
+        .pr-mock-body {
+            padding: 1.25rem 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 13px; line-height: 1.8;
+        }
+        .pr-mock-body .check-pass { color: var(--green); }
+        .pr-mock-body .check-fail { color: var(--red); }
+        .pr-mock-body .dim-detail {
+            color: var(--text-secondary); padding-left: 1.5rem;
+        }
+        .pr-mock-body .report-link {
+            display: inline-block; margin-top: 0.75rem;
+            font-family: var(--mono); font-size: 13px; color: var(--accent);
+        }
+        .pr-mock-body .report-link:hover { text-decoration: underline; }
+
+        /* ── PRICING STRIP ── */
+        .pricing-strip {
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            padding: 2rem 2.5rem; margin-bottom: 2rem;
+        }
+        .pricing-strip h3 {
+            font-family: var(--mono); font-size: 16px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-strip p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+        }
+
+        /* ── CTA ── */
+        .cta-strip {
+            border-top: 1px solid var(--border); text-align: center;
+            padding: 4rem 2rem;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 20px; font-weight: 700;
+            margin-bottom: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        .cta-strip p {
+            font-size: 14px; color: var(--text-secondary); margin-bottom: 2rem;
+            max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.7;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700;
+            padding: 0.75rem 2.5rem; background: var(--accent); color: #fff;
+            border-radius: 2px; transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* ── FOOTER ── */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .flow-grid { grid-template-columns: 1fr; }
+            .flow-step + .flow-step { border-left: none; border-top: 1px solid var(--border); }
+            .flow-arrow { display: none; }
+            .nav-links { gap: 0; }
+            .nav-links a { padding: 0.4rem 0.5rem; font-size: 10px; }
+            .config-table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark">SYCO<span>INDEX</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-label">CI/CD Integration</div>
+    <h1>Safety Checks in Your CI Pipeline</h1>
+    <p>Block deploys that regress on child safety. One YAML file, zero configuration.</p>
+</section>
+
+<!-- ── QUICK START ── -->
+<section class="section" id="quickstart">
+    <div class="section-label">Quick Start</div>
+    <div class="section-title">Add to your repo in 60 seconds</div>
+    <div class="section-desc">Create <code>.github/workflows/safety.yml</code> in your repository and paste the following configuration. That's it.</div>
+
+    <div class="code-block">
+        <span class="label">YAML</span>
+<span class="key">name</span>: <span class="string">Sycoindex Safety Check</span>
+<span class="key">on</span>: [<span class="string">pull_request</span>]
+
+<span class="key">jobs</span>:
+  <span class="key">safety-check</span>:
+    <span class="key">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="key">steps</span>:
+      - <span class="key">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="key">uses</span>: <span class="string">sycoindex/safety-check@v1</span>
+        <span class="key">with</span>:
+          <span class="key">api-key</span>: <span class="method">${{ secrets.SYCOINDEX_API_KEY }}</span>
+          <span class="key">model-endpoint</span>: <span class="method">${{ secrets.MODEL_ENDPOINT }}</span>
+          <span class="key">threshold-pai</span>: <span class="number">2.0</span>
+          <span class="key">threshold-sycophancy</span>: <span class="number">60</span>
+          <span class="key">fail-on-regression</span>: <span class="number">true</span>
+    </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section" id="how-it-works">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">From PR to safety score in minutes</div>
+    <div class="section-desc">The action integrates directly with GitHub's check system. Results appear inline on your pull request, blocking merges when safety thresholds are violated.</div>
+
+    <div class="flow-grid">
+        <div class="flow-step">
+            <div class="flow-number">1</div>
+            <div class="flow-title">PR Opened</div>
+            <div class="flow-desc">A pull request is opened or updated on your repository. The GitHub Action triggers automatically.</div>
+            <div class="flow-arrow">&#8250;</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-number">2</div>
+            <div class="flow-title">Scenarios Executed</div>
+            <div class="flow-desc">Sycoindex runs 50 child-safety and sycophancy scenarios against your model endpoint via the API.</div>
+            <div class="flow-arrow">&#8250;</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-number">3</div>
+            <div class="flow-title">Scores Compared</div>
+            <div class="flow-desc">Results are compared against your configured thresholds and the previous baseline from the main branch.</div>
+            <div class="flow-arrow">&#8250;</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-number">4</div>
+            <div class="flow-title">PR Annotated</div>
+            <div class="flow-desc">The PR is annotated with detailed results. If a regression is detected, the check fails and the merge is blocked.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CONFIGURATION REFERENCE ── -->
+<section class="section" id="configuration">
+    <div class="section-label">Configuration Reference</div>
+    <div class="section-title">Action inputs</div>
+    <div class="section-desc">All inputs are passed via the <code>with:</code> block in your workflow YAML. Required inputs must be set for the action to run.</div>
+
+    <table class="config-table">
+        <thead>
+            <tr>
+                <th>Input</th>
+                <th>Description</th>
+                <th>Default</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>api-key <span class="config-badge badge-required">Required</span></td>
+                <td>Your Sycoindex API key. Store as a repository secret.</td>
+                <td>&mdash;</td>
+            </tr>
+            <tr>
+                <td>model-endpoint <span class="config-badge badge-required">Required</span></td>
+                <td>URL of your model's API endpoint. The action sends evaluation prompts here and scores the responses.</td>
+                <td>&mdash;</td>
+            </tr>
+            <tr>
+                <td>threshold-pai <span class="config-badge badge-optional">Optional</span></td>
+                <td>Maximum allowed PAI composite score. The check fails if the model scores above this value.</td>
+                <td><code>2.0</code></td>
+            </tr>
+            <tr>
+                <td>threshold-sycophancy <span class="config-badge badge-optional">Optional</span></td>
+                <td>Minimum sycophancy honesty score. The check fails if the model scores below this value.</td>
+                <td><code>60</code></td>
+            </tr>
+            <tr>
+                <td>fail-on-regression <span class="config-badge badge-optional">Optional</span></td>
+                <td>Block the PR if the safety score worsens compared to the baseline branch, even if absolute thresholds pass.</td>
+                <td><code>true</code></td>
+            </tr>
+            <tr>
+                <td>scenarios <span class="config-badge badge-optional">Optional</span></td>
+                <td>Which scenario set to run. Options: <code>all</code>, <code>pai-only</code>, <code>syco-only</code>.</td>
+                <td><code>all</code></td>
+            </tr>
+            <tr>
+                <td>baseline-branch <span class="config-badge badge-optional">Optional</span></td>
+                <td>Branch to compare against for regression detection. Typically your main or production branch.</td>
+                <td><code>main</code></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── OUTPUT EXAMPLES ── -->
+<section class="section" id="output-examples">
+    <div class="section-label">Output Examples</div>
+    <div class="section-title">What your team sees on every PR</div>
+    <div class="section-desc">The action posts a detailed comment on the pull request with scoring results. Here's what a passing and a failing check look like.</div>
+
+    <!-- Passing example -->
+    <div class="pr-mock">
+        <div class="pr-mock-header">
+            <div class="status-icon status-pass">&#10003;</div>
+            Sycoindex Safety Check &mdash; Passed
+        </div>
+        <div class="pr-mock-body">
+            <div><span class="check-pass">Sycophancy Honesty: 86.4</span> (threshold: 60) <span class="check-pass">&#10003;</span></div>
+            <div><span class="check-pass">PAI Composite: 1.15</span> (threshold: 2.0) <span class="check-pass">&#10003;</span></div>
+            <div><span class="check-pass">Regression Check: +0.3 improvement</span> <span class="check-pass">&#10003;</span></div>
+            <a class="report-link" href="#">View full report &#8594; sycoindex.ai/report/abc123</a>
+        </div>
+    </div>
+
+    <!-- Failing example -->
+    <div class="pr-mock">
+        <div class="pr-mock-header">
+            <div class="status-icon status-fail">&#10007;</div>
+            Sycoindex Safety Check &mdash; Failed
+        </div>
+        <div class="pr-mock-body">
+            <div><span class="check-fail">PAI Composite: 2.31</span> (threshold: 2.0) <span class="check-fail">&#10007;</span></div>
+            <div><span class="check-fail">Regression: +0.45 worse than baseline</span> <span class="check-fail">&#10007;</span></div>
+            <br>
+            <div style="color: var(--text-dim); margin-bottom: 0.25rem;">2 dimensions regressed:</div>
+            <div class="dim-detail">EXL: 2.84 &#8594; 3.21 (+0.37)</div>
+            <div class="dim-detail">DEP: 2.51 &#8594; 2.89 (+0.38)</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="section" id="pricing">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">Included in all paid plans</div>
+
+    <div class="pricing-strip">
+        <h3>GitHub Action Usage</h3>
+        <p>GitHub Action usage is included in all paid plans. Free tier: 5 checks/month. No additional per-run fees. Upgrade anytime from the <a href="pricing.html" style="color: var(--accent); font-weight: 600;">pricing page</a>.</p>
+    </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-strip">
+    <h3>Start blocking unsafe deploys today</h3>
+    <p>Get your API key and add the Sycoindex Safety Check to your CI pipeline in under a minute.</p>
+    <a href="pricing.html">Get your API key &#8594;</a>
+</section>
+
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+</body>
+</html>

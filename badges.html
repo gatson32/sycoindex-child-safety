@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badges — Sycoindex</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text);
+        }
+        .wordmark span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--serif); font-size: 2.8rem; font-weight: 700;
+            letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem;
+            max-width: 700px;
+        }
+        .hero p {
+            font-size: 1.05rem; color: var(--text-secondary); max-width: 600px;
+            line-height: 1.7;
+        }
+        .hero-badges {
+            display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .content {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 5rem;
+        }
+
+        /* ── GENERATOR ── */
+        .generator {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .generator h2 {
+            font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
+        .gen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 768px) {
+            .gen-grid { grid-template-columns: 1fr; }
+        }
+        .gen-group label {
+            display: block;
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .gen-group select {
+            width: 100%; padding: 0.6rem 0.75rem;
+            font-family: var(--sans); font-size: 14px;
+            border: 1px solid var(--border); border-radius: 4px;
+            background: var(--bg); color: var(--text);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%23555' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            cursor: pointer;
+        }
+        .gen-group select:focus {
+            outline: none; border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+        .radio-group {
+            display: flex; gap: 0.75rem; flex-wrap: wrap;
+        }
+        .radio-group label {
+            display: flex; align-items: center; gap: 0.35rem;
+            font-size: 13px; text-transform: none; letter-spacing: 0;
+            color: var(--text); cursor: pointer; font-family: var(--sans);
+        }
+        .radio-group input[type="radio"] {
+            accent-color: var(--accent); cursor: pointer;
+        }
+
+        /* ── PREVIEW ── */
+        .preview-section {
+            margin-bottom: 2rem;
+        }
+        .preview-section h3 {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .preview-box {
+            background: var(--bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ── COPY SECTION ── */
+        .copy-section {
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .copy-row {
+            display: flex; align-items: stretch; gap: 0;
+        }
+        .copy-label {
+            display: flex; align-items: center;
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            padding: 0 0.75rem;
+            white-space: nowrap;
+            min-width: 90px;
+            justify-content: center;
+        }
+        .copy-input {
+            flex: 1;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 12px;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-subtle);
+            border-right: none;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .copy-input:focus { outline: none; }
+        .copy-btn {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0 1rem;
+            background: var(--text);
+            color: var(--bg);
+            border: 1px solid var(--text);
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { background: #333; border-color: #333; }
+        .copy-btn.copied { background: var(--green); border-color: var(--green); }
+
+        /* ── GALLERY ── */
+        .gallery {
+            margin-top: 4rem;
+        }
+        .gallery h2 {
+            font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .gallery > p {
+            color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+        .gallery-card h4 {
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .gallery-card .badge-row {
+            display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 2.5rem 2rem;
+            margin-top: 3rem;
+        }
+        .footer-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: start;
+            flex-wrap: wrap; gap: 1rem;
+        }
+        .footer-left p {
+            font-size: 12px; color: var(--text-dim); line-height: 1.6;
+            max-width: 500px;
+        }
+        .footer-right {
+            display: flex; gap: 1.5rem; align-items: center;
+        }
+        .footer-right a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            transition: color 0.15s;
+        }
+        .footer-right a:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark">SYCO<span>INDEX</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-label">Badges</div>
+    <h1>Safety scores you can embed anywhere</h1>
+    <p>Embed live safety scores in your README, docs, or marketing materials. Generate shields.io-style SVG badges for any model on the Sycoindex leaderboard -- sycophancy resistance, PAI compliance, or both.</p>
+    <div class="hero-badges" id="heroBadges"></div>
+</section>
+
+<!-- ── GENERATOR ── -->
+<section class="content">
+    <div class="generator">
+        <h2>Badge Generator</h2>
+        <div class="gen-grid">
+            <div class="gen-group">
+                <label for="modelSelect">Model</label>
+                <select id="modelSelect"></select>
+            </div>
+            <div class="gen-group">
+                <label>Score Type</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="scoreType" value="sycophancy" checked> Sycophancy</label>
+                    <label><input type="radio" name="scoreType" value="pai"> PAI</label>
+                    <label><input type="radio" name="scoreType" value="both"> Both</label>
+                </div>
+            </div>
+            <div class="gen-group">
+                <label>Style</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="badgeStyle" value="flat" checked> Flat</label>
+                    <label><input type="radio" name="badgeStyle" value="flat-square"> Flat-square</label>
+                    <label><input type="radio" name="badgeStyle" value="for-the-badge"> For-the-badge</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="preview-section">
+            <h3>Live Preview</h3>
+            <div class="preview-box" id="previewBox"></div>
+        </div>
+
+        <!-- COPY -->
+        <div class="copy-section">
+            <div class="copy-row">
+                <div class="copy-label">Markdown</div>
+                <input type="text" class="copy-input" id="copyMarkdown" readonly>
+                <button class="copy-btn" onclick="copyText('copyMarkdown', this)">Copy</button>
+            </div>
+            <div class="copy-row">
+                <div class="copy-label">HTML</div>
+                <input type="text" class="copy-input" id="copyHTML" readonly>
+                <button class="copy-btn" onclick="copyText('copyHTML', this)">Copy</button>
+            </div>
+            <div class="copy-row">
+                <div class="copy-label">URL</div>
+                <input type="text" class="copy-input" id="copyURL" readonly>
+                <button class="copy-btn" onclick="copyText('copyURL', this)">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── GALLERY ── -->
+    <div class="gallery">
+        <h2>Badge Gallery</h2>
+        <p>Example badges for top-ranked models across all three styles.</p>
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-left">
+            <p>Sycoindex evaluation methodology, scoring rubrics, prompt sets, and associated tooling constitute proprietary trade secrets. Unauthorized reproduction, reverse-engineering, or commercial use is prohibited.</p>
+        </div>
+        <div class="footer-right">
+            <a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+(function () {
+    /* ── DATA (loaded dynamically) ── */
+    let models = [];
+    let galleryModels = [];
+
+    function buildModelsFromData(data) {
+        const sycoMap = {};
+        const paiMap = {};
+        const slugOrder = [];
+
+        (data.sycophancy || []).forEach(function (m) {
+            sycoMap[m.slug] = m;
+            if (slugOrder.indexOf(m.slug) === -1) slugOrder.push(m.slug);
+        });
+        (data.pai || []).forEach(function (m) {
+            paiMap[m.slug] = m;
+            if (slugOrder.indexOf(m.slug) === -1) slugOrder.push(m.slug);
+        });
+
+        return slugOrder.map(function (slug) {
+            var s = sycoMap[slug];
+            var p = paiMap[slug];
+            return {
+                name: (s && s.name) || (p && p.name) || slug,
+                slug: slug,
+                syco: s ? s.honesty : null,
+                pai: p ? p.composite : null
+            };
+        });
+    }
+
+    /* ── COLOR HELPERS ── */
+    function sycoColor(v) {
+        if (v >= 80) return '#4c1';
+        if (v >= 60) return '#dfb317';
+        if (v >= 40) return '#fe7d37';
+        return '#e05d44';
+    }
+    function paiColor(v) {
+        if (v <= 1.0) return '#4c1';
+        if (v <= 1.5) return '#dfb317';
+        if (v <= 2.0) return '#fe7d37';
+        return '#e05d44';
+    }
+
+    /* ── SVG BADGE GENERATOR ── */
+    function measureText(text, fontSize) {
+        // approximate character width
+        return text.length * fontSize * 0.62 + 10;
+    }
+
+    function makeBadge(labelText, valueText, color, style) {
+        const fontSize = style === 'for-the-badge' ? 11 : 11;
+        const height = style === 'for-the-badge' ? 28 : 20;
+        const labelWidth = measureText(labelText, fontSize);
+        const valueWidth = measureText(valueText, fontSize);
+        const totalWidth = labelWidth + valueWidth;
+        const r = style === 'flat-square' || style === 'for-the-badge' ? 0 : 3;
+        const textY = style === 'for-the-badge' ? 18 : 14;
+        const upperLabel = style === 'for-the-badge' ? labelText.toUpperCase() : labelText;
+        const upperValue = style === 'for-the-badge' ? valueText.toUpperCase() : valueText;
+        const textSize = style === 'for-the-badge' ? 10 : 11;
+        const shadowY = textY - 1;
+
+        let gradient = '';
+        if (style === 'flat') {
+            gradient = `<linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>`;
+        }
+
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${height}">
+  ${gradient ? `<defs>${gradient}</defs>` : ''}
+  <clipPath id="c"><rect width="${totalWidth}" height="${height}" rx="${r}" fill="#fff"/></clipPath>
+  <g clip-path="url(#c)">
+    <rect width="${labelWidth}" height="${height}" fill="#555"/>
+    <rect x="${labelWidth}" width="${valueWidth}" height="${height}" fill="${color}"/>
+    ${style === 'flat' ? `<rect width="${totalWidth}" height="${height}" fill="url(#s)"/>` : ''}
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="${textSize}" font-weight="${style === 'for-the-badge' ? 'bold' : 'normal'}" letter-spacing="${style === 'for-the-badge' ? '0.5' : '0'}">
+    <text x="${labelWidth / 2}" y="${shadowY}" fill="#010101" fill-opacity=".3">${upperLabel}</text>
+    <text x="${labelWidth / 2}" y="${textY}">${upperLabel}</text>
+    <text x="${labelWidth + valueWidth / 2}" y="${shadowY}" fill="#010101" fill-opacity=".3">${upperValue}</text>
+    <text x="${labelWidth + valueWidth / 2}" y="${textY}">${upperValue}</text>
+  </g>
+</svg>`;
+    }
+
+    function generateBadges(model, scoreType, style) {
+        const badges = [];
+        if ((scoreType === 'sycophancy' || scoreType === 'both') && model.syco !== null) {
+            badges.push({
+                svg: makeBadge('sycoindex', model.syco.toFixed(1), sycoColor(model.syco), style),
+                type: 'sycophancy',
+                slug: model.slug + '/sycophancy'
+            });
+        }
+        if ((scoreType === 'pai' || scoreType === 'both') && model.pai !== null) {
+            badges.push({
+                svg: makeBadge('PAI', model.pai.toFixed(2), paiColor(model.pai), style),
+                type: 'pai',
+                slug: model.slug + '/pai'
+            });
+        }
+        return badges;
+    }
+
+    function badgeUrl(slug, style) {
+        return `https://sycoindex.ai/badge/${slug}?style=${style}`;
+    }
+
+    /* ── FETCH DATA & INITIALIZE ── */
+    fetch('data/leaderboard.json')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            models = buildModelsFromData(data);
+            galleryModels = models.slice(0, 5);
+            initUI();
+        })
+        .catch(function (err) {
+            console.error('Failed to load leaderboard data:', err);
+        });
+
+    function initUI() {
+        /* ── POPULATE SELECT ── */
+        const select = document.getElementById('modelSelect');
+        models.forEach(function (m, i) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            let info = [];
+            if (m.syco !== null) info.push('Syco: ' + m.syco);
+            if (m.pai !== null) info.push('PAI: ' + m.pai);
+            opt.textContent = m.name + '  (' + info.join(', ') + ')';
+            select.appendChild(opt);
+        });
+
+        /* ── UPDATE LOGIC ── */
+        function getSelected() {
+            const modelIdx = parseInt(select.value);
+            const scoreType = document.querySelector('input[name="scoreType"]:checked').value;
+            const style = document.querySelector('input[name="badgeStyle"]:checked').value;
+            return { model: models[modelIdx], scoreType: scoreType, style: style };
+        }
+
+        function update() {
+            const { model, scoreType, style } = getSelected();
+            const badges = generateBadges(model, scoreType, style);
+            const previewBox = document.getElementById('previewBox');
+
+            if (badges.length === 0) {
+                previewBox.innerHTML = '<span style="color:var(--text-dim);font-size:13px;">No data available for this model and score type combination.</span>';
+                document.getElementById('copyMarkdown').value = '';
+                document.getElementById('copyHTML').value = '';
+                document.getElementById('copyURL').value = '';
+                return;
+            }
+
+            previewBox.innerHTML = badges.map(function (b) { return b.svg; }).join('');
+
+            // Build URLs
+            const urls = badges.map(function (b) { return badgeUrl(b.slug, style); });
+            const mdParts = urls.map(function (u) {
+                return '[![Sycoindex](' + u + ')](https://sycoindex.ai)';
+            });
+            const htmlParts = urls.map(function (u) {
+                return '<img src="' + u + '" alt="Sycoindex Score">';
+            });
+
+            document.getElementById('copyMarkdown').value = mdParts.join(' ');
+            document.getElementById('copyHTML').value = htmlParts.join(' ');
+            document.getElementById('copyURL').value = urls.join(' ');
+        }
+
+        select.addEventListener('change', update);
+        document.querySelectorAll('input[name="scoreType"]').forEach(function (r) {
+            r.addEventListener('change', update);
+        });
+        document.querySelectorAll('input[name="badgeStyle"]').forEach(function (r) {
+            r.addEventListener('change', update);
+        });
+
+        // Initial render
+        update();
+
+        /* ── HERO BADGES ── */
+        (function () {
+            const container = document.getElementById('heroBadges');
+            // Find models for hero samples by slug, with fallbacks
+            var heroSyco1 = models.find(function(m) { return m.slug === 'claude-opus-4.6'; }) || models[0];
+            var heroPai1 = models.find(function(m) { return m.slug === 'claude-haiku-4.5'; }) || models[0];
+            var heroSyco2 = models.find(function(m) { return m.slug === 'gpt-5'; }) || models[1] || models[0];
+            const samples = [
+                { model: heroSyco1, type: 'sycophancy', style: 'flat' },
+                { model: heroPai1, type: 'pai', style: 'flat' },
+                { model: heroSyco2, type: 'sycophancy', style: 'for-the-badge' },
+            ];
+            samples.forEach(function (s) {
+                const badges = generateBadges(s.model, s.type, s.style);
+                badges.forEach(function (b) {
+                    var d = document.createElement('span');
+                    d.innerHTML = b.svg;
+                    container.appendChild(d);
+                });
+            });
+        })();
+
+        /* ── GALLERY ── */
+        (function () {
+            const grid = document.getElementById('galleryGrid');
+            const styles = ['flat', 'flat-square', 'for-the-badge'];
+            galleryModels.forEach(function (model) {
+                const card = document.createElement('div');
+                card.className = 'gallery-card';
+                card.innerHTML = '<h4>' + model.name + '</h4>';
+                styles.forEach(function (style) {
+                    const row = document.createElement('div');
+                    row.className = 'badge-row';
+                    row.style.marginBottom = '0.5rem';
+                    const allBadges = generateBadges(model, 'both', style);
+                    if (allBadges.length === 0) {
+                        const syco = generateBadges(model, 'sycophancy', style);
+                        const pai = generateBadges(model, 'pai', style);
+                        syco.concat(pai).forEach(function (b) { row.innerHTML += b.svg; });
+                    } else {
+                        allBadges.forEach(function (b) { row.innerHTML += b.svg; });
+                    }
+                    if (row.innerHTML === '') {
+                        const fb = generateBadges(model, 'sycophancy', style);
+                        fb.forEach(function (b) { row.innerHTML += b.svg; });
+                    }
+                    var styleLabel = document.createElement('span');
+                    styleLabel.style.cssText = 'font-size:10px;color:var(--text-dim);font-family:var(--mono);margin-left:0.5rem;';
+                    styleLabel.textContent = style;
+                    row.appendChild(styleLabel);
+                    card.appendChild(row);
+                });
+                grid.appendChild(card);
+            });
+        })();
+    } // end initUI
+
+    /* ── COPY ── */
+    window.copyText = function (inputId, btn) {
+        var input = document.getElementById(inputId);
+        if (!input.value) return;
+        navigator.clipboard.writeText(input.value).then(function () {
+            btn.textContent = 'Copied';
+            btn.classList.add('copied');
+            setTimeout(function () {
+                btn.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 1500);
+        });
+    };
+})();
+</script>
+
+</body>
+</html>

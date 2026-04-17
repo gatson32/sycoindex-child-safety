@@ -4,35 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sycoindex PAI Explorer — See How Models Respond to Children</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
         :root {
-            --bg: #0c0c0c; --bg-el: #141414; --bg-sf: #1a1a1a;
-            --border: #262626; --border-s: #1e1e1e;
-            --text: #e8e8e8; --text-2: #888; --text-d: #555;
-            --accent: #c8ff00; --accent-dim: rgba(200,255,0,0.08);
-            --red: #ff3b30; --orange: #ff9500; --green: #32d74b;
-            --mono: 'Space Mono','SF Mono',monospace;
-            --serif: 'Newsreader','Georgia',serif;
-            --sans: 'Inter',-apple-system,sans-serif;
+            --bg: #ffffff; --bg-el: #f5f5f5; --bg-sf: #ebebeb;
+            --border: #d4d4d4; --border-s: #e5e5e5;
+            --text: #111111; --text-2: #555555; --text-d: #999999;
+            --accent: #0055FF; --accent-dim: rgba(0,85,255,0.08);
+            --red: #dc2626; --orange: #d97706; --green: #16a34a;
+            --mono: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+            --serif: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+            --sans: 'Helvetica Neue',Helvetica,Arial,sans-serif;
         }
         html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
         body { font-family:var(--sans); background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; }
-        ::selection { background:var(--accent); color:#000; }
+        ::selection { background:var(--accent); color:#fff; }
         a { color:inherit; text-decoration:none; }
 
         /* NAV */
-        nav { position:sticky; top:0; z-index:100; background:rgba(12,12,12,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border-s); }
+        nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border-s); }
         .nav-inner { max-width:1400px; margin:0 auto; padding:0 2rem; height:52px; display:flex; align-items:center; justify-content:space-between; }
         .wordmark { font-family:var(--mono); font-size:14px; font-weight:700; }
         .wordmark span { color:var(--accent); }
         .nav-links { display:flex; gap:0.25rem; list-style:none; }
         .nav-links a { font-family:var(--mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-2); padding:0.4rem 0.75rem; border-radius:4px; transition:color 0.15s,background 0.15s; }
         .nav-links a:hover { color:var(--text); background:var(--bg-sf); }
-        .nav-tag { font-family:var(--mono); font-size:9px; font-weight:700; background:var(--accent); color:#000; padding:1px 5px; border-radius:2px; margin-left:6px; vertical-align:middle; }
+        .nav-tag { font-family:var(--mono); font-size:9px; font-weight:700; background:var(--accent); color:#fff; padding:1px 5px; border-radius:2px; margin-left:6px; vertical-align:middle; }
 
         /* HEADER */
         .header { max-width:1400px; margin:0 auto; padding:3rem 2rem 2rem; }
@@ -57,7 +54,7 @@
         .model-chips { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
         .model-chip { font-family:var(--mono); font-size:12px; padding:0.5rem 1rem; background:var(--bg-el); color:var(--text-2); border:1px solid var(--border); border-radius:4px; cursor:pointer; transition:all 0.15s; user-select:none; }
         .model-chip:hover { border-color:var(--accent); color:var(--text); }
-        .model-chip.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:500; }
+        .model-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:500; }
         .model-chip-reset { font-family:var(--mono); font-size:11px; padding:0.5rem 0.75rem; color:var(--text-d); border:none; background:none; cursor:pointer; transition:color 0.15s; margin-left:auto; }
         .model-chip-reset:hover { color:var(--accent); }
 
@@ -107,12 +104,22 @@
         .stat-val.neutral { color:var(--text); }
 
         /* FOOTER */
-        footer { border-top:1px solid var(--border); padding:2rem 0; margin-top:2rem; }
-        .foot-inner { max-width:1400px; margin:0 auto; padding:0 2rem; display:flex; justify-content:space-between; align-items:center; }
-        .foot-copy { font-family:var(--mono); font-size:11px; color:var(--text-d); }
-        .foot-links { display:flex; gap:1.5rem; list-style:none; }
-        .foot-links a { font-family:var(--mono); font-size:11px; color:var(--text-d); text-transform:uppercase; letter-spacing:0.06em; transition:color 0.15s; }
-        .foot-links a:hover { color:var(--text); }
+        footer { margin-top:2rem; }
+        .foot-directory { max-width:1400px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-2); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1400px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-d); line-height:1.6; }
+        .foot-legal { max-width:1400px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-d); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-2); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
 
         @media (max-width:768px) {
             .cards { grid-template-columns:1fr; }
@@ -124,11 +131,15 @@
 <body>
     <nav>
         <div class="nav-inner">
-            <a href="sycoindex-homepage-v3.html" class="wordmark">sycoindex<span>.</span></a>
+            <a href="index.html" class="wordmark">sycoindex<span>.</span></a>
             <ul class="nav-links">
-                <li><a href="sycoindex-homepage-v3.html">Leaderboard</a></li>
+                <li><a href="index.html">Leaderboard</a></li>
                 <li><a href="#" style="color:var(--accent)">Explorer<span class="nav-tag">Live</span></a></li>
-                <li><a href="sycoindex-homepage-v3.html#methodology">Methodology</a></li>
+                <li><a href="api-docs.html">API</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="compliance.html">Compliance</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Providers</a></li>
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
         </div>
@@ -137,7 +148,7 @@
     <div class="header">
         <div class="header-kicker">PAI Transcript Explorer</div>
         <h1>Same child. Same prompt.<br>Five <em>different answers.</em></h1>
-        <p class="header-sub">Select a scenario below. See exactly how each model responds to a child — and how our 3-judge cross-lab ensemble scores it across five dimensions of parasocial attachment risk.</p>
+        <p class="header-sub">Select a scenario below. See exactly how each model responds to a child — and how our 5-judge cross-lab ensemble scores it across five dimensions of parasocial attachment risk.</p>
     </div>
 
     <div class="controls">
@@ -200,13 +211,16 @@
     </div>
 
     <footer>
-        <div class="foot-inner">
-            <div class="foot-copy">© 2026 Sycoindex — Chris Roseli & Gregory Carney</div>
-            <ul class="foot-links">
-                <li><a href="sycoindex-homepage-v3.html">Home</a></li>
-                <li><a href="#">API</a></li>
-                <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
-            </ul>
+        <div class="foot-directory">
+            <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#insights">Insights</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+            <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">API Docs</a></li><li><a href="submit.html">Submit a Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+            <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="compliance.html">COPPA</a></li><li><a href="compliance.html">EU AI Act</a></li></ul></div>
+            <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+        </div>
+        <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+        <div class="foot-legal">
+            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+            <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
         </div>
     </footer>
 
@@ -295,6 +309,7 @@ function renderModelChips() {
             activeModels.has(modelKey) ? activeModels.delete(modelKey) : activeModels.add(modelKey);
             renderModelChips();
             if (currentScenario) renderScenario(currentScenario);
+            if (typeof writeHash === 'function') writeHash();
         });
         container.appendChild(chip);
     }
@@ -306,6 +321,7 @@ function renderModelChips() {
         activeModels = new Set(MODEL_ORDER);
         renderModelChips();
         if (currentScenario) renderScenario(currentScenario);
+        if (typeof writeHash === 'function') writeHash();
     });
     container.appendChild(resetBtn);
 }
@@ -343,21 +359,61 @@ function populateScenarios() {
     renderScenario(select.value);
 }
 
+// ── URL STATE: Deep-linkable Explorer ──
+function readHash() {
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    return {
+        scenario: params.get('s') || null,
+        sort: params.get('sort') || 'composite-asc',
+        dim: params.get('dim') || 'all',
+        models: params.get('models') ? params.get('models').split(',') : null,
+    };
+}
+
+function writeHash() {
+    const params = new URLSearchParams();
+    if (currentScenario) params.set('s', currentScenario);
+    params.set('sort', document.getElementById('sort-select').value);
+    const dim = document.getElementById('dim-filter').value;
+    if (dim !== 'all') params.set('dim', dim);
+    if (activeModels.size < MODEL_ORDER.length) params.set('models', Array.from(activeModels).join(','));
+    const hash = params.toString();
+    history.replaceState(null, '', '#' + hash);
+}
+
+function applyHash() {
+    const h = readHash();
+    if (h.sort) document.getElementById('sort-select').value = h.sort;
+    if (h.dim) document.getElementById('dim-filter').value = h.dim;
+    if (h.models) activeModels = new Set(h.models.filter(m => MODEL_ORDER.includes(m)));
+    renderModelChips();
+    populateScenarios();
+    if (h.scenario && DATA[h.scenario]) {
+        document.getElementById('scenario-select').value = h.scenario;
+        renderScenario(h.scenario);
+    }
+}
+
 // Inline data load
 fetch('data/explorer-data.json').then(r => r.json()).then(d => {
     DATA = d;
-    renderModelChips();
-    populateScenarios();
     document.getElementById('st-scenarios').textContent = Object.keys(d).length;
     document.getElementById('st-transcripts').textContent = Object.keys(d).length * 5;
+    // Apply URL hash state if present, otherwise default view
+    if (window.location.hash.length > 1) {
+        applyHash();
+    } else {
+        renderModelChips();
+        populateScenarios();
+    }
 }).catch(() => {
-    // Fallback: try relative path
     document.getElementById('prompt-text').textContent = 'Error loading data. Ensure data/explorer-data.json exists.';
 });
 
-document.getElementById('scenario-select').addEventListener('change', e => renderScenario(e.target.value));
-document.getElementById('sort-select').addEventListener('change', () => { if (currentScenario) renderScenario(currentScenario); });
-document.getElementById('dim-filter').addEventListener('change', () => populateScenarios());
+document.getElementById('scenario-select').addEventListener('change', e => { renderScenario(e.target.value); writeHash(); });
+document.getElementById('sort-select').addEventListener('change', () => { if (currentScenario) renderScenario(currentScenario); writeHash(); });
+document.getElementById('dim-filter').addEventListener('change', () => { populateScenarios(); writeHash(); });
+window.addEventListener('hashchange', () => { if (Object.keys(DATA).length) applyHash(); });
 </script>
 </body>
 </html>

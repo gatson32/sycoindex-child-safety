@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "updated": "2026-04-17T00:00:00Z",
+    "version": "1.0.0",
+    "kappa": 0.875,
+    "judges": ["Anthropic", "OpenAI", "Mistral", "Google", "Meta"],
+    "transcripts_scored": 550,
+    "models_scored": 10
+  },
+  "sycophancy": [
+    {"slug":"claude-opus-4.6","name":"Claude Opus 4.6","vendor":"Anthropic","honesty":92.8,"ev":0.4,"me":0.6,"il":1.0,"ia":0.8,"fa":0.8,"history":[89.1,91.4,92.8]},
+    {"slug":"gpt-5","name":"GPT-5","vendor":"OpenAI","honesty":86.4,"ev":1.2,"me":1.0,"il":1.6,"ia":1.4,"fa":1.6,"history":[82.0,84.8,86.4]},
+    {"slug":"claude-sonnet-4.6","name":"Claude Sonnet 4.6","vendor":"Anthropic","honesty":86.3,"ev":1.0,"me":1.2,"il":1.8,"ia":1.4,"fa":1.4,"history":[83.5,85.1,86.3]},
+    {"slug":"claude-haiku-4.5","name":"Claude Haiku 4.5","vendor":"Anthropic","honesty":86.2,"ev":1.2,"me":1.0,"il":1.6,"ia":1.6,"fa":1.4,"history":[84.0,85.5,86.2]},
+    {"slug":"gemini-2.5-pro","name":"Gemini 2.5 Pro","vendor":"Google DeepMind","honesty":84.7,"ev":1.4,"me":1.2,"il":1.8,"ia":1.6,"fa":1.6,"history":[80.2,82.9,84.7]},
+    {"slug":"deepseek-v3.2","name":"DeepSeek V3.2","vendor":"DeepSeek","honesty":60.0,"ev":3.8,"me":4.2,"il":4.0,"ia":3.6,"fa":4.4,"history":[55.3,58.1,60.0]},
+    {"slug":"gpt-5-mini","name":"GPT-5 Mini","vendor":"OpenAI","honesty":59.4,"ev":4.0,"me":3.8,"il":4.4,"ia":4.2,"fa":3.9,"history":[62.1,60.8,59.4]},
+    {"slug":"gemini-2.5-flash","name":"Gemini 2.5 Flash","vendor":"Google DeepMind","honesty":45.0,"ev":5.2,"me":5.8,"il":5.4,"ia":5.6,"fa":5.5,"history":[48.2,46.5,45.0]},
+    {"slug":"mistral-large-3","name":"Mistral Large 3","vendor":"Mistral AI","honesty":28.2,"ev":7.0,"me":7.4,"il":7.2,"ia":6.8,"fa":7.5,"history":[25.0,27.1,28.2]},
+    {"slug":"llama-4-maverick","name":"Llama 4 Maverick","vendor":"Meta","honesty":24.4,"ev":7.6,"me":7.8,"il":7.4,"ia":7.2,"fa":7.8,"history":[22.8,23.5,24.4]}
+  ],
+  "pai": [
+    {"slug":"claude-haiku-4.5","name":"Claude Haiku 4.5","vendor":"Anthropic","composite":0.42,"emi":0.28,"exl":0.52,"bnd":0.09,"dep":1.04,"aud":0.15,"risk":"low","history":[0.58,0.49,0.42]},
+    {"slug":"claude-sonnet-4","name":"Claude Sonnet 4","vendor":"Anthropic","composite":1.15,"emi":1.04,"exl":1.64,"bnd":0.86,"dep":1.82,"aud":0.41,"risk":"low","history":[1.42,1.28,1.15]},
+    {"slug":"qwen-2.5-7b","name":"Qwen 2.5 7B","vendor":"Alibaba","composite":1.20,"emi":0.64,"exl":1.84,"bnd":1.13,"dep":1.80,"aud":0.57,"risk":"low","history":[1.45,1.31,1.20]},
+    {"slug":"llama-3.3-70b","name":"Llama 3.3 70B","vendor":"Meta","composite":1.58,"emi":1.24,"exl":2.34,"bnd":1.35,"dep":2.10,"aud":0.85,"risk":"medium","history":[1.82,1.68,1.58]},
+    {"slug":"deepseek-v3","name":"DeepSeek V3","vendor":"DeepSeek","composite":1.66,"emi":1.61,"exl":2.37,"bnd":1.53,"dep":2.09,"aud":0.70,"risk":"medium","history":[1.90,1.75,1.66]},
+    {"slug":"gemini-flash-lite","name":"Gemini Flash Lite","vendor":"Google","composite":1.67,"emi":1.59,"exl":2.34,"bnd":1.46,"dep":1.98,"aud":0.97,"risk":"medium","history":[1.85,1.74,1.67]},
+    {"slug":"gemini-2.5-flash","name":"Gemini 2.5 Flash","vendor":"Google DeepMind","composite":1.82,"emi":3.12,"exl":2.31,"bnd":1.00,"dep":1.35,"aud":1.31,"risk":"medium","history":[2.10,1.95,1.82]},
+    {"slug":"mistral-medium","name":"Mistral Medium","vendor":"Mistral AI","composite":2.01,"emi":1.60,"exl":2.74,"bnd":1.96,"dep":2.70,"aud":1.06,"risk":"medium","history":[2.30,2.15,2.01]},
+    {"slug":"mistral-large","name":"Mistral Large","vendor":"Mistral AI","composite":2.07,"emi":1.77,"exl":2.84,"bnd":1.86,"dep":2.51,"aud":1.38,"risk":"medium","history":[2.35,2.20,2.07]},
+    {"slug":"mistral-small","name":"Mistral Small","vendor":"Mistral AI","composite":2.14,"emi":1.69,"exl":2.88,"bnd":2.14,"dep":2.54,"aud":1.46,"risk":"medium","history":[2.40,2.28,2.14]}
+  ]
+}

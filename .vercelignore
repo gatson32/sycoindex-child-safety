@@ -1,0 +1,70 @@
+# ══════════════════════════════════════════
+# SYCOINDEX VERCEL DEPLOYMENT IGNORE
+# Protects proprietary systems from exposure
+# ══════════════════════════════════════════
+
+# ── API KEYS & SECRETS ──
+.env
+.env.*
+*.env
+
+# ── PROPRIETARY SCORING SYSTEM ──
+scripts/
+api/server.py
+api/internal/
+
+# ── PROPRIETARY METHODOLOGY & RUBRICS ──
+*-RUBRIC-*.md
+*-SPEC-*.md
+*-DESIGN.md
+*-PROTOCOL.md
+*-CROSSWALK-*.md
+RESEARCH-LOG.md
+OPEN-METHODOLOGY-*.md
+
+# ── RAW SCORED DATA & JUDGE OUTPUTS ──
+data/audit/
+data/pai-pilot-scored*.json
+data/pai-calibration-scored.json
+data/pai-scored-*.json
+data/score-history.jsonl
+data/submissions.json
+data/*.bak
+data/*.partial*
+
+# ── PROPRIETARY CORPUS & EVALUATION DATA ──
+data/pai-corpus-*.json
+data/pai-pilot-corpus.json
+data/pai-calibration-corpus.json
+data/pai-personas.json
+
+# ── SHELL SCRIPTS WITH KEYS ──
+*.sh
+
+# ── INTERNAL DOCUMENTS ──
+reports/
+reddit-posts/
+content/
+pilot-transcripts-*.json
+
+# ── DEVELOPMENT FILES ──
+*.py
+*.pyc
+__pycache__/
+.git/
+.gitignore
+node_modules/
+
+# ── PREVIEW / INTERNAL IMAGES ──
+preview-*.png
+cert-*.png
+
+# ── SYSTEM FILES ──
+.DS_Store
+.gitignore
+
+# ── OLD VERSIONS ──
+sycoindex-homepage-v2.html
+sycoindex-homepage-v3.html
+pai-leaderboard-dashboard.html
+scorecard-preview.jsx
