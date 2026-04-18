@@ -1,0 +1,10 @@
+{
+  "env": { "node": true, "es2020": true, "browser": true },
+  "parserOptions": { "ecmaVersion": 2020 },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "semi": ["warn", "always"],
+    "no-console": "off"
+  }
+}

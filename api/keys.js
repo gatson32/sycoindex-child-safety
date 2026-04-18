@@ -3,6 +3,15 @@
 // GET /api/keys?key=sk-syco-XXXX — Check key status
 
 const crypto = require('crypto');
+const { kv } = require('@vercel/kv');
+
+// XSS sanitization
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>"'&]/g, function(c) {
+    return {'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c];
+  }).trim().slice(0, 500);
+}
 
 // Rate limiting for key creation
 const rateLimits = new Map();
@@ -21,9 +30,6 @@ function checkRateLimit(ip) {
   return true;
 }
 
-// In-memory key store — resets on cold start (fine for MVP)
-const apiKeys = new Map();
-
 // Email validation
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -34,10 +40,13 @@ function generateKey() {
   return 'sk-syco-' + crypto.randomBytes(16).toString('hex');
 }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Content-Security-Policy', "default-src 'none'");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -54,7 +63,7 @@ module.exports = (req, res) => {
       });
     }
 
-    const keyData = apiKeys.get(key);
+    const keyData = await kv.get('key:' + key);
 
     if (!keyData) {
       return res.status(200).json({
@@ -79,7 +88,9 @@ module.exports = (req, res) => {
     }
 
     try {
-      const { email, name, organization } = req.body || {};
+      const { email } = req.body || {};
+      const name = sanitize(req.body.name);
+      const org = sanitize(req.body.organization);
 
       if (!email) {
         return res.status(400).json({
@@ -96,10 +107,10 @@ module.exports = (req, res) => {
       const apiKey = generateKey();
       const now = new Date().toISOString();
 
-      apiKeys.set(apiKey, {
+      await kv.set('key:' + apiKey, {
         email,
         name: name || null,
-        organization: organization || null,
+        organization: org || null,
         created_at: now,
         rate_limit: 1000,
         calls_used: 0

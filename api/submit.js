@@ -1,6 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+// XSS sanitization
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>"'&]/g, function(c) {
+    return {'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c];
+  }).trim().slice(0, 500);
+}
+
 // Simple rate limiting using in-memory store (resets on cold start)
 const rateLimits = new Map();
 const RATE_LIMIT = 5; // submissions per hour per IP
@@ -22,6 +30,9 @@ module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Security-Policy', "default-src 'none'");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed. Use POST.' });
@@ -33,7 +44,11 @@ module.exports = (req, res) => {
   }
 
   try {
-    const { model_name, vendor, api_endpoint, contact_email, notes } = req.body || {};
+    const model_name = sanitize(req.body.model_name);
+    const vendor = sanitize(req.body.vendor);
+    const api_endpoint = sanitize(req.body.api_endpoint);
+    const contact_email = sanitize(req.body.contact_email);
+    const notes = sanitize(req.body.notes);
 
     // Validate required fields exist and are strings
     const required = { model_name, vendor, api_endpoint, contact_email };

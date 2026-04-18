@@ -1,0 +1,14 @@
+{
+  "name": "sycoindex-child-safety",
+  "version": "1.0.0",
+  "description": "SycoIndex Child Safety API — PAI and sycophancy scoring for AI models",
+  "scripts": {
+    "test": "node test/api.test.js",
+    "lint": "npx eslint api/ cli/ test/"
+  },
+  "private": true,
+  "dependencies": {
+    "@upstash/redis": "^1.37.0",
+    "@vercel/kv": "^2.0.0"
+  }
+}

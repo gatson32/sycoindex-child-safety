@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School District Partnerships — Sycoindex PAI</title>
     <meta name="description" content="Protecting students in the age of AI. Sycoindex offers school districts standardized AI safety scoring, monitoring, and FERPA-compliant reporting.">
+    <link rel="stylesheet" href="styles.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -240,6 +241,9 @@
             display: none; font-family: var(--mono); font-size: 13px;
             color: var(--green); margin-top: 0.75rem;
         }
+        .form-result { padding: 1rem; border-radius: 6px; margin-top: 1rem; font-size: 14px; display: none; }
+        .form-result.success { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .form-result.error { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
 
         /* -- COMPLIANCE LINK -- */
         .compliance-banner {
@@ -492,6 +496,7 @@
             <button type="submit" class="school-submit">Request Free Report</button>
         </form>
         <div class="form-success" id="form-success">Thank you. We'll be in touch within 2 business days.</div>
+        <div id="form-result" class="form-result"></div>
     </div>
 </section>
 
@@ -499,7 +504,7 @@
 <section class="cta-strip">
     <h3>The AI tools are in the classroom. The question is whether you know how safe they are.</h3>
     <p>Get standardized, third-party safety scores for every AI tool your students use.</p>
-    <a href="mailto:chris@sycoindex.com?subject=School%20District%20Partnership">Contact Us</a>
+    <a href="mailto:chris@sycoindex.org?subject=School%20District%20Partnership">Contact Us</a>
 </section>
 
 <!-- -- FOOTER -- -->
@@ -508,7 +513,7 @@
         <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
         <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
         <div class="foot-col"><h4>Education</h4><ul><li><a href="schools.html">School Partnerships</a></li><li><a href="compliance.html">FERPA/COPPA Compliance</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.org">Contact</a></li></ul></div>
     </div>
     <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
@@ -528,15 +533,24 @@ async function submitSchool(e) {
         size: form.querySelector('select[name="size"]').value,
         use_case: 'school'
     };
+    const resultDiv = document.getElementById('form-result');
+    resultDiv.className = 'form-result';
+    resultDiv.textContent = '';
     try {
-        await fetch('/api/waitlist', {
+        const res = await fetch('/api/waitlist', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-    } catch(err) {}
-    form.style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
+        if (!res.ok) throw new Error('Request failed');
+        form.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+        resultDiv.textContent = "Thanks! Your request has been submitted.";
+        resultDiv.className = 'form-result success';
+    } catch(err) {
+        resultDiv.textContent = 'Something went wrong. Please try again.';
+        resultDiv.className = 'form-result error';
+    }
 }
 </script>
 

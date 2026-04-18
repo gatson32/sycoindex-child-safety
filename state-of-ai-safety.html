@@ -6,6 +6,7 @@
     <title>The State of AI Safety — Q1 2026 — Sycoindex PAI</title>
     <meta name="description" content="Sycoindex's inaugural quarterly report on AI child safety. Key findings: sycophancy decreased 12%, child safety scores improved in 7/10 models, and 3 new models entered the leaderboard.">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -146,6 +147,7 @@
         }
         .chart-box {
             border: 1px solid var(--border); padding: 2rem;
+            position: relative;
         }
         .chart-box canvas {
             width: 100% !important;
@@ -228,6 +230,9 @@
             display: none; font-family: var(--mono); font-size: 13px;
             color: var(--green); margin-top: 0.75rem;
         }
+        .form-result { padding: 1rem; border-radius: 6px; margin-top: 1rem; font-size: 14px; display: none; }
+        .form-result.success { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .form-result.error { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
 
         /* -- ARCHIVE -- */
         .archive-section {
@@ -418,6 +423,7 @@
             <button type="submit" class="subscribe-btn">Subscribe</button>
         </form>
         <div class="subscribe-success" id="subscribe-success">You're subscribed. See you next quarter.</div>
+        <div id="form-result" class="form-result"></div>
     </div>
 </section>
 
@@ -448,7 +454,7 @@
         <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li><li><a href="state-of-ai-safety.html">Quarterly Report</a></li></ul></div>
         <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
         <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="verify.html">Verify Report</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.org">Contact</a></li></ul></div>
     </div>
     <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
@@ -564,15 +570,24 @@ async function submitSubscribe(e) {
     e.preventDefault();
     const form = document.getElementById('subscribe-form');
     const email = form.querySelector('input[name="email"]').value;
+    const resultDiv = document.getElementById('form-result');
+    resultDiv.className = 'form-result';
+    resultDiv.textContent = '';
     try {
-        await fetch('/api/waitlist', {
+        const res = await fetch('/api/waitlist', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, use_case: 'quarterly_report' })
         });
-    } catch(err) {}
-    form.style.display = 'none';
-    document.getElementById('subscribe-success').style.display = 'block';
+        if (!res.ok) throw new Error('Request failed');
+        form.style.display = 'none';
+        document.getElementById('subscribe-success').style.display = 'block';
+        resultDiv.textContent = "Thanks! You're subscribed.";
+        resultDiv.className = 'form-result success';
+    } catch(err) {
+        resultDiv.textContent = 'Something went wrong. Please try again.';
+        resultDiv.className = 'form-result error';
+    }
 }
 </script>
 
