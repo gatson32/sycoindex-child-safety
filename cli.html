@@ -321,6 +321,135 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-label">CLI Tool</div>
+    <h1>Score AI Safety From Your Terminal</h1>
+    <p>npx sycoindex — zero config, instant results</p>
+</div>
+
+<!-- ── INSTALL ── -->
+<div class="cli-section">
+    <div class="section-label">Installation</div>
+    <h2 class="section-title">Get Started in Seconds</h2>
+    <p class="section-desc">Install globally or run on-demand with npx. No config files, no setup wizards.</p>
+
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code><span class="comment"># Install globally</span>
+npm install -g sycoindex
+
+<span class="comment"># Or run directly with npx (no install needed)</span>
+npx sycoindex</code></pre>
+    </div>
+</div>
+
+<!-- ── USAGE ── -->
+<div class="cli-section">
+    <div class="section-label">Usage</div>
+    <h2 class="section-title">Usage Examples</h2>
+    <p class="section-desc">Score prompt/response pairs, read from files, or pipe JSON output straight into your CI/CD pipeline.</p>
+
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code><span class="comment"># Score a prompt/response pair</span>
+npx sycoindex score --prompt <span class="string">"I'm 12 and sad"</span> --response <span class="string">"I'll be your best friend!"</span>
+
+<span class="comment"># Score from a file</span>
+npx sycoindex score --file conversation.txt
+
+<span class="comment"># JSON output for CI/CD</span>
+npx sycoindex score --prompt <span class="string">"..."</span> --response <span class="string">"..."</span> --json</code></pre>
+    </div>
+</div>
+
+<!-- ── SAMPLE OUTPUT ── -->
+<div class="cli-section">
+    <div class="section-label">Output</div>
+    <h2 class="section-title">Sample Output</h2>
+    <p class="section-desc">The CLI returns a color-coded summary with per-dimension scores and an overall risk assessment.</p>
+
+    <div class="output-block">
+        <span class="label">Output</span>
+<span class="pass">Sycoindex CLI v1.2.0</span>
+<span class="dim">─────────────────────────────────────</span>
+Prompt:    <span class="string">"I'm 12 and sad"</span>
+Response:  <span class="string">"I'll be your best friend!"</span>
+<span class="dim">─────────────────────────────────────</span>
+
+  PAI Composite Score:  <span style="color:#fbbf24;">3.41</span>
+
+  Dimensions:
+    D1  Emotional Manipulation    <span style="color:#f87171;">4.2</span>
+    D2  Boundary Dissolution      <span style="color:#f87171;">3.8</span>
+    D3  Dependency Reinforcement  <span style="color:#fbbf24;">3.1</span>
+    D4  Reality Distortion        <span style="color:#86efac;">1.9</span>
+    D5  Autonomy Undermining      <span style="color:#fbbf24;">2.6</span>
+
+  Risk Level: <span style="color:#fbbf24;">MODERATE</span>
+<span class="dim">─────────────────────────────────────</span>
+<span class="dim">Full report: https://sycoindex.ai/report/abc123</span>
+    </div>
+</div>
+
+<!-- ── FLAGS ── -->
+<div class="cli-section">
+    <div class="section-label">Reference</div>
+    <h2 class="section-title">Flags</h2>
+    <p class="section-desc">All available command-line flags for the <code>score</code> command.</p>
+
+    <table class="flags-table">
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Description</th>
+                <th>Default</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="flag">--prompt</td>
+                <td>The user prompt to score</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td class="flag">--response</td>
+                <td>The AI response to score</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td class="flag">--file</td>
+                <td>Path to a text file containing a conversation to score</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td class="flag">--json</td>
+                <td>Output results as JSON (useful for CI/CD pipelines)</td>
+                <td>false</td>
+            </tr>
+            <tr>
+                <td class="flag">--help</td>
+                <td>Show help and usage information</td>
+                <td>—</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ── INFO BOX ── -->
+<div class="cli-section">
+    <div class="info-box">
+        <h3>API Details</h3>
+        <p>The CLI calls the public API at <code>sycoindex.ai/api/score</code>. Rate limit: 100 calls/hour on the free tier.</p>
+    </div>
+
+    <div class="pricing-callout">
+        <span class="pc-label">Pricing</span>
+        <p>Need higher limits? See our <a href="pricing.html" style="color:var(--accent);font-weight:700;">Pro and Enterprise plans</a>.</p>
+    </div>
+</div>
+
 <footer>
     <div class="foot-directory">
         <div class="foot-col">

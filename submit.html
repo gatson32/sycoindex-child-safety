@@ -348,6 +348,118 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-label">Model Submission</div>
+    <h1>Submit Your Model for Scoring</h1>
+    <p>Join 10 frontier models already on the leaderboard</p>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section">
+    <div class="how-label">How It Works</div>
+    <div class="how-grid">
+        <div class="how-step">
+            <div class="step-num">01</div>
+            <div class="step-title">Submit Details</div>
+            <div class="step-desc">Provide your model name, API endpoint, and contact information using the form below. We handle the rest.</div>
+        </div>
+        <div class="how-step">
+            <div class="step-num">02</div>
+            <div class="step-title">48-Hour Scoring</div>
+            <div class="step-desc">Our 5-judge ensemble evaluates your model across child safety, sycophancy, boundary enforcement, and emotional manipulation dimensions.</div>
+        </div>
+        <div class="how-step">
+            <div class="step-num">03</div>
+            <div class="step-title">Results Published</div>
+            <div class="step-desc">Your model appears on the public leaderboard with full dimension scores, transcript samples, and a downloadable compliance report.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── SUBMISSION FORM ── -->
+<section class="form-section">
+    <div class="form-label">Submission Form</div>
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Model Details</h2>
+            <p>All fields are required unless marked optional. Your API endpoint is kept strictly confidential.</p>
+        </div>
+        <form class="form-body" action="/api/submit" method="POST">
+            <div class="form-row">
+                <label for="model-name">Model Name</label>
+                <input type="text" id="model-name" name="model_name" placeholder="e.g., GPT-4o, Claude 3.5 Sonnet" required>
+            </div>
+            <div class="form-row">
+                <label for="vendor">Vendor / Organization</label>
+                <input type="text" id="vendor" name="vendor" placeholder="e.g., OpenAI, Anthropic, Meta" required>
+            </div>
+            <div class="form-row">
+                <label for="api-endpoint">API Endpoint URL</label>
+                <input type="text" id="api-endpoint" name="api_endpoint" placeholder="https://api.example.com/v1/chat" required>
+                <div class="hint">Your endpoint is kept private and used only for scoring.</div>
+            </div>
+            <div class="form-row">
+                <label for="contact-email">Contact Email</label>
+                <input type="email" id="contact-email" name="contact_email" placeholder="safety-team@example.com" required>
+            </div>
+            <div class="form-row">
+                <label for="notes">Notes / Context <span class="optional">(optional)</span></label>
+                <textarea id="notes" name="notes" placeholder="Any specific configuration, system prompts, or context we should know about..."></textarea>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="submit-btn">Submit for Scoring</button>
+            </div>
+        </form>
+        <div class="form-success" id="form-success">
+            <div class="check-icon">&#10003;</div>
+            <h3>Submission Received</h3>
+            <p>We'll begin scoring within 24 hours and notify you at the provided email when results are published.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── ALREADY SCORED ── -->
+<section class="scored-section">
+    <div class="scored-label">Already Scored &mdash; 10 Models on the Leaderboard</div>
+    <div class="scored-pills">
+        <div class="pill"><span class="pill-name">GPT-4o</span><span class="pill-score mid">3.2</span></div>
+        <div class="pill"><span class="pill-name">Claude 3.5 Sonnet</span><span class="pill-score high">1.8</span></div>
+        <div class="pill"><span class="pill-name">Gemini 1.5 Pro</span><span class="pill-score mid">3.5</span></div>
+        <div class="pill"><span class="pill-name">Llama 3.1 405B</span><span class="pill-score low">5.1</span></div>
+        <div class="pill"><span class="pill-name">Mistral Large</span><span class="pill-score mid">4.0</span></div>
+        <div class="pill"><span class="pill-name">Command R+</span><span class="pill-score mid">3.8</span></div>
+        <div class="pill"><span class="pill-name">GPT-4o Mini</span><span class="pill-score mid">3.9</span></div>
+        <div class="pill"><span class="pill-name">Claude 3 Haiku</span><span class="pill-score high">2.1</span></div>
+        <div class="pill"><span class="pill-name">Gemini Flash</span><span class="pill-score mid">4.2</span></div>
+        <div class="pill"><span class="pill-name">DeepSeek V2</span><span class="pill-score low">5.8</span></div>
+    </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section">
+    <div class="faq-label">Frequently Asked Questions</div>
+    <div class="faq-grid">
+        <div class="faq-item">
+            <h4>How long does scoring take?</h4>
+            <p>48 hours from submission. We run our full prompt suite and 5-judge ensemble evaluation, then publish results to the leaderboard.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Is my API endpoint kept private?</h4>
+            <p>Yes. Your API endpoint URL is used exclusively for scoring and is never displayed publicly or shared with third parties.</p>
+        </div>
+        <div class="faq-item">
+            <h4>What does it cost?</h4>
+            <p>Free for public scoring. Your model appears on the public leaderboard. Enterprise plans with private scoring and custom reports are also available.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Can I submit a fine-tuned model?</h4>
+            <p>Absolutely. We score any model accessible via API, including fine-tuned variants, custom system prompts, and safety-wrapped deployments.</p>
+        </div>
+    </div>
+</section>
+
 <footer>
     <div class="foot-directory">
         <div class="foot-col">

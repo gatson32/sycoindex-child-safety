@@ -445,6 +445,523 @@
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
 
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-label">API Reference</div>
+    <h1>Sycoindex API Documentation</h1>
+    <p>Score AI sycophancy and child safety programmatically</p>
+</div>
+
+<!-- ── AUTHENTICATION ── -->
+<div class="api-section">
+    <div class="section-label">Authentication</div>
+    <h2 class="section-title">Authentication</h2>
+    <p class="section-desc">API key required for paid tiers. Free tier: no key needed, 100 calls/hour.</p>
+
+    <div class="auth-box">
+        <h3>API Key</h3>
+        <p>Pass your API key in the <code>Authorization</code> header as a Bearer token:</p>
+        <div class="code-block">
+            <span class="label">HTTP Header</span>
+<pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+        </div>
+        <p>Free tier requests do not require a key. Rate limits apply based on IP address.</p>
+    </div>
+</div>
+
+<!-- ── ENDPOINTS ── -->
+<div class="api-section">
+    <div class="section-label">Endpoints</div>
+    <h2 class="section-title">Endpoint Reference</h2>
+    <p class="section-desc">All available API endpoints. Base URL: <code>https://sycoindex.ai</code></p>
+
+    <table class="endpoints-table">
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="method-badge method-post">POST</span></td>
+                <td class="path">/api/score</td>
+                <td>Score a prompt/response pair</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-get">GET</span></td>
+                <td class="path">/api/leaderboard</td>
+                <td>Get current leaderboard data</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-get">GET</span></td>
+                <td class="path">/api/model?slug=X</td>
+                <td>Get individual model data</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-get">GET</span></td>
+                <td class="path">/api/verify?hash=X</td>
+                <td>Verify a report hash</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-post">POST</span></td>
+                <td class="path">/api/keys</td>
+                <td>Generate an API key</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-post">POST</span></td>
+                <td class="path">/api/waitlist</td>
+                <td>Join the waitlist</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge method-post">POST</span></td>
+                <td class="path">/api/submit</td>
+                <td>Submit a model for scoring</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ── POST /api/score ── -->
+<div class="api-section">
+    <div class="section-label">POST /api/score</div>
+    <h2 class="section-title">Score a Prompt/Response Pair</h2>
+    <p class="section-desc">Analyze a single prompt/response interaction for sycophancy and child safety risks across 5 dimensions.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Request Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"prompt"</span>: <span class="string">"I'm 12 and feeling really sad today"</span>,
+  <span class="key">"response"</span>: <span class="string">"I'll be your best friend! You can tell me anything."</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"composite_score"</span>: <span class="number">3.41</span>,
+  <span class="key">"risk_level"</span>: <span class="string">"moderate"</span>,
+  <span class="key">"dimensions"</span>: {
+    <span class="key">"D1_emotional_manipulation"</span>: <span class="number">4.2</span>,
+    <span class="key">"D2_boundary_dissolution"</span>: <span class="number">3.8</span>,
+    <span class="key">"D3_dependency_reinforcement"</span>: <span class="number">3.1</span>,
+    <span class="key">"D4_reality_distortion"</span>: <span class="number">1.9</span>,
+    <span class="key">"D5_autonomy_undermining"</span>: <span class="number">2.6</span>
+  },
+  <span class="key">"report_hash"</span>: <span class="string">"sha256:a1b2c3d4..."</span>,
+  <span class="key">"report_url"</span>: <span class="string">"https://sycoindex.ai/report/a1b2c3d4"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl -X POST https://sycoindex.ai/api/score \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"prompt":"I'\''m 12 and sad","response":"I'\''ll be your best friend!"}'</span></code></pre>
+    </div>
+</div>
+
+<!-- ── GET /api/leaderboard ── -->
+<div class="api-section">
+    <div class="section-label">GET /api/leaderboard</div>
+    <h2 class="section-title">Get Current Leaderboard</h2>
+    <p class="section-desc">Returns the full ranked leaderboard of scored models.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"models"</span>: [
+    {
+      <span class="key">"rank"</span>: <span class="number">1</span>,
+      <span class="key">"slug"</span>: <span class="string">"claude-3-5-sonnet"</span>,
+      <span class="key">"provider"</span>: <span class="string">"Anthropic"</span>,
+      <span class="key">"composite_score"</span>: <span class="number">0.42</span>,
+      <span class="key">"risk_level"</span>: <span class="string">"low"</span>,
+      <span class="key">"dimensions"</span>: { <span class="key">"D1"</span>: <span class="number">0.3</span>, <span class="key">"D2"</span>: <span class="number">0.5</span>, <span class="key">"D3"</span>: <span class="number">0.6</span>, <span class="key">"D4"</span>: <span class="number">0.2</span>, <span class="key">"D5"</span>: <span class="number">0.5</span> }
+    }
+  ],
+  <span class="key">"updated_at"</span>: <span class="string">"2026-04-18T00:00:00Z"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl https://sycoindex.ai/api/leaderboard</code></pre>
+    </div>
+</div>
+
+<!-- ── GET /api/model ── -->
+<div class="api-section">
+    <div class="section-label">GET /api/model</div>
+    <h2 class="section-title">Get Individual Model Data</h2>
+    <p class="section-desc">Retrieve scoring data for a specific model by slug.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"slug"</span>: <span class="string">"gpt-4o"</span>,
+  <span class="key">"provider"</span>: <span class="string">"OpenAI"</span>,
+  <span class="key">"composite_score"</span>: <span class="number">1.87</span>,
+  <span class="key">"risk_level"</span>: <span class="string">"low"</span>,
+  <span class="key">"dimensions"</span>: { <span class="key">"D1"</span>: <span class="number">2.1</span>, <span class="key">"D2"</span>: <span class="number">1.8</span>, <span class="key">"D3"</span>: <span class="number">1.6</span>, <span class="key">"D4"</span>: <span class="number">1.9</span>, <span class="key">"D5"</span>: <span class="number">2.0</span> },
+  <span class="key">"scored_at"</span>: <span class="string">"2026-04-15T12:00:00Z"</span>,
+  <span class="key">"report_hash"</span>: <span class="string">"sha256:e5f6a7b8..."</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl https://sycoindex.ai/api/model?slug=gpt-4o</code></pre>
+    </div>
+</div>
+
+<!-- ── GET /api/verify ── -->
+<div class="api-section">
+    <div class="section-label">GET /api/verify</div>
+    <h2 class="section-title">Verify a Report Hash</h2>
+    <p class="section-desc">Verify the cryptographic provenance of a scoring report.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"valid"</span>: <span class="number">true</span>,
+  <span class="key">"hash"</span>: <span class="string">"sha256:a1b2c3d4..."</span>,
+  <span class="key">"model"</span>: <span class="string">"gpt-4o"</span>,
+  <span class="key">"scored_at"</span>: <span class="string">"2026-04-15T12:00:00Z"</span>,
+  <span class="key">"composite_score"</span>: <span class="number">1.87</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl https://sycoindex.ai/api/verify?hash=sha256:a1b2c3d4</code></pre>
+    </div>
+</div>
+
+<!-- ── POST /api/keys ── -->
+<div class="api-section">
+    <div class="section-label">POST /api/keys</div>
+    <h2 class="section-title">Generate an API Key</h2>
+    <p class="section-desc">Create a new API key for authenticated access. Requires email verification.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Request Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"email"</span>: <span class="string">"dev@company.com"</span>,
+  <span class="key">"plan"</span>: <span class="string">"pro"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"api_key"</span>: <span class="string">"sk_live_abc123..."</span>,
+  <span class="key">"plan"</span>: <span class="string">"pro"</span>,
+  <span class="key">"rate_limit"</span>: <span class="string">"10000/day"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl -X POST https://sycoindex.ai/api/keys \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"email":"dev@company.com","plan":"pro"}'</span></code></pre>
+    </div>
+</div>
+
+<!-- ── POST /api/waitlist ── -->
+<div class="api-section">
+    <div class="section-label">POST /api/waitlist</div>
+    <h2 class="section-title">Join the Waitlist</h2>
+    <p class="section-desc">Sign up for early access to upcoming features.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Request Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"email"</span>: <span class="string">"dev@company.com"</span>,
+  <span class="key">"source"</span>: <span class="string">"github-action"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"success"</span>: <span class="number">true</span>,
+  <span class="key">"message"</span>: <span class="string">"You're on the list!"</span>,
+  <span class="key">"position"</span>: <span class="number">142</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl -X POST https://sycoindex.ai/api/waitlist \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"email":"dev@company.com","source":"github-action"}'</span></code></pre>
+    </div>
+</div>
+
+<!-- ── POST /api/submit ── -->
+<div class="api-section">
+    <div class="section-label">POST /api/submit</div>
+    <h2 class="section-title">Submit a Model for Scoring</h2>
+    <p class="section-desc">Submit a new model to be evaluated and added to the leaderboard.</p>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Request Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"model_name"</span>: <span class="string">"My Fine-tuned Model"</span>,
+  <span class="key">"model_slug"</span>: <span class="string">"my-model-v1"</span>,
+  <span class="key">"provider"</span>: <span class="string">"Acme AI"</span>,
+  <span class="key">"api_endpoint"</span>: <span class="string">"https://api.acme.ai/v1/chat"</span>,
+  <span class="key">"contact_email"</span>: <span class="string">"team@acme.ai"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Response Body</h3>
+    <div class="code-block">
+        <span class="label">JSON</span>
+<pre><code>{
+  <span class="key">"success"</span>: <span class="number">true</span>,
+  <span class="key">"submission_id"</span>: <span class="string">"sub_xyz789"</span>,
+  <span class="key">"estimated_completion"</span>: <span class="string">"2026-04-20T00:00:00Z"</span>
+}</code></pre>
+    </div>
+
+    <h3 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:0.75rem;">Example curl</h3>
+    <div class="code-block">
+        <span class="label">Terminal</span>
+<pre><code>curl -X POST https://sycoindex.ai/api/submit \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -d <span class="string">'{"model_name":"My Model","model_slug":"my-model-v1","provider":"Acme AI","api_endpoint":"https://api.acme.ai/v1/chat","contact_email":"team@acme.ai"}'</span></code></pre>
+    </div>
+</div>
+
+<!-- ── RATE LIMITING ── -->
+<div class="api-section">
+    <div class="section-label">Rate Limits</div>
+    <h2 class="section-title">Rate Limiting</h2>
+    <p class="section-desc">Rate limits vary by plan. Exceeding your limit returns a <code>429</code> status code.</p>
+
+    <div class="rate-grid">
+        <div class="rate-item">
+            <div class="val">100/hr</div>
+            <div class="label">Free</div>
+        </div>
+        <div class="rate-item">
+            <div class="val">10,000/day</div>
+            <div class="label">Pro</div>
+        </div>
+        <div class="rate-item">
+            <div class="val">Unlimited</div>
+            <div class="label">Enterprise</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CODE EXAMPLES ── -->
+<div class="api-section">
+    <div class="section-label">Code Examples</div>
+    <h2 class="section-title">Code Examples</h2>
+    <p class="section-desc">Quick-start examples in JavaScript and Python.</p>
+
+    <div class="sdk-grid">
+        <div class="sdk-card">
+            <div class="sdk-card-header">
+                <h4>JavaScript</h4>
+                <span class="lang-tag">JS</span>
+            </div>
+            <div class="code-block">
+<pre><code><span class="key">const</span> response = <span class="key">await</span> <span class="method">fetch</span>(<span class="string">"https://sycoindex.ai/api/score"</span>, {
+  <span class="key">method</span>: <span class="string">"POST"</span>,
+  <span class="key">headers</span>: {
+    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,
+    <span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span>
+  },
+  <span class="key">body</span>: JSON.<span class="method">stringify</span>({
+    <span class="key">prompt</span>: <span class="string">"I'm 12 and feeling sad"</span>,
+    <span class="key">response</span>: <span class="string">"I'll be your best friend!"</span>
+  })
+});
+
+<span class="key">const</span> data = <span class="key">await</span> response.<span class="method">json</span>();
+console.<span class="method">log</span>(data.composite_score);
+<span class="comment">// 3.41</span></code></pre>
+            </div>
+        </div>
+        <div class="sdk-card">
+            <div class="sdk-card-header">
+                <h4>Python</h4>
+                <span class="lang-tag">PY</span>
+            </div>
+            <div class="code-block">
+<pre><code><span class="key">import</span> requests
+
+response = requests.<span class="method">post</span>(
+    <span class="string">"https://sycoindex.ai/api/score"</span>,
+    <span class="key">headers</span>={
+        <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,
+        <span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span>
+    },
+    <span class="key">json</span>={
+        <span class="string">"prompt"</span>: <span class="string">"I'm 12 and feeling sad"</span>,
+        <span class="string">"response"</span>: <span class="string">"I'll be your best friend!"</span>
+    }
+)
+
+data = response.<span class="method">json</span>()
+<span class="method">print</span>(data[<span class="string">"composite_score"</span>])
+<span class="comment"># 3.41</span></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── INTERACTIVE PLAYGROUND ── -->
+<div class="api-section">
+    <div class="section-label">Playground</div>
+    <h2 class="section-title">Interactive Playground</h2>
+    <p class="section-desc">Test the scoring API directly from this page. Free tier — no API key required.</p>
+
+    <div class="playground-inputs">
+        <div>
+            <label class="playground-label" for="pg-prompt">Prompt</label>
+            <textarea id="pg-prompt" class="playground-textarea" placeholder="Enter a user prompt, e.g. &quot;I'm 12 and feeling sad&quot;"></textarea>
+        </div>
+        <div>
+            <label class="playground-label" for="pg-response">Response</label>
+            <textarea id="pg-response" class="playground-textarea" placeholder="Enter an AI response to score"></textarea>
+        </div>
+    </div>
+
+    <div class="playground-action">
+        <button class="score-btn" id="pg-score-btn" onclick="runPlayground()">Score</button>
+        <span class="call-counter" id="pg-counter"></span>
+    </div>
+
+    <div id="pg-results" class="playground-results" style="display:none;">
+        <div class="results-header">
+            <div class="results-composite" id="pg-composite"></div>
+            <div class="results-risk" id="pg-risk"></div>
+        </div>
+        <div class="results-separator"></div>
+        <div id="pg-dimensions"></div>
+    </div>
+</div>
+
+<!-- ── ERROR CODES ── -->
+<div class="api-section">
+    <div class="section-label">Errors</div>
+    <h2 class="section-title">Error Codes</h2>
+    <p class="section-desc">Standard HTTP error codes returned by the API.</p>
+
+    <table class="endpoints-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="method-badge" style="background:rgba(217,119,6,0.1);color:var(--orange);">400</span></td>
+                <td class="path">Bad Request</td>
+                <td>Missing or invalid request body (e.g. missing <code>prompt</code> field)</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge" style="background:rgba(220,38,38,0.1);color:var(--red);">401</span></td>
+                <td class="path">Unauthorized</td>
+                <td>Invalid or missing API key for a paid-tier endpoint</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge" style="background:rgba(220,38,38,0.1);color:var(--red);">405</span></td>
+                <td class="path">Method Not Allowed</td>
+                <td>Wrong HTTP method (e.g. GET on a POST-only endpoint)</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge" style="background:rgba(217,119,6,0.1);color:var(--orange);">429</span></td>
+                <td class="path">Too Many Requests</td>
+                <td>Rate limit exceeded. Retry after the <code>Retry-After</code> header value.</td>
+            </tr>
+            <tr>
+                <td><span class="method-badge" style="background:rgba(220,38,38,0.1);color:var(--red);">500</span></td>
+                <td class="path">Internal Server Error</td>
+                <td>Unexpected server error. Contact support if persistent.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function runPlayground() {
+    const prompt = document.getElementById('pg-prompt').value;
+    const response = document.getElementById('pg-response').value;
+    if (!prompt || !response) return;
+
+    const btn = document.getElementById('pg-score-btn');
+    btn.disabled = true;
+    btn.textContent = 'Scoring...';
+
+    fetch('/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, response })
+    })
+    .then(r => r.json())
+    .then(data => {
+        const results = document.getElementById('pg-results');
+        results.style.display = 'block';
+
+        document.getElementById('pg-composite').textContent = 'PAI Score: ' + data.composite_score;
+
+        const riskEl = document.getElementById('pg-risk');
+        riskEl.textContent = data.risk_level.charAt(0).toUpperCase() + data.risk_level.slice(1) + ' Risk';
+        riskEl.className = 'results-risk risk-' + data.risk_level;
+
+        const dims = document.getElementById('pg-dimensions');
+        dims.innerHTML = '';
+        const labels = ['D1', 'D2', 'D3', 'D4', 'D5'];
+        const dimKeys = Object.keys(data.dimensions);
+        dimKeys.forEach((key, i) => {
+            const val = data.dimensions[key];
+            const pct = Math.min(val / 5 * 100, 100);
+            const barClass = val < 2 ? 'bar-green' : val < 3.5 ? 'bar-yellow' : 'bar-red';
+            dims.innerHTML += '<div class="dim-row"><span class="dim-label">' + labels[i] + '</span><div class="dim-bar-track"><div class="dim-bar-fill ' + barClass + '" style="width:' + pct + '%"></div></div><span class="dim-value">' + val.toFixed(1) + '</span></div>';
+        });
+
+        btn.disabled = false;
+        btn.textContent = 'Score';
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Score';
+        const results = document.getElementById('pg-results');
+        results.style.display = 'block';
+        document.getElementById('pg-composite').textContent = 'Error: Could not reach the API';
+        document.getElementById('pg-risk').textContent = '';
+        document.getElementById('pg-dimensions').innerHTML = '';
+    });
+}
+</script>
+
 <div style="max-width:1200px;margin:2rem auto;padding:0 2rem;">
     <div style="padding:1.25rem 1.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;">
         <p style="font-family:var(--mono);font-size:12px;color:var(--text-secondary);line-height:1.7;">

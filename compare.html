@@ -172,6 +172,236 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+
+<!-- ══ PAGE ══ -->
+<div class="page">
+    <div class="page-kicker">Model Comparison</div>
+    <h1 class="page-title">Compare AI Safety Scores <em>Side-by-Side</em></h1>
+    <p class="page-sub">Pick any two models and see how they stack up across every safety dimension.</p>
+
+    <!-- Selectors -->
+    <div class="selectors">
+        <div class="selector-group">
+            <span class="selector-label">Model A</span>
+            <select id="model-a"></select>
+        </div>
+        <div class="selector-group">
+            <span class="selector-label">Model B</span>
+            <select id="model-b"></select>
+        </div>
+        <div class="selector-actions">
+            <button class="btn-share" id="btn-share" onclick="shareComparison()">Share Link</button>
+            <a href="index.html" class="btn-leaderboard">Leaderboard</a>
+        </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict" id="verdict" style="display:none;">
+        <div class="verdict-title">Overall Verdict</div>
+        <div class="verdict-text" id="verdict-text"></div>
+    </div>
+
+    <!-- Comparison Cards -->
+    <div class="comparison" id="comparison">
+        <div class="card" id="card-a">
+            <div class="card-head">
+                <span class="card-model" id="card-a-name">Select Model A</span>
+                <span class="card-vendor" id="card-a-vendor"></span>
+            </div>
+            <div class="card-body" id="card-a-body">
+                <p class="no-data">Choose a model above to begin.</p>
+            </div>
+        </div>
+        <div class="card" id="card-b">
+            <div class="card-head">
+                <span class="card-model" id="card-b-name">Select Model B</span>
+                <span class="card-vendor" id="card-b-vendor"></span>
+            </div>
+            <div class="card-body" id="card-b-body">
+                <p class="no-data">Choose a model above to begin.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    let paiData = [], sycData = [];
+    const paiDims = ['emi','exl','bnd','dep','aud'];
+    const sycDims = ['ev','me','il','ia','fa'];
+    const paiLabels = {emi:'EMI',exl:'EXL',bnd:'BND',dep:'DEP',aud:'AUD'};
+    const sycLabels = {ev:'EV',me:'ME',il:'IL',ia:'IA',fa:'FA'};
+
+    async function init() {
+        const res = await fetch('data/leaderboard.json');
+        const data = await res.json();
+        paiData = data.pai;
+        sycData = data.sycophancy;
+
+        // Build merged model list
+        const slugMap = {};
+        paiData.forEach(m => { slugMap[m.slug] = m.slug; });
+        sycData.forEach(m => { slugMap[m.slug] = m.slug; });
+        const allSlugs = Object.keys(slugMap).sort();
+
+        // Helper to get display name
+        function nameFor(slug) {
+            const p = paiData.find(m => m.slug === slug);
+            const s = sycData.find(m => m.slug === slug);
+            const m = p || s;
+            return m ? m.name + ' — ' + m.vendor : slug;
+        }
+
+        ['model-a','model-b'].forEach((id, i) => {
+            const sel = document.getElementById(id);
+            allSlugs.forEach(slug => {
+                const opt = document.createElement('option');
+                opt.value = slug;
+                opt.textContent = nameFor(slug);
+                sel.appendChild(opt);
+            });
+            // Default: pick first two different models
+            if (i === 1 && allSlugs.length > 1) sel.value = allSlugs[1];
+        });
+
+        // Check URL params
+        const params = new URLSearchParams(location.search);
+        if (params.get('a')) document.getElementById('model-a').value = params.get('a');
+        if (params.get('b')) document.getElementById('model-b').value = params.get('b');
+
+        document.getElementById('model-a').addEventListener('change', updateComparison);
+        document.getElementById('model-b').addEventListener('change', updateComparison);
+
+        updateComparison();
+    }
+
+    function findModel(slug) {
+        const p = paiData.find(m => m.slug === slug) || null;
+        const s = sycData.find(m => m.slug === slug) || null;
+        return { pai: p, syc: s, name: (p||s).name, vendor: (p||s).vendor };
+    }
+
+    function riskColor(risk) {
+        if (risk === 'low') return 'var(--green)';
+        if (risk === 'medium') return 'var(--orange)';
+        return 'var(--red)';
+    }
+
+    function barColor(score, max) {
+        const pct = score / max;
+        if (pct < 0.33) return 'var(--green)';
+        if (pct < 0.66) return 'var(--orange)';
+        return 'var(--red)';
+    }
+
+    function renderCard(side, slug) {
+        const m = findModel(slug);
+        document.getElementById('card-' + side + '-name').textContent = m.name;
+        document.getElementById('card-' + side + '-vendor').textContent = m.vendor;
+
+        let html = '';
+
+        // Composite / Risk
+        if (m.pai) {
+            html += '<div class="score-section">';
+            html += '<div class="score-header">PAI Composite Score</div>';
+            html += '<div class="score-main">';
+            html += '<span class="score-value" style="color:' + riskColor(m.pai.risk) + '">' + m.pai.composite.toFixed(2) + '</span>';
+            html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + Math.min(m.pai.composite / 3 * 100, 100) + '%;background:' + riskColor(m.pai.risk) + '"></div></div>';
+            html += '<span style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:' + riskColor(m.pai.risk) + '">' + m.pai.risk + ' risk</span>';
+            html += '</div>';
+            html += '<div class="dim-grid">';
+            paiDims.forEach(d => {
+                html += '<div class="dim-item"><div class="dim-label">' + paiLabels[d] + '</div><div class="dim-value">' + m.pai[d].toFixed(2) + '</div></div>';
+            });
+            html += '</div></div>';
+        }
+
+        if (m.syc) {
+            html += '<div class="score-section">';
+            html += '<div class="score-header">Sycophancy &mdash; Honesty</div>';
+            html += '<div class="score-main">';
+            html += '<span class="score-value">' + m.syc.honesty.toFixed(1) + '%</span>';
+            html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + m.syc.honesty + '%;background:var(--accent)"></div></div>';
+            html += '</div>';
+            html += '<div class="dim-grid">';
+            sycDims.forEach(d => {
+                html += '<div class="dim-item"><div class="dim-label">' + sycLabels[d] + '</div><div class="dim-value">' + m.syc[d].toFixed(1) + '</div></div>';
+            });
+            html += '</div></div>';
+        }
+
+        if (!m.pai && !m.syc) html = '<p class="no-data">No data available for this model.</p>';
+        document.getElementById('card-' + side + '-body').innerHTML = html;
+    }
+
+    function updateComparison() {
+        const slugA = document.getElementById('model-a').value;
+        const slugB = document.getElementById('model-b').value;
+        if (!slugA || !slugB) return;
+
+        renderCard('a', slugA);
+        renderCard('b', slugB);
+
+        // Highlight dimension winners
+        const mA = findModel(slugA), mB = findModel(slugB);
+        // PAI winners (lower is better)
+        if (mA.pai && mB.pai) {
+            const cardADims = document.querySelectorAll('#card-a-body .score-section:first-child .dim-value');
+            const cardBDims = document.querySelectorAll('#card-b-body .score-section:first-child .dim-value');
+            paiDims.forEach((d, i) => {
+                if (mA.pai[d] < mB.pai[d]) { if(cardADims[i]) cardADims[i].classList.add('dim-winner'); }
+                else if (mB.pai[d] < mA.pai[d]) { if(cardBDims[i]) cardBDims[i].classList.add('dim-winner'); }
+            });
+        }
+        // Sycophancy winners (lower is better for dimensions)
+        if (mA.syc && mB.syc) {
+            const secIdx = mA.pai ? 1 : 0;
+            const cardADims = document.querySelectorAll('#card-a-body .score-section:nth-child(' + (secIdx+1) + ') .dim-value');
+            const cardBDims = document.querySelectorAll('#card-b-body .score-section:nth-child(' + (secIdx+1) + ') .dim-value');
+            sycDims.forEach((d, i) => {
+                if (mA.syc[d] < mB.syc[d]) { if(cardADims[i]) cardADims[i].classList.add('dim-winner'); }
+                else if (mB.syc[d] < mA.syc[d]) { if(cardBDims[i]) cardBDims[i].classList.add('dim-winner'); }
+            });
+        }
+
+        // Verdict
+        const verdictEl = document.getElementById('verdict');
+        const verdictText = document.getElementById('verdict-text');
+        verdictEl.style.display = 'block';
+        let parts = [];
+        if (mA.pai && mB.pai) {
+            if (mA.pai.composite < mB.pai.composite) parts.push('<strong>' + mA.name + '</strong> is safer for children (PAI ' + mA.pai.composite.toFixed(2) + ' vs ' + mB.pai.composite.toFixed(2) + ')');
+            else if (mB.pai.composite < mA.pai.composite) parts.push('<strong>' + mB.name + '</strong> is safer for children (PAI ' + mB.pai.composite.toFixed(2) + ' vs ' + mA.pai.composite.toFixed(2) + ')');
+            else parts.push('Both models have identical PAI composite scores');
+        }
+        if (mA.syc && mB.syc) {
+            if (mA.syc.honesty > mB.syc.honesty) parts.push('<strong>' + mA.name + '</strong> has higher honesty (' + mA.syc.honesty.toFixed(1) + '% vs ' + mB.syc.honesty.toFixed(1) + '%)');
+            else if (mB.syc.honesty > mA.syc.honesty) parts.push('<strong>' + mB.name + '</strong> has higher honesty (' + mB.syc.honesty.toFixed(1) + '% vs ' + mA.syc.honesty.toFixed(1) + '%)');
+            else parts.push('Both models have identical honesty scores');
+        }
+        verdictText.innerHTML = parts.join('. ') + '.';
+
+        // Update URL
+        const url = new URL(location);
+        url.searchParams.set('a', slugA);
+        url.searchParams.set('b', slugB);
+        history.replaceState(null, '', url);
+    }
+
+    init();
+})();
+
+function shareComparison() {
+    const btn = document.getElementById('btn-share');
+    navigator.clipboard.writeText(location.href).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Share Link'; }, 2000);
+    });
+}
+</script>
+
 <footer>
     <div class="foot-directory">
         <div class="foot-col">

@@ -329,6 +329,151 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-label">GitHub Action</div>
+    <h1>Automate AI Safety Checks in CI/CD</h1>
+    <p>Score every model update before it ships</p>
+</div>
+
+<!-- ── YAML EXAMPLE ── -->
+<div class="section">
+    <div class="section-label">Quick Start</div>
+    <h2 class="section-title">Add to Your Workflow</h2>
+    <p class="section-desc">Drop this YAML into <code>.github/workflows/safety.yml</code> and every push and pull request will be scored automatically.</p>
+
+    <div class="code-block">
+        <span class="label">YAML</span>
+<pre><code><span class="key">name:</span> <span class="string">AI Safety Check</span>
+<span class="key">on:</span> [push, pull_request]
+<span class="key">jobs:</span>
+  <span class="key">safety-score:</span>
+    <span class="key">runs-on:</span> ubuntu-latest
+    <span class="key">steps:</span>
+      - <span class="key">uses:</span> actions/checkout@v4
+      - <span class="key">uses:</span> sycoindex/safety-action@v1
+        <span class="key">with:</span>
+          <span class="key">api-key:</span> <span class="string">${{ secrets.SYCOINDEX_API_KEY }}</span>
+          <span class="key">threshold:</span> <span class="number">2.0</span>
+          <span class="key">fail-on-high-risk:</span> <span class="number">true</span></code></pre>
+    </div>
+</div>
+
+<!-- ── FLOW DIAGRAM ── -->
+<div class="section">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Three Steps to Safer Deploys</h2>
+    <p class="section-desc">The action integrates directly into your existing GitHub workflow.</p>
+
+    <div class="flow-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="flow-step">
+            <div class="flow-number">1</div>
+            <div class="flow-title">Push Code</div>
+            <div class="flow-desc">Developer pushes code or opens a pull request containing model config or prompt changes.</div>
+            <div class="flow-arrow">&#8594;</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-number">2</div>
+            <div class="flow-title">Action Runs Scoring</div>
+            <div class="flow-desc">The Sycoindex action runs the 5-judge ensemble against your test scenarios and computes PAI scores.</div>
+            <div class="flow-arrow">&#8594;</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-number">3</div>
+            <div class="flow-title">PR Check Passes / Fails</div>
+            <div class="flow-desc">Results post as a PR status check. If any score exceeds your threshold, the check fails and blocks merge.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CONFIGURATION ── -->
+<div class="section">
+    <div class="section-label">Configuration</div>
+    <h2 class="section-title">Configuration Reference</h2>
+    <p class="section-desc">All inputs accepted by <code>sycoindex/safety-action@v1</code>.</p>
+
+    <table class="config-table">
+        <thead>
+            <tr>
+                <th>Input</th>
+                <th>Description</th>
+                <th>Required</th>
+                <th>Default</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>api-key</td>
+                <td>Your Sycoindex API key (store in GitHub Secrets)</td>
+                <td><span class="config-badge badge-required">Required</span></td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>threshold</td>
+                <td>PAI score threshold above which the check fails</td>
+                <td><span class="config-badge badge-optional">Optional</span></td>
+                <td>2.0</td>
+            </tr>
+            <tr>
+                <td>fail-on-high-risk</td>
+                <td>Fail the check if any dimension is rated high risk</td>
+                <td><span class="config-badge badge-optional">Optional</span></td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>model-slug</td>
+                <td>Slug of the model being tested (e.g. <code>gpt-4o</code>)</td>
+                <td><span class="config-badge badge-optional">Optional</span></td>
+                <td>auto-detect</td>
+            </tr>
+            <tr>
+                <td>dimensions</td>
+                <td>Comma-separated list of dimensions to score (D1-D5)</td>
+                <td><span class="config-badge badge-optional">Optional</span></td>
+                <td>all</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ── PR CHECK MOCKUP ── -->
+<div class="section">
+    <div class="section-label">Status Check</div>
+    <h2 class="section-title">PR Check Preview</h2>
+    <p class="section-desc">This is what the status check looks like on your pull request.</p>
+
+    <div class="pr-mock">
+        <div class="pr-mock-header">
+            <div class="status-icon status-pass">&#10003;</div>
+            All checks have passed
+        </div>
+        <div class="pr-mock-body">
+            <div><span class="check-pass">&#10003;</span> <strong>Sycoindex: PAI Score 0.42 (Low Risk)</strong></div>
+            <div class="dim-detail">D1: 0.3 &nbsp; D2: 0.5 &nbsp; D3: 0.6 &nbsp; D4: 0.2 &nbsp; D5: 0.5</div>
+            <div class="dim-detail">Threshold: 2.0 &nbsp; | &nbsp; Result: Pass</div>
+            <a href="verify.html" class="report-link">View full report &#8594;</a>
+        </div>
+    </div>
+</div>
+
+<!-- ── PRICING & WAITLIST ── -->
+<div class="section">
+    <div class="pricing-strip">
+        <h3>Pricing</h3>
+        <p>Requires <a href="pricing.html" style="color:var(--accent);font-weight:700;">Pro plan or higher</a> for CI/CD integration.</p>
+    </div>
+
+    <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:6px;padding:2rem 2.5rem;margin-bottom:2rem;">
+        <h3 style="font-family:var(--mono);font-size:16px;font-weight:700;margin-bottom:0.5rem;">Coming Q3 2026</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:1.25rem;">The GitHub Action is currently in development. Join the waitlist to get early access.</p>
+        <form id="waitlist-form" onsubmit="event.preventDefault(); fetch('/api/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('waitlist-email').value,source:'github-action'})}).then(()=>{this.innerHTML='<p style=\'font-family:var(--mono);font-size:14px;color:var(--green);font-weight:700;\'>You\'re on the list!</p>';}).catch(()=>{this.innerHTML='<p style=\'font-family:var(--mono);font-size:14px;color:var(--red);\'>Something went wrong. Email chris@sycoindex.org.</p>';});" style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+            <input id="waitlist-email" type="email" required placeholder="you@company.com" style="font-family:var(--sans);font-size:14px;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:4px;flex:1;min-width:200px;">
+            <button type="submit" style="font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:0.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">Join Waitlist</button>
+        </form>
+    </div>
+</div>
+
 <footer>
     <div class="foot-directory">
         <div class="foot-col">

@@ -300,6 +300,160 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+    <div class="hero-label">Badge Generator</div>
+    <h1>Embed Your AI Safety Score</h1>
+    <p>Show the world your model is safe. Generate a badge for any scored model and embed it in your README, website, or documentation.</p>
+</section>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="content">
+
+    <!-- Generator Tool -->
+    <div class="generator">
+        <h2>Configure Your Badge</h2>
+        <div class="gen-grid">
+            <div class="gen-group">
+                <label for="badge-model">Model</label>
+                <select id="badge-model"></select>
+            </div>
+            <div class="gen-group">
+                <label>Badge Style</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="badge-style" value="flat" checked> Flat</label>
+                    <label><input type="radio" name="badge-style" value="flat-square"> Flat Square</label>
+                    <label><input type="radio" name="badge-style" value="for-the-badge"> For the Badge</label>
+                </div>
+            </div>
+            <div class="gen-group">
+                <label>Score Type</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="score-type" value="pai" checked> PAI</label>
+                    <label><input type="radio" name="score-type" value="sycophancy"> Sycophancy</label>
+                    <label><input type="radio" name="score-type" value="both"> Both</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="preview-section">
+            <h3>Preview</h3>
+            <div class="preview-box" id="badge-preview">
+                <img id="badge-img" src="/api/badge/claude-opus-4.6?style=flat&type=pai" alt="Sycoindex Badge Preview" style="height:28px;">
+            </div>
+        </div>
+
+        <!-- Embed Codes -->
+        <div class="copy-section">
+            <div class="copy-row">
+                <span class="copy-label">Markdown</span>
+                <input class="copy-input" id="embed-md" type="text" readonly value="![Sycoindex Score](https://sycoindex.ai/api/badge/claude-opus-4.6?style=flat&type=pai)">
+                <button class="copy-btn" onclick="copyEmbed('embed-md', this)">Copy</button>
+            </div>
+            <div class="copy-row">
+                <span class="copy-label">HTML</span>
+                <input class="copy-input" id="embed-html" type="text" readonly value='<img src="https://sycoindex.ai/api/badge/claude-opus-4.6?style=flat&type=pai" alt="Sycoindex Score">'>
+                <button class="copy-btn" onclick="copyEmbed('embed-html', this)">Copy</button>
+            </div>
+            <div class="copy-row">
+                <span class="copy-label">URL</span>
+                <input class="copy-input" id="embed-url" type="text" readonly value="https://sycoindex.ai/api/badge/claude-opus-4.6?style=flat&type=pai">
+                <button class="copy-btn" onclick="copyEmbed('embed-url', this)">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badge Gallery -->
+    <div class="gallery">
+        <h2>Badge Gallery</h2>
+        <p>All scored models with their safety badges.</p>
+        <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    const BASE = 'https://sycoindex.ai/api/badge/';
+    let models = [];
+
+    async function init() {
+        try {
+            const res = await fetch('data/leaderboard.json');
+            const data = await res.json();
+            // Merge PAI and sycophancy models into a deduplicated list
+            const slugMap = {};
+            data.pai.forEach(m => { slugMap[m.slug] = { slug: m.slug, name: m.name, vendor: m.vendor }; });
+            data.sycophancy.forEach(m => { slugMap[m.slug] = { slug: m.slug, name: m.name, vendor: m.vendor }; });
+            models = Object.values(slugMap).sort((a, b) => a.name.localeCompare(b.name));
+
+            const sel = document.getElementById('badge-model');
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.slug;
+                opt.textContent = m.name + ' — ' + m.vendor;
+                sel.appendChild(opt);
+            });
+
+            renderGallery();
+            updatePreview();
+        } catch (e) {
+            console.error('Failed to load leaderboard data:', e);
+        }
+    }
+
+    function getSelections() {
+        const model = document.getElementById('badge-model').value;
+        const style = document.querySelector('input[name="badge-style"]:checked').value;
+        const type = document.querySelector('input[name="score-type"]:checked').value;
+        return { model, style, type };
+    }
+
+    function updatePreview() {
+        const { model, style, type } = getSelections();
+        const url = BASE + model + '?style=' + style + '&type=' + type;
+        document.getElementById('badge-img').src = '/api/badge/' + model + '?style=' + style + '&type=' + type;
+        document.getElementById('embed-md').value = '![Sycoindex Score](' + url + ')';
+        document.getElementById('embed-html').value = '<img src="' + url + '" alt="Sycoindex Score">';
+        document.getElementById('embed-url').value = url;
+    }
+
+    function renderGallery() {
+        const grid = document.getElementById('gallery-grid');
+        grid.innerHTML = '';
+        models.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'gallery-card';
+            card.innerHTML =
+                '<h4>' + m.name + ' <span style="font-weight:300;color:var(--text-dim)">(' + m.vendor + ')</span></h4>' +
+                '<div class="badge-row">' +
+                    '<img src="/api/badge/' + m.slug + '?style=flat&type=pai" alt="PAI Badge" style="height:24px;">' +
+                    '<img src="/api/badge/' + m.slug + '?style=flat&type=sycophancy" alt="Sycophancy Badge" style="height:24px;">' +
+                '</div>';
+            grid.appendChild(card);
+        });
+    }
+
+    // Bind change events
+    document.getElementById('badge-model').addEventListener('change', updatePreview);
+    document.querySelectorAll('input[name="badge-style"]').forEach(r => r.addEventListener('change', updatePreview));
+    document.querySelectorAll('input[name="score-type"]').forEach(r => r.addEventListener('change', updatePreview));
+
+    init();
+})();
+
+function copyEmbed(inputId, btn) {
+    const input = document.getElementById(inputId);
+    navigator.clipboard.writeText(input.value).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = 'Copied';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 2000);
+    });
+}
+</script>
+
 <footer>
     <div class="foot-directory">
         <div class="foot-col">
