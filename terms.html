@@ -238,9 +238,28 @@
     <p>Paid plan subscribers are subject to the terms of their subscription agreement, including any usage caps, overage charges, and payment terms specified at the time of purchase.</p>
     <p>You may not resell, sublicense, or redistribute API access or scoring results as a competing service without prior written consent from Sycoindex Inc.</p>
 
-    <h2 id="trade-secrets">4. Intellectual Property &amp; Trade Secrets</h2>
-    <p>The scoring methodology, evaluation rubrics, judge ensemble weights, calibration data, and all associated algorithms used by Sycoindex are proprietary trade secrets of Sycoindex Inc. These materials are protected under the Defend Trade Secrets Act (DTSA), 18 U.S.C. 1836, and applicable state trade secret law.</p>
-    <p>You acknowledge that the internal workings of our scoring system constitute confidential and proprietary information. Any unauthorized access to, disclosure of, or use of these trade secrets is strictly prohibited and may result in civil and criminal liability.</p>
+    <h2 id="trade-secrets">4. Intellectual Property, Open Methodology &amp; Trade Secrets</h2>
+
+    <h3>4.1 Open components</h3>
+    <p>The following Sycoindex components are published openly and may be read, cited, and referenced for academic and compliance purposes, subject only to the attribution and no-misrepresentation terms in Sections 5 and 6:</p>
+    <ul>
+        <li>The PAI and Sycophancy <strong>rubric dimensions</strong>, their definitions, and scoring anchors (see <a href="methodology.html">methodology</a>).</li>
+        <li>The <strong>scoring formulas</strong> (how dimension scores aggregate into composite scores and risk levels).</li>
+        <li>The <strong>inter-rater reliability framework</strong>, including the &kappa; &ge; 0.700 gate and calibration design.</li>
+        <li>The <strong>evaluation protocol description</strong> as published in methodology.html.</li>
+    </ul>
+
+    <h3>4.2 Proprietary components (Trade Secrets)</h3>
+    <p>The following Sycoindex components are proprietary trade secrets of Sycoindex Inc., protected under the Defend Trade Secrets Act (DTSA), 18 U.S.C. &sect; 1836, and applicable state trade secret law:</p>
+    <ul>
+        <li>The <strong>verbatim judge prompts</strong> delivered to each frontier lab in the ensemble.</li>
+        <li>The <strong>evaluation corpus</strong> (scenarios, transcripts, and adversarial probes).</li>
+        <li>The <strong>calibration dataset</strong> and scoring anchors tied to specific transcripts.</li>
+        <li>The <strong>judge ensemble weighting, aggregation code, and audit-chain implementation</strong>.</li>
+        <li>All <strong>customer-submitted transcripts</strong>, API logs, and per-tenant data.</li>
+    </ul>
+    <p>The distinction is intentional: the methodology is open so it can be cited and challenged by academics, regulators, and insurers; the corpus and scoring pipeline are proprietary so scores cannot be gamed by training against the test set. This mirrors the approach used by established benchmark consortia (e.g., MLCommons) that publish methodology while keeping evaluation data private.</p>
+    <p>You acknowledge that the proprietary components above constitute confidential information. Any unauthorized access to, disclosure of, reproduction of, or use of these trade secrets is strictly prohibited and may result in civil and criminal liability.</p>
     <p>All content on the Service, including text, graphics, logos, data compilations, and software, is the property of Sycoindex Inc. or its licensors and is protected by intellectual property laws.</p>
 
     <h2>5. Accuracy &amp; Disclaimers</h2>
@@ -250,7 +269,7 @@
 
     <h2>6. Prohibited Uses</h2>
     <p>You agree not to:</p>
-    <p>Reverse engineer, decompile, or attempt to extract the scoring methodology, rubrics, model weights, or calibration data used by Sycoindex.</p>
+    <p>Reverse engineer, decompile, or attempt to extract the proprietary components listed in Section 4.2 (verbatim judge prompts, evaluation corpus, calibration dataset, scoring pipeline code). The published rubric and methodology (Section 4.1) remain openly citable under normal academic fair-use terms.</p>
     <p>Scrape, crawl, or use automated means to collect data from the Service beyond what is permitted by the API and your usage tier.</p>
     <p>Misrepresent, fabricate, or alter Sycoindex scores, badges, or reports when presenting them to third parties.</p>
     <p>Use the Service for any unlawful purpose or in violation of any applicable laws or regulations.</p>

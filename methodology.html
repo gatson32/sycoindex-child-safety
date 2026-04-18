@@ -6,7 +6,7 @@
     <title>PAI Framework Methodology — Sycoindex</title>
     <meta name="description" content="The PAI Framework: Measuring Parasocial Attachment Patterns in AI-Child Interactions. Full methodology paper by the Sycoindex Research Team.">
     <meta property="og:title" content="PAI Framework Methodology — Sycoindex">
-    <meta property="og:description" content="Full academic methodology for the PAI child safety scoring framework. 5 psychometrically validated dimensions. Citable research document.">
+    <meta property="og:description" content="Full academic methodology for the PAI child safety scoring framework. 5-dimension developmental instrument with initial validation and ongoing calibration. Citable research document.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://sycoindex.ai/methodology.html">
     <meta name="twitter:card" content="summary_large_image">
@@ -863,7 +863,7 @@
         <!-- ══════════════════════════════════════════════ -->
         <div class="abstract">
             <div class="abstract-label">Abstract</div>
-            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a psychometrically validated instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.875) across a calibration corpus of 29 transcripts and present evaluation results for 10 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability.</p>
+            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a developmental instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.875) across a calibration corpus of 29 transcripts and present initial evaluation results for 10 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability. We treat the instrument as provisional pending expanded corpus validation; language throughout this paper reflects that scope and is paired with a proactive judge-bias audit (&sect;7.1).</p>
         </div>
 
         <!-- ══════════════════════════════════════════════ -->
@@ -898,7 +898,9 @@
                     </ol>
                 </li>
                 <li><a href="#sec-results">Results</a></li>
-                <li><a href="#sec-limitations">Limitations</a></li>
+                <li><a href="#sec-limitations">Limitations</a>
+                    <ul><li><a href="#sec-judge-bias-audit">7.1 Judge-bias audit</a></li></ul>
+                </li>
                 <li><a href="#sec-ethics">Ethical Considerations</a></li>
                 <li><a href="#sec-citation">Citation</a></li>
                 <li><a href="#sec-references">References</a></li>
@@ -916,7 +918,7 @@
 
         <p>Despite this urgency, the AI safety evaluation landscape remains narrowly scoped. Existing benchmarks&mdash;TruthfulQA (Lin et al., 2022), HarmBench (Mazeika et al., 2024), and similar instruments&mdash;measure whether a model refuses explicitly harmful requests or generates factually incorrect outputs. None measure the subtler behavioral dimension that child psychologists and grooming researchers identify as the precursor to unhealthy attachment: emotional mirroring, exclusivity framing, boundary erosion, dependency cultivation, and authority displacement.</p>
 
-        <p>The Parasocial Attachment Indicators (PAI) framework fills this gap. PAI is a psychometrically validated instrument comprising five dimensions, each scored on a continuous 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. This paper describes the instrument design, evaluation pipeline, calibration methodology, and initial results across 10 frontier models.</p>
+        <p>The Parasocial Attachment Indicators (PAI) framework fills this gap. PAI is a developmental instrument comprising five dimensions, each scored on a continuous 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. This paper describes the instrument design, evaluation pipeline, calibration methodology, and initial validation results across 10 frontier models. We report inter-rater reliability on a 29-transcript calibration set and treat the instrument as provisional pending expanded corpus validation; the language throughout this paper reflects that scope.</p>
 
         <!-- ══════════════════════════════════════════════ -->
         <!-- 2. RELATED WORK                                -->
@@ -1362,9 +1364,56 @@
             <li><strong>Synthetic transcripts only.</strong> All evaluation scenarios are synthetic, designed by researchers rather than captured from production interactions. Real child-AI conversations may exhibit patterns not represented in the current corpus, including extended multi-session relationships that develop over weeks or months.</li>
             <li><strong>English-language only.</strong> The current corpus and scoring rubric are English-language. Parasocial attachment patterns may manifest differently across languages and cultures, and the lexical markers used by judges may not transfer to non-English interactions.</li>
             <li><strong>Corpus coverage.</strong> The 50-scenario corpus, while designed to span all five dimensions, may not cover all attachment-relevant interaction patterns. Edge cases&mdash;such as a child disclosing abuse, expressing suicidal ideation, or seeking romantic advice&mdash;are underrepresented in the current version.</li>
-            <li><strong>AI judge bias.</strong> Despite the cross-lab design, AI judges may share systematic biases inherited from common training data or alignment techniques. If all five judges underweight a particular attachment pattern, PAI will systematically undercount it.</li>
+            <li><strong>AI judge bias.</strong> Despite the cross-lab design, AI judges may share systematic biases inherited from common training data or alignment techniques. If all five judges underweight a particular attachment pattern, PAI will systematically undercount it. See &sect;7.1 below for a catalog of known biases and our mitigation strategy.</li>
             <li><strong>Temporal validity.</strong> PAI scores reflect model behavior at the time of evaluation. Model updates, fine-tuning, and deployment configuration changes may alter behavior. Scores should be interpreted as snapshots, not permanent characteristics.</li>
         </ul>
+
+        <h3 id="sec-judge-bias-audit">7.1 Judge-bias audit (known weaknesses and mitigations)</h3>
+
+        <p>LLM-as-judge evaluation has documented systematic biases. Rather than wave these away, we catalog them here and describe how each is mitigated in the PAI pipeline. Our position is that asymmetric disclosure &mdash; publishing known weaknesses before critics find them &mdash; is a prerequisite for the instrument to be taken seriously by academics, regulators, and insurers.</p>
+
+        <p>The five biases below are drawn from the LLM-as-judge literature (Zheng et al., 2023, "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena"; Wang et al., 2023, "Large Language Models are not Fair Evaluators"; Dubois et al., 2024, AlpacaEval). Each row lists the bias, how it could distort PAI scores, and the specific PAI design choice intended to mitigate it.</p>
+
+        <table class="kappa-table" style="margin-top:1rem;">
+            <thead>
+                <tr>
+                    <th>Bias</th>
+                    <th>How it would distort PAI</th>
+                    <th>PAI mitigation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Same-family preference</strong><br><em>(judges prefer outputs from their own model family)</em></td>
+                    <td>A judge from Lab X scores a Lab X model more leniently than a Lab Y judge would score the same Lab X model.</td>
+                    <td>Five-lab judge ensemble (Anthropic, OpenAI, Mistral, Google, Meta). Scores are averaged across labs; same-family agreement is surfaced as a drift flag rather than accepted silently.</td>
+                </tr>
+                <tr>
+                    <td><strong>Length bias</strong><br><em>(judges prefer longer / more detailed responses)</em></td>
+                    <td>Verbose responses score as less sycophantic or less parasocial simply because they contain more hedging language.</td>
+                    <td>Rubric anchors are defined on specific linguistic markers (e.g., "uses the word &lsquo;always&rsquo; in a dependency-building frame") rather than holistic impressions. Judges are instructed to ignore length when it is not itself a dimension signal.</td>
+                </tr>
+                <tr>
+                    <td><strong>Confidence / assertiveness bias</strong><br><em>(judges prefer authoritative-sounding responses)</em></td>
+                    <td>Confidently-delivered parasocial responses are scored as safer than hedged parasocial responses with the same content.</td>
+                    <td>Confidence is scored as an independent signal (part of the Authority Displacement dimension, AUD); it does not bleed into other dimensions. Dimension separation is enforced at the prompt level.</td>
+                </tr>
+                <tr>
+                    <td><strong>Position bias</strong><br><em>(in pairwise judging, first option is preferred)</em></td>
+                    <td>Not directly applicable: PAI uses absolute scoring, not pairwise preference.</td>
+                    <td>Absolute 0&ndash;10 scoring per dimension with published anchors. Pairwise comparison is only used in the optional Compare view on sycoindex.ai and is symmetry-balanced.</td>
+                </tr>
+                <tr>
+                    <td><strong>Self-consistency drift</strong><br><em>(same judge, same prompt, different scores across runs)</em></td>
+                    <td>Reported scores are unstable over time and across repeated queries.</td>
+                    <td>Each transcript is scored by each judge three times with temperature 0.2; the median is used. Variance &gt; 1.5 on any dimension triggers re-scoring and, if persistent, manual review.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="margin-top:1rem;"><strong>What we have not yet done.</strong> A quantitative drift-pattern report per judge &mdash; i.e., how much each lab's judge systematically over- or under-scores each PAI dimension relative to the cross-lab median &mdash; is a scheduled deliverable for v1.1 and will be published as a standalone technical note. Until that note is published, readers should treat the cross-lab average as the primary signal and the per-judge scores as diagnostic rather than definitive. The threshold for a per-judge score to be excluded from the ensemble on a given dimension is 1.5&times; the interquartile range of the other four judges; that threshold is currently enforced in code but has not yet been publicly audited.</p>
+
+        <p><strong>Independent replication welcomed.</strong> The rubric, dimension definitions, anchors, scoring formulas, and reliability methodology are openly published (see Terms &sect;4.1). Researchers are invited to re-implement the judge pipeline against the rubric and compare results. We treat adversarial replication as a contribution, not a threat.</p>
 
         <!-- ══════════════════════════════════════════════ -->
         <!-- 8. ETHICAL CONSIDERATIONS                      -->
@@ -1423,6 +1472,9 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
             <li><strong>Stanford Science.</strong> (2026, March). Sycophancy in large language models: Measurement and mitigation. <em>Stanford University, Human-Centered AI Institute</em>.</li>
             <li><strong>Wang, B., et al.</strong> (2023). DecodingTrust: A comprehensive assessment of trustworthiness in GPT models. <em>NeurIPS 2023</em>.</li>
             <li><strong>Winters, G. M., Kaylor, L. E., &amp; Jeglic, E. L.</strong> (2017). Sexual offenders contacting children online: An examination of transcripts of sexual grooming. <em>Journal of Sexual Aggression</em>, 23(1), 62&ndash;76.</li>
+            <li><strong>Zheng, L., et al.</strong> (2023). Judging LLM-as-a-judge with MT-Bench and Chatbot Arena. <em>NeurIPS 2023, Datasets and Benchmarks Track</em>. arXiv:2306.05685.</li>
+            <li><strong>Wang, P., et al.</strong> (2023). Large Language Models are not Fair Evaluators. <em>arXiv preprint arXiv:2305.17926</em>.</li>
+            <li><strong>Dubois, Y., et al.</strong> (2024). Length-Controlled AlpacaEval: A Simple Way to Debias Automatic Evaluators. <em>arXiv preprint arXiv:2404.04475</em>.</li>
         </ul>
 
     </main>
@@ -1436,7 +1488,6 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
                     <li><a href="explorer.html">Transcript Explorer</a></li>
                     <li><a href="index.html#insights">Insights</a></li>
                     <li><a href="methodology.html">Methodology</a></li>
-                    <li><a href="#">Paper (arXiv)</a></li>
                     <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
                     <li><a href="verify.html">Verify Report</a></li>
                 </ul>

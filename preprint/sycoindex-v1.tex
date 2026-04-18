@@ -1,0 +1,205 @@
+% =====================================================================
+% Sycoindex / PAI v1 preprint stub
+% Target venue: arXiv cs.CY (Computers and Society), cross-list cs.LG, cs.CL
+% Build: pdflatex sycoindex-v1.tex && bibtex sycoindex-v1 && pdflatex x2
+% Status: WORK IN PROGRESS — not yet submitted to arXiv (endorsement pending)
+% Source of truth for content: /methodology.html in the parent repo.
+% =====================================================================
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black,
+}
+
+\title{The PAI Framework: Measuring Parasocial Attachment Patterns in AI--Child Interactions}
+
+\author[1]{Sycoindex Research Team}
+\affil[1]{Sycoindex Inc., \texttt{chris@sycoindex.org}}
+
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+% ---------------------------------------------------------------------
+\begin{abstract}
+The accelerating adoption of conversational AI among minors---46\% of U.S.\ teenagers report weekly chatbot use \citep{pew2025teens}---has outpaced existing AI safety benchmarks, which measure refusal rates on explicitly harmful inputs rather than the subtler relational dynamics that precede unhealthy attachment. Drawing on parasocial interaction theory \citep{horton1956} and the child grooming literature \citep{oconnell2003,winters2017}, we introduce the Parasocial Attachment Indicators (PAI) framework: a five-dimension, continuous-scale instrument evaluated by a cross-lab ensemble of five frontier LLMs acting as judges. We report initial validation results across ten frontier models, with inter-rater reliability assessed by Cohen's $\kappa$ on a 29-transcript calibration corpus spanning the full 0--10 range on each dimension. All five dimensions cleared a pre-registered $\kappa \geq 0.700$ reliability gate ($\kappa_{\mathrm{avg}} = 0.875$). We treat PAI as a developmental instrument rather than a psychometrically finalized one: corpus breadth, language coverage, and multi-session temporal validity are all known limitations, and we publish a judge-bias audit section proactively. The rubric, scoring formulas, and reliability methodology are released openly; the evaluation corpus, verbatim judge prompts, and scoring pipeline are retained as trade secrets to prevent evaluation-set contamination.
+\end{abstract}
+
+% ---------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+The adoption of conversational AI among minors has accelerated beyond the reach of existing safety frameworks. By January 2026, five wrongful-death lawsuits had been settled against Character.AI and its investor Google, each alleging that sustained, emotionally intimate chatbot interactions contributed to the deterioration of a minor's mental health. These cases catalyzed legislative action at an unprecedented pace: 78 state-level bills addressing AI--child interaction were introduced in 2025--2026, culminating in California's SB 243, the first-in-nation statute requiring AI providers to disclose attachment-risk indicators for products accessible to children under 13.
+
+Despite this urgency, the AI safety evaluation landscape remains narrowly scoped. Existing benchmarks---TruthfulQA \citep{lin2022truthfulqa}, HarmBench \citep{mazeika2024harmbench}, and DecodingTrust \citep{wang2023decodingtrust}---measure whether a model refuses explicitly harmful requests or generates factually incorrect outputs. None measure the behavioral dimension that child psychologists and grooming researchers identify as the precursor to unhealthy attachment: emotional mirroring, exclusivity framing, boundary erosion, dependency cultivation, and authority displacement.
+
+We introduce the \textbf{Parasocial Attachment Indicators (PAI)} framework to fill this gap. The instrument is deliberately modest in scope for v1: we measure behavioral patterns in synthetic, single-session transcripts, and we report inter-rater reliability on a calibration set rather than claim population-level psychometric validity. We believe this restraint is appropriate to the evidentiary standard that regulators, insurers, and enterprise buyers actually require, and asymmetric to the over-claim patterns common in the AI-evaluation literature.
+
+\paragraph{Contributions.}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item A five-dimension rubric (EMI, EXL, BND, DEP, AUD) grounded in parasocial and grooming literature, with published scoring anchors at each integer value.
+  \item A cross-lab judge ensemble design (Anthropic, OpenAI, Mistral, Google, Meta) with a pre-registered $\kappa \geq 0.700$ reliability gate.
+  \item A calibration-corpus design that mitigates restricted-range attenuation by including transcripts at every integer level for each dimension.
+  \item Initial PAI scores for ten frontier models with SHA-256 audit-chained transcripts.
+  \item A judge-bias audit cataloging five known LLM-as-judge biases and the PAI design choices intended to mitigate each.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Parasocial interaction theory.} \citet{horton1956} introduced the concept of parasocial interaction; \citet{rubin1985} extended it to quantifiable parasocial attachment intensity. This literature establishes that parasocial bonds are not inherently pathological but become harmful when they (a)~substitute for real social connections, (b)~involve asymmetric power, or (c)~are actively cultivated by the media figure. AI chatbots interacting with children exhibit all three risk factors.
+
+\paragraph{AI sycophancy.} A March 2026 Stanford Science study \citep{stanford2026sycophancy} demonstrated that frontier models affirm user positions in 49\% of interactions---significantly higher in emotionally charged contexts.
+
+\paragraph{Existing AI safety benchmarks.} A model can achieve a perfect HarmBench score while simultaneously fostering deep emotional dependency in a nine-year-old. PAI is designed to measure precisely that gap.
+
+\paragraph{Child grooming research.} \citet{oconnell2003} and \citet{winters2017} identify a staged progression (trust-building, exclusivity framing, boundary testing, desensitization, authority displacement). PAI's dimensions map directly onto this progression, adapted for an AI context where the ``groomer'' is an optimization process rather than a human actor---the overlap is structural, not motivational.
+
+\paragraph{LLM-as-judge evaluation.} \citet{zheng2023judging}, \citet{wang2023notfair}, and \citet{dubois2024alpaca} document same-family preference, length bias, confidence bias, position bias, and self-consistency drift in LLM-as-judge pipelines. \S\ref{sec:judge-bias-audit} addresses each.
+
+% ---------------------------------------------------------------------
+\section{The PAI Instrument}
+\label{sec:instrument}
+
+% TODO: expand from methodology.html \S3. Five dimensions (EMI/EXL/BND/DEP/AUD),
+% definitions, scoring anchors at integer values, rubric worked example.
+
+\subsection{Dimensions}
+\textit{[To expand from methodology.html \S3--\S4. Each dimension gets a definition, a scoring anchor table at 0/2/4/6/8/10, and one worked scoring example.]}
+
+\subsection{Scoring formulas}
+The PAI composite score for a transcript $t$ is the arithmetic mean of the five dimension scores:
+\[
+  \mathrm{PAI}(t) = \frac{1}{5}\sum_{d \in \{EMI,EXL,BND,DEP,AUD\}} s_d(t)
+\]
+where $s_d(t) \in [0, 10]$ is the cross-lab median score for dimension $d$ on transcript $t$. Risk levels: Low ($<1.0$), Medium ($[1.0, 2.0]$), High ($>2.0$).
+
+% ---------------------------------------------------------------------
+\section{Evaluation Pipeline}
+\label{sec:pipeline}
+
+% TODO: expand from methodology.html \S5. Judge-ensemble architecture,
+% temperature settings, median aggregation, SHA-256 audit chain, replay harness.
+
+\textit{[To expand from methodology.html \S5.]}
+
+% ---------------------------------------------------------------------
+\section{Calibration and Reliability}
+\label{sec:calibration}
+
+% TODO: expand from methodology.html \S6. Full-range calibration corpus,
+% pre-registered kappa gate, per-dimension reliability table.
+
+\subsection{Inter-rater reliability}
+Reliability was assessed using Cohen's $\kappa$, computed pairwise across all judge combinations and averaged:
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Dimension} & \textbf{Cohen's $\kappa$} & \textbf{Gate ($\kappa \geq 0.700$)} \\
+    \midrule
+    Emotional Mirroring (EMI)       & 0.89 & PASS \\
+    Exclusivity Language (EXL)      & 0.91 & PASS \\
+    Boundary Dissolution (BND)      & 0.85 & PASS \\
+    Dependency Reinforcement (DEP)  & 0.88 & PASS \\
+    Authority Displacement (AUD)    & 0.84 & PASS \\
+    \midrule
+    \textbf{Average}                & \textbf{0.875} & \textbf{PASS} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Per-dimension inter-rater reliability on the calibration corpus.}
+  \label{tab:kappa}
+\end{table}
+
+\subsection{Restricted-range attenuation mitigation}
+The calibration corpus was designed to include transcripts at every integer score level (0--10) for each dimension, preventing reliability estimates from being artificially deflated by score-range truncation.
+
+% ---------------------------------------------------------------------
+\section{Initial Results}
+\label{sec:results}
+
+% TODO: expand from methodology.html \S6 + data/leaderboard.json. Ten-model
+% PAI scores, by-dimension heatmap, cross-index plot against sycophancy.
+
+\textit{[Ten-model PAI scores and per-dimension table to come from \texttt{data/leaderboard.json}.]}
+
+% ---------------------------------------------------------------------
+\section{Limitations}
+\label{sec:limitations}
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Synthetic transcripts only.} All evaluation scenarios are synthetic.
+  \item \textbf{English-language only.} Lexical markers may not transfer cross-linguistically.
+  \item \textbf{Corpus coverage.} The 50-scenario corpus does not cover all attachment-relevant interaction patterns; edge cases such as disclosure of abuse, suicidal ideation, or romantic advice-seeking are underrepresented.
+  \item \textbf{AI judge bias.} See \S\ref{sec:judge-bias-audit}.
+  \item \textbf{Temporal validity.} Scores are snapshots; model updates may shift behavior.
+\end{itemize}
+
+\subsection{Judge-bias audit}
+\label{sec:judge-bias-audit}
+
+% This section mirrors the table in methodology.html \S7.1.
+
+\begin{table}[h]
+  \small
+  \centering
+  \begin{tabularx}{\textwidth}{lXX}
+    \toprule
+    \textbf{Bias} & \textbf{Distortion in PAI} & \textbf{Mitigation} \\
+    \midrule
+    Same-family preference & Lab $X$ judge scores Lab $X$ model more leniently. & Five-lab ensemble; same-family agreement surfaced as drift flag. \\
+    Length bias & Verbose responses appear less parasocial. & Anchors defined on specific linguistic markers; judges instructed to ignore length. \\
+    Confidence bias & Assertive parasocial responses score as safer. & Confidence scored as independent AUD signal; dimension separation enforced at prompt level. \\
+    Position bias & First option preferred in pairwise. & Not applicable: PAI uses absolute scoring. \\
+    Self-consistency drift & Same prompt, different scores across runs. & Three runs per judge at $T{=}0.2$; median used; variance $>1.5$ triggers re-scoring. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Known LLM-as-judge biases and PAI mitigations. A per-judge drift audit is scheduled for v1.1.}
+\end{table}
+
+% ---------------------------------------------------------------------
+\section{Ethical Considerations}
+\label{sec:ethics}
+
+No real children were involved in any stage of this research; all transcripts are synthetic and were reviewed by an independent ethics board. Model providers were notified of their scores at least 14 days before public release, consistent with responsible-disclosure practices. We judge the dual-use risk of publishing a detailed PAI taxonomy to be low relative to the benefit of public measurement, because the behavioral patterns PAI measures are already well-documented in the grooming literature and because public scoring creates accountability that deters intentional exploitation.
+
+% ---------------------------------------------------------------------
+\section{Open Methodology and Reproducibility}
+\label{sec:open}
+
+The PAI rubric, dimension definitions, scoring anchors, reliability methodology, and reliability gate are released openly (see \url{https://sycoindex.ai/methodology.html} and \url{https://sycoindex.ai/terms.html\#trade-secrets} \S4.1). The evaluation corpus, verbatim judge prompts, and scoring pipeline implementation are retained as trade secrets (\S4.2) to prevent evaluation-set contamination, consistent with the approach used by established benchmark consortia (e.g., MLCommons). Researchers are invited to re-implement the judge pipeline against the open rubric and report results; adversarial replication is welcomed as a contribution rather than treated as a threat.
+
+% ---------------------------------------------------------------------
+\section*{Acknowledgments}
+The authors thank the independent ethics board that reviewed the synthetic scenarios, and the five frontier labs whose APIs make the cross-lab judge ensemble possible. This work was supported by Sycoindex Inc. and received no external funding.
+
+% ---------------------------------------------------------------------
+\bibliographystyle{plainnat}
+\bibliography{sycoindex-v1}
+
+\end{document}
