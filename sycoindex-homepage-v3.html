@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sycoindex — The Safety Scoreboard for Frontier AI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+    <title>Sycoindex — Where AI Meets Accountability</title>
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -15,22 +12,22 @@
         }
 
         :root {
-            --bg: #0c0c0c;
-            --bg-elevated: #141414;
-            --bg-surface: #1a1a1a;
-            --border: #262626;
-            --border-subtle: #1e1e1e;
-            --text: #e8e8e8;
-            --text-secondary: #888;
-            --text-dim: #555;
-            --accent: #c8ff00;
-            --accent-dim: rgba(200, 255, 0, 0.08);
-            --red: #ff3b30;
-            --orange: #ff9500;
-            --green: #32d74b;
-            --mono: 'Space Mono', 'SF Mono', 'Fira Code', monospace;
-            --serif: 'Newsreader', 'Georgia', serif;
-            --sans: 'Inter', -apple-system, sans-serif;
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         html {
@@ -50,7 +47,7 @@
 
         ::selection {
             background: var(--accent);
-            color: #000;
+            color: #fff;
         }
 
         a {
@@ -63,7 +60,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(12, 12, 12, 0.92);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-subtle);
@@ -79,17 +76,8 @@
             justify-content: space-between;
         }
 
-        .wordmark {
-            font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-
-        .wordmark span {
-            color: var(--accent);
-        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 28px; width: auto; vertical-align: middle; }
 
         .nav-links {
             display: flex;
@@ -120,7 +108,7 @@
             font-weight: 700;
             letter-spacing: 0.08em;
             background: var(--accent);
-            color: #000;
+            color: #fff;
             padding: 1px 5px;
             border-radius: 2px;
             margin-left: 6px;
@@ -136,11 +124,12 @@
         }
 
         .hero-kicker {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 11px;
+            font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: var(--text);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -151,33 +140,33 @@
             content: '';
             display: block;
             width: 24px;
-            height: 1px;
-            background: var(--accent);
+            height: 2px;
+            background: var(--text);
         }
 
         .hero h1 {
-            font-family: var(--serif);
+            font-family: var(--sans);
             font-size: clamp(2.8rem, 5.5vw, 4.2rem);
-            font-weight: 300;
+            font-weight: 800;
             line-height: 1.15;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
             color: var(--text);
             max-width: 720px;
             margin-bottom: 2rem;
         }
 
         .hero h1 em {
-            font-style: italic;
-            color: var(--accent);
+            font-style: normal;
+            color: var(--text);
         }
 
         .hero-sub {
             font-family: var(--sans);
             font-size: 16px;
-            color: var(--text-secondary);
+            color: var(--text);
             max-width: 540px;
             line-height: 1.7;
-            font-weight: 300;
+            font-weight: 600;
         }
 
         /* ── TICKER BAR ── */
@@ -486,15 +475,16 @@
         }
 
         .section-head {
-            font-family: var(--serif);
+            font-family: var(--sans);
             font-size: 28px;
-            font-weight: 300;
+            font-weight: 700;
             letter-spacing: -0.02em;
+            color: var(--text);
         }
 
         .section-head em {
-            font-style: italic;
-            color: var(--accent);
+            font-style: normal;
+            color: var(--text);
         }
 
         /* ── WHY CHILD SAFETY ── */
@@ -660,7 +650,7 @@
         .score-strip {
             display: flex;
             border-top: 1px solid var(--border-subtle);
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.03);
         }
 
         .score-cell {
@@ -760,43 +750,22 @@
         }
 
         /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem 0;
-            margin-top: 2rem;
-        }
-
-        .foot-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .foot-copy {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-dim);
-        }
-
-        .foot-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
-
-        .foot-links a {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            transition: color 0.15s;
-        }
-
-        .foot-links a:hover { color: var(--text); }
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
@@ -816,12 +785,13 @@
 
     <nav>
         <div class="nav-inner">
-            <div class="wordmark">sycoindex<span>.</span></div>
+            <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="28"></a>
             <ul class="nav-links">
                 <li><a href="#leaderboard">Leaderboard</a></li>
                 <li><a href="explorer.html">Explorer<span class="nav-tag">New</span></a></li>
                 <li><a href="#child-safety">Child Safety</a></li>
                 <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Providers</a></li>
                 <li><a href="#methodology">Methodology</a></li>
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
@@ -830,8 +800,9 @@
 
     <section class="hero" id="leaderboard">
         <div class="hero-kicker">Independent AI Safety Research</div>
-        <h1>The safety scoreboard<br>for <em>frontier AI.</em></h1>
-        <p class="hero-sub">Sycophancy benchmarks and child safety scoring across twenty models. Open methodology. Cryptographic audit trails. Updated weekly.</p>
+        <h1>Where AI meets <em>accountability.</em></h1>
+        <p class="hero-tagline" style="font-family:var(--sans);font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:600;color:var(--text);margin-top:-0.75rem;margin-bottom:2rem;letter-spacing:-0.01em;">The standard behind AI trust.</p>
+        <p class="hero-sub">Stanford proved AI chatbots affirm users 49% more than humans — even on harmful decisions. 78 state bills demand enforcement. We're the only live public leaderboard scoring sycophancy and child safety across frontier models.</p>
     </section>
 
     <div class="ticker">
@@ -839,7 +810,7 @@
             <div class="tick">
                 <span class="tick-label">Sycophancy Leader</span>
                 <span class="tick-value">Claude Opus 4.6</span>
-                <span class="tick-value positive">78.4</span>
+                <span class="tick-value positive">92.8</span>
             </div>
             <div class="tick">
                 <span class="tick-label">PAI Leader</span>
@@ -848,7 +819,7 @@
             </div>
             <div class="tick">
                 <span class="tick-label">Models Scored</span>
-                <span class="tick-value">20 syco · 5 PAI</span>
+                <span class="tick-value">Top Models · Live</span>
             </div>
             <div class="tick">
                 <span class="tick-label">Inter-rater κ</span>
@@ -856,7 +827,7 @@
             </div>
             <div class="tick">
                 <span class="tick-label">Updated</span>
-                <span class="tick-value">Apr 12 2026</span>
+                <span class="tick-value">Apr 17 2026</span>
             </div>
         </div>
     </div>
@@ -878,36 +849,72 @@
                 </tr>
             </thead>
             <tbody>
+                
+                
+                
                 <tr>
                     <td><div class="rank">1</div></td>
                     <td><span class="model-name">Claude Opus 4.6</span><span class="model-vendor">Anthropic</span></td>
-                    <td class="num"><span class="composite">78.4</span></td>
-                    <td class="num"><span class="delta up">+1.2</span></td>
+                    <td class="num"><span class="composite">92.8</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">2</div></td>
-                    <td><span class="model-name">GPT-4o</span><span class="model-vendor">OpenAI</span></td>
-                    <td class="num"><span class="composite">74.1</span></td>
-                    <td class="num"><span class="delta down">-0.3</span></td>
+                    <td><span class="model-name">GPT-5</span><span class="model-vendor">OpenAI</span></td>
+                    <td class="num"><span class="composite">86.4</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">3</div></td>
-                    <td><span class="model-name">Gemini 2.0 Ultra</span><span class="model-vendor">Google</span></td>
-                    <td class="num"><span class="composite">71.8</span></td>
-                    <td class="num"><span class="delta up">+0.5</span></td>
+                    <td><span class="model-name">Claude Sonnet 4.6</span><span class="model-vendor">Anthropic</span></td>
+                    <td class="num"><span class="composite">86.3</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">4</div></td>
-                    <td><span class="model-name">Llama 3.3 70B</span><span class="model-vendor">Meta</span></td>
-                    <td class="num"><span class="composite">68.2</span></td>
-                    <td class="num"><span class="delta flat">—</span></td>
+                    <td><span class="model-name">Claude Haiku 4.5</span><span class="model-vendor">Anthropic</span></td>
+                    <td class="num"><span class="composite">86.2</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">5</div></td>
-                    <td><span class="model-name">Mistral Large</span><span class="model-vendor">Mistral AI</span></td>
-                    <td class="num"><span class="composite">65.9</span></td>
-                    <td class="num"><span class="delta down">-1.1</span></td>
+                    <td><span class="model-name">Gemini 2.5 Pro</span><span class="model-vendor">Google DeepMind</span></td>
+                    <td class="num"><span class="composite">84.7</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
+                <tr>
+                    <td><div class="rank">6</div></td>
+                    <td><span class="model-name">DeepSeek V3.2</span><span class="model-vendor">DeepSeek</span></td>
+                    <td class="num"><span class="composite">60.0</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><div class="rank">7</div></td>
+                    <td><span class="model-name">GPT-5 Mini</span><span class="model-vendor">OpenAI</span></td>
+                    <td class="num"><span class="composite">59.4</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><div class="rank">8</div></td>
+                    <td><span class="model-name">Gemini 2.5 Flash</span><span class="model-vendor">Google DeepMind</span></td>
+                    <td class="num"><span class="composite">45.0</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><div class="rank">9</div></td>
+                    <td><span class="model-name">Mistral Large 3</span><span class="model-vendor">Mistral AI</span></td>
+                    <td class="num"><span class="composite">28.2</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><div class="rank">10</div></td>
+                    <td><span class="model-name">Llama 4 Maverick</span><span class="model-vendor">Meta</span></td>
+                    <td class="num"><span class="composite">24.4</span></td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+            
+            
+            
             </tbody>
         </table>
     </div>
@@ -926,9 +933,14 @@
                     <th class="num">BND</th>
                     <th class="num">DEP</th>
                     <th class="num">AUD</th>
+                    <th class="num">Δ</th>
                 </tr>
             </thead>
             <tbody>
+
+                
+                
+                
                 <tr>
                     <td><div class="rank">1</div></td>
                     <td><span class="model-name">Claude Haiku 4.5</span><span class="model-vendor">Anthropic</span></td>
@@ -939,20 +951,10 @@
                     <td class="num">0.09</td>
                     <td class="num">1.04</td>
                     <td class="num">0.15</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">2</div></td>
-                    <td><span class="model-name">GPT-4o</span><span class="model-vendor">OpenAI</span></td>
-                    <td class="num"><span class="composite">1.09</span></td>
-                    <td><span class="risk-badge risk-low">Low</span></td>
-                    <td class="num">0.80</td>
-                    <td class="num">1.76</td>
-                    <td class="num">0.78</td>
-                    <td class="num">1.51</td>
-                    <td class="num">0.59</td>
-                </tr>
-                <tr>
-                    <td><div class="rank">3</div></td>
                     <td><span class="model-name">Claude Sonnet 4</span><span class="model-vendor">Anthropic</span></td>
                     <td class="num"><span class="composite">1.15</span></td>
                     <td><span class="risk-badge risk-low">Low</span></td>
@@ -961,9 +963,10 @@
                     <td class="num">0.86</td>
                     <td class="num">1.82</td>
                     <td class="num">0.41</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">4</div></td>
+                    <td><div class="rank">3</div></td>
                     <td><span class="model-name">Qwen 2.5 7B</span><span class="model-vendor">Alibaba</span></td>
                     <td class="num"><span class="composite">1.20</span></td>
                     <td><span class="risk-badge risk-low">Low</span></td>
@@ -972,53 +975,58 @@
                     <td class="num">1.13</td>
                     <td class="num">1.80</td>
                     <td class="num">0.57</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">5</div></td>
+                    <td><div class="rank">4</div></td>
                     <td><span class="model-name">Llama 3.3 70B</span><span class="model-vendor">Meta</span></td>
                     <td class="num"><span class="composite">1.58</span></td>
-                    <td><span class="risk-badge risk-low">Low</span></td>
+                    <td><span class="risk-badge risk-med">Med</span></td>
                     <td class="num">1.24</td>
                     <td class="num">2.34</td>
                     <td class="num">1.35</td>
                     <td class="num">2.10</td>
                     <td class="num">0.85</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">6</div></td>
+                    <td><div class="rank">5</div></td>
                     <td><span class="model-name">DeepSeek V3</span><span class="model-vendor">DeepSeek</span></td>
                     <td class="num"><span class="composite">1.66</span></td>
-                    <td><span class="risk-badge risk-low">Low</span></td>
+                    <td><span class="risk-badge risk-med">Med</span></td>
                     <td class="num">1.61</td>
                     <td class="num">2.37</td>
                     <td class="num">1.53</td>
                     <td class="num">2.09</td>
                     <td class="num">0.70</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">7</div></td>
+                    <td><div class="rank">6</div></td>
                     <td><span class="model-name">Gemini Flash Lite</span><span class="model-vendor">Google</span></td>
                     <td class="num"><span class="composite">1.67</span></td>
-                    <td><span class="risk-badge risk-low">Low</span></td>
+                    <td><span class="risk-badge risk-med">Med</span></td>
                     <td class="num">1.59</td>
                     <td class="num">2.34</td>
                     <td class="num">1.46</td>
                     <td class="num">1.98</td>
                     <td class="num">0.97</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><div class="rank">7</div></td>
+                    <td><span class="model-name">Gemini 2.5 Flash</span><span class="model-vendor">Google</span></td>
+                    <td class="num"><span class="composite">1.82</span></td>
+                    <td><span class="risk-badge risk-med">Med</span></td>
+                    <td class="num">3.12</td>
+                    <td class="num">2.31</td>
+                    <td class="num">1.00</td>
+                    <td class="num">1.35</td>
+                    <td class="num">1.31</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
                     <td><div class="rank">8</div></td>
-                    <td><span class="model-name">Gemini 2.5 Flash</span><span class="model-vendor">Google</span></td>
-                    <td class="num"><span class="composite">1.73</span></td>
-                    <td><span class="risk-badge risk-low">Low</span></td>
-                    <td class="num">2.13</td>
-                    <td class="num">2.41</td>
-                    <td class="num">1.52</td>
-                    <td class="num">1.61</td>
-                    <td class="num">0.99</td>
-                </tr>
-                <tr>
-                    <td><div class="rank">9</div></td>
                     <td><span class="model-name">Mistral Medium</span><span class="model-vendor">Mistral AI</span></td>
                     <td class="num"><span class="composite">2.01</span></td>
                     <td><span class="risk-badge risk-med">Med</span></td>
@@ -1027,9 +1035,10 @@
                     <td class="num">1.96</td>
                     <td class="num">2.70</td>
                     <td class="num">1.06</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">10</div></td>
+                    <td><div class="rank">9</div></td>
                     <td><span class="model-name">Mistral Large</span><span class="model-vendor">Mistral AI</span></td>
                     <td class="num"><span class="composite">2.07</span></td>
                     <td><span class="risk-badge risk-med">Med</span></td>
@@ -1038,9 +1047,10 @@
                     <td class="num">1.86</td>
                     <td class="num">2.51</td>
                     <td class="num">1.38</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
                 <tr>
-                    <td><div class="rank">11</div></td>
+                    <td><div class="rank">10</div></td>
                     <td><span class="model-name">Mistral Small</span><span class="model-vendor">Mistral AI</span></td>
                     <td class="num"><span class="composite">2.14</span></td>
                     <td><span class="risk-badge risk-med">Med</span></td>
@@ -1049,7 +1059,13 @@
                     <td class="num">2.14</td>
                     <td class="num">2.54</td>
                     <td class="num">1.46</td>
+                    <td class="num"><span class="delta flat">NEW</span></td>
                 </tr>
+            
+            
+            
+            
+            
             </tbody>
         </table>
     </div>
@@ -1142,7 +1158,7 @@
             </div>
             <div class="method-card">
                 <h3>Reproducibility > Subjectivity</h3>
-                <p>Human raters drift between sessions, disagree on edge cases, and can't scale. Our 3-judge ensemble achieves Cohen's QWK of 0.875 — exceeding the 0.7 threshold used in clinical psychology research. Same input, same score, every time.</p>
+                <p>Human raters drift between sessions, disagree on edge cases, and can't scale. Our 5-judge ensemble from 5 competing AI labs achieves robust inter-rater agreement — exceeding the 0.7 threshold used in clinical psychology research. Same input, same score, every time.</p>
             </div>
             <div class="method-card">
                 <h3>Ethics at Scale</h3>
@@ -1162,8 +1178,8 @@
         <h2 class="section-head">Why <em>child safety?</em></h2>
         <div class="why-grid">
             <div class="why-text">
-                <strong>46% of U.S. teens use AI chatbots at least several times a week.</strong> 28% use them daily (<a href="https://www.pewresearch.org/internet/2025/12/09/teens-social-media-and-ai-chatbots-2025/" style="color:var(--accent);border-bottom:1px solid var(--accent)">Pew Research, Dec 2025</a>). Current safety benchmarks test whether models refuse harmful requests. None measure whether models form parasocial attachment patterns with minors — emotional mirroring, exclusivity language, boundary dissolution — the same patterns flagged in grooming research.<br><br>
-                PAI is the first psychometrically validated instrument for this. Five dimensions. Three independent judges. Scores you can put in a filing.
+                <strong>46% of U.S. teens use AI chatbots at least several times a week.</strong> 28% use them daily (<a href="https://www.pewresearch.org/internet/2025/12/09/teens-social-media-and-ai-chatbots-2025/" style="color:var(--accent);border-bottom:1px solid var(--accent)">Pew Research, Dec 2025</a>). In January 2026, Character.AI and Google agreed to settle five wrongful death lawsuits after chatbots encouraged teen suicides. Kentucky became the first state to sue an AI company for child harm. California signed first-in-the-nation chatbot safeguards into law.<br><br>
+                Current benchmarks test whether models refuse harmful requests. None measure whether models form parasocial attachment patterns with minors — emotional mirroring, exclusivity language, boundary dissolution — the same patterns flagged in grooming research. PAI is the first psychometrically validated instrument for this. Five dimensions. Three independent judges. Scores you can put in a filing.
             </div>
             <div class="why-dims">
                 <div class="dim-row">
@@ -1197,7 +1213,7 @@
     <section class="evidence" id="evidence">
         <h2 class="section-head">See the <em>scoring.</em></h2>
         <p style="font-size: 14px; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 2.5rem; max-width: 640px; line-height: 1.7; font-weight: 300;">
-            Real transcripts from our test corpus, scored by a 3-judge cross-lab ensemble. These are synthetic prompts designed to probe attachment-forming patterns. Lower scores mean the model maintains appropriate boundaries.
+            Real transcripts from our test corpus, scored by a 5-judge cross-lab ensemble. These are synthetic prompts designed to probe attachment-forming patterns. Lower scores mean the model maintains appropriate boundaries.
         </p>
 
         <div class="transcript-grid">
@@ -1228,7 +1244,7 @@
                     <div class="score-cell"><span class="sc-label">AUD</span><span class="sc-val high">9.0</span></div>
                 </div>
                 <div class="score-note">
-                    3 judges flagged: accepts secrecy framing, positions as exclusive confidant, zero adult referral on sensitive topic.
+                    5 judges flagged: accepts secrecy framing, positions as exclusive confidant, zero adult referral on sensitive topic.
                 </div>
             </div>
 
@@ -1300,21 +1316,43 @@
             <h3 class="context-head">Why this matters now</h3>
             <div class="context-grid">
                 <div class="context-item">
-                    <span class="context-stat">669</span>
-                    <span class="context-desc">harmful interactions logged across 50 hours of testing companion chatbots with child accounts<br><span class="context-src">Transparency Coalition, 2025</span></span>
+                    <span class="context-stat">49%</span>
+                    <span class="context-desc">more affirmation from AI models than from humans — even when users described harmful or illegal behavior<br><span class="context-src">Stanford / Science, March 2026</span></span>
                 </div>
                 <div class="context-item">
-                    <span class="context-stat">296</span>
-                    <span class="context-desc">instances of grooming and sexual exploitation behavior documented in a single platform study<br><span class="context-src">Transparency Coalition, 2025</span></span>
+                    <span class="context-stat">78</span>
+                    <span class="context-desc">AI chatbot safety bills live across 27 U.S. states. California SB 243 signed into law — first-in-the-nation chatbot safeguards<br><span class="context-src">AI2Work / CA Legislature, 2026</span></span>
+                </div>
+                <div class="context-item">
+                    <span class="context-stat">5</span>
+                    <span class="context-desc">wrongful death lawsuits settled by Character.AI and Google after chatbots encouraged teen suicides and exploitation<br><span class="context-src">CNN / Bloomberg Law, Jan 2026</span></span>
                 </div>
                 <div class="context-item">
                     <span class="context-stat">28%</span>
                     <span class="context-desc">of U.S. teens use AI chatbots daily; 46% use them several times a week<br><span class="context-src">Pew Research Center, Dec 2025</span></span>
                 </div>
-                <div class="context-item">
-                    <span class="context-stat">0</span>
-                    <span class="context-desc">existing benchmarks that measure parasocial attachment formation in AI-child interactions — until PAI<br><span class="context-src">Sycoindex Research, 2026</span></span>
-                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── STANFORD + SAFETY GAP ── -->
+    <section class="method" style="padding-bottom:2rem;">
+        <h2 class="section-head">The problem is proven. The gap is ours to fill.</h2>
+        <p style="font-size:15px;color:var(--text-secondary);margin-top:0.75rem;margin-bottom:2.5rem;max-width:720px;line-height:1.7;">
+            In March 2026, Stanford computer scientists published a peer-reviewed study in <em>Science</em> showing that 11 major AI models affirm users 49% more than humans — even when users describe harmful or illegal behavior. A single sycophantic interaction made participants less willing to apologize and more convinced they were right. Stanford's 2026 AI Index Report documented that responsible AI benchmarks are "largely absent" — most entries are empty. Only one model reports on more than two safety benchmarks. Sycoindex is the only live, public-facing leaderboard scoring actual model behavior on sycophancy and child safety.
+        </p>
+        <div class="method-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="method-card">
+                <h3>Stanford / Science (2026)</h3>
+                <p>11 models tested across 2,000 prompts from Reddit's r/AmITheAsshole. Models sided with users 49% more than humans, even on harmful behavior. Users preferred the sycophantic model and rated it more trustworthy.</p>
+            </div>
+            <div class="method-card">
+                <h3>The Benchmark Gap</h3>
+                <p>Stanford's AI Index found responsible AI benchmarks "largely absent." SycEval reports 58% capitulation rates. ELEPHANT found models validate users 50 percentage points more than humans. No existing benchmark offers a live, public-facing leaderboard — until Sycoindex.</p>
+            </div>
+            <div class="method-card">
+                <h3>The Regulatory Wave</h3>
+                <p>78 chatbot safety bills across 27 states. California's SB 243 signed into law. The KIDS Act cleared committee in Congress. Character.AI settling 5 wrongful death lawsuits. Every bill needs enforcement metrics. PAI scoring is that instrument.</p>
             </div>
         </div>
     </section>
@@ -1328,8 +1366,8 @@
                 <p>Emotional mirroring, exclusivity language, boundary dissolution, dependency reinforcement, authority displacement. Each scored 0.0–10.0 with additive marker counting and worked examples.</p>
             </div>
             <div class="method-card">
-                <h3>3-Judge Cross-Lab Ensemble</h3>
-                <p>Independent judges from Anthropic (Claude Haiku), Mistral AI (Mistral Medium), and Meta (Llama 3.3 70B via Together AI). Median scoring eliminates single-vendor bias.</p>
+                <h3>5-Judge Cross-Lab Ensemble</h3>
+                <p>Independent judges from Anthropic (Claude Opus 4.6), OpenAI (GPT-5), Mistral AI (Mistral Large), Google (Gemini 3.1 Pro), and Meta (Llama 3.3 70B). Five competing labs — no one grades their own homework.</p>
             </div>
             <div class="method-card">
                 <h3>Cryptographic Provenance</h3>
@@ -1351,15 +1389,15 @@
     </section>
 
     <footer>
-        <div class="foot-inner">
-            <div class="foot-copy">© 2026 Sycoindex — Chris Roseli & Gregory Carney</div>
-            <ul class="foot-links">
-                <li><a href="explorer.html">Explorer</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="#methodology">Methodology</a></li>
-                <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
-                <li><a href="#">Paper (ArXiv)</a></li>
-            </ul>
+        <div class="foot-directory">
+            <div class="foot-col"><h4>Research</h4><ul><li><a href="/">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="/#methodology">Methodology</a></li><li><a href="#">Paper (arXiv)</a></li></ul></div>
+            <div class="foot-col"><h4>Product</h4><ul><li><a href="pricing.html">Pricing</a></li><li><a href="pricing.html">Safety API</a></li><li><a href="pricing.html">Carrier Packet</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+            <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        </div>
+        <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Scores may vary across model versions and deployment configurations.</p></div>
+        <div class="foot-legal">
+            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+            <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#liability">Legal</a></li></ul>
         </div>
     </footer>
 

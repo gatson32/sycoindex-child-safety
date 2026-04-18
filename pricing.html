@@ -49,11 +49,8 @@
             max-width: 1200px; margin: 0 auto; padding: 0 2rem;
             height: 52px; display: flex; align-items: center; justify-content: space-between;
         }
-        .wordmark {
-            font-family: var(--mono); font-size: 14px; font-weight: 700;
-            letter-spacing: -0.02em; color: var(--text);
-        }
-        .wordmark span { color: var(--accent); }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 28px; width: auto; vertical-align: middle; }
         .nav-links { display: flex; gap: 0.25rem; list-style: none; }
         .nav-links a {
             font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
@@ -336,7 +333,7 @@
 <!-- ── NAV ── -->
 <nav>
     <div class="nav-inner">
-        <a href="index.html" class="wordmark">SYCO<span>INDEX</span></a>
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="28"></a>
         <ul class="nav-links">
             <li><a href="index.html">Leaderboard</a></li>
             <li><a href="explorer.html">Explorer</a></li>
@@ -529,7 +526,7 @@
                     <div class="label">labs · 5 judges · 1 score</div>
                 </div>
             </div>
-            <a href="mailto:api@sycoindex.com?subject=PAI%20API%20Beta%20Access" class="plan-cta">Request Beta Access</a>
+            <a href="mailto:chris@sycoindex.com?subject=PAI%20API%20Beta%20Access" class="plan-cta">Request Beta Access</a>
         </div>
         <div>
             <div class="api-code">
@@ -614,7 +611,7 @@ curl -X POST https://api.sycoindex.com/v1/score \
         <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
         <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
         <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:contact@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
     </div>
     <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">

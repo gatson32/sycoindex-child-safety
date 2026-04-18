@@ -83,17 +83,8 @@
             justify-content: space-between;
         }
 
-        .wordmark {
-            font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-
-        .wordmark span {
-            color: var(--accent);
-        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 28px; width: auto; vertical-align: middle; }
 
         .nav-links {
             display: flex;
@@ -812,7 +803,7 @@
 
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="wordmark">sycoindex<span>.</span></a>
+            <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="28"></a>
             <ul class="nav-links">
                 <li><a href="index.html#leaderboard">Leaderboard</a></li>
                 <li><a href="explorer.html">Explorer</a></li>
@@ -1442,7 +1433,7 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
                 <h4>Company</h4>
                 <ul>
                     <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
-                    <li><a href="mailto:contact@sycoindex.com">Contact</a></li>
+                    <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
                 </ul>
             </div>
         </div>

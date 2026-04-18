@@ -106,13 +106,8 @@
             padding: 20px 20px 16px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-        .sidebar-brand .wordmark {
-            font-size: 17px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
+        .sidebar-brand .wordmark { display: inline-block; }
+        .sidebar-brand .wordmark img { height: 28px; width: auto; vertical-align: middle; }
         .sidebar-brand .sub {
             font-size: 10px;
             color: var(--sidebar-text);
@@ -503,7 +498,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="wordmark">Sycoindex</div>
+            <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="28"></a>
             <div class="sub">Enterprise Dashboard</div>
         </div>
         <nav class="sidebar-nav">

@@ -102,17 +102,8 @@
             justify-content: space-between;
         }
 
-        .wordmark {
-            font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-
-        .wordmark span {
-            color: var(--accent);
-        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 28px; width: auto; vertical-align: middle; }
 
         .nav-links {
             display: flex;
@@ -1241,7 +1232,7 @@
 
     <nav>
         <div class="nav-inner">
-            <div class="wordmark">sycoindex<span>.</span></div>
+            <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="28"></a>
             <ul class="nav-links">
                 <li><a href="#leaderboard">Leaderboard</a></li>
                 <li><a href="explorer.html">Explorer</a></li>
@@ -1766,7 +1757,7 @@
     <!-- ── COMMUNITY CTA ── -->
     <div class="community-bar">
         <a href="https://github.com/sycoindex" target="_blank" class="community-btn primary">★ Star us on GitHub</a>
-        <a href="mailto:contact@sycoindex.com?subject=Newsletter%20Signup" class="community-btn">Subscribe to Updates</a>
+        <a href="mailto:chris@sycoindex.com?subject=Newsletter%20Signup" class="community-btn">Subscribe to Updates</a>
         <a href="https://x.com/sycoindex" target="_blank" class="community-btn">Follow on X</a>
         <a href="https://linkedin.com/company/sycoindex" target="_blank" class="community-btn">LinkedIn</a>
     </div>
@@ -1804,7 +1795,7 @@
                 <h4>Company</h4>
                 <ul>
                     <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
-                    <li><a href="mailto:contact@sycoindex.com">Contact</a></li>
+                    <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
                 </ul>
             </div>
         </div>
