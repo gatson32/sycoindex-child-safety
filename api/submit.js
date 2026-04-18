@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { checkRateLimit } = require('./_rate-limit');
 
 // XSS sanitization
 function sanitize(str) {
@@ -9,24 +10,11 @@ function sanitize(str) {
   }).trim().slice(0, 500);
 }
 
-// Simple rate limiting using in-memory store (resets on cold start)
-const rateLimits = new Map();
-const RATE_LIMIT = 5; // submissions per hour per IP
-const RATE_WINDOW = 3600000; // 1 hour in ms
+// Rate limit: 5 submissions/hour/IP, KV-backed with in-memory fallback.
+const RATE_LIMIT = 5;
+const RATE_WINDOW = 3600000;
 
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const entry = rateLimits.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW) {
-    rateLimits.set(ip, { start: now, count: 1 });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
-
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -39,7 +27,8 @@ module.exports = (req, res) => {
 
   // Rate limiting
   const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
-  if (!checkRateLimit(ip)) {
+  const rl = await checkRateLimit({ ip, scope: 'submit', limit: RATE_LIMIT, windowMs: RATE_WINDOW });
+  if (!rl.allowed) {
     return res.status(429).json({ error: 'Rate limit exceeded. Max 5 submissions per hour.' });
   }
 

@@ -341,6 +341,16 @@
         body.dark .mobile-menu { background: #111111; }
         body.dark footer { background: #0a0a0a; }
     </style>
+    <noscript>
+      <style>
+        /* Without JS, hide the hamburger and always show the nav links at
+           small widths so navigation is still usable. */
+        @media (max-width: 768px) {
+          .hamburger { display: none !important; }
+          .nav-links { display: flex !important; position: static !important; flex-wrap: wrap; }
+        }
+      </style>
+    </noscript>
 </head>
 <body>
 
@@ -348,7 +358,7 @@
 <nav>
     <div class="nav-inner">
         <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
-        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <button class="hamburger" aria-label="Menu" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
         <ul class="nav-links">
             <li><a href="index.html">Leaderboard</a></li>
             <li><a href="explorer.html">Explorer</a></li>

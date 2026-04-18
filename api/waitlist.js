@@ -2,6 +2,7 @@
 // POST /api/waitlist — Sign up for the waitlist
 
 const { kv } = require('@vercel/kv');
+const { checkRateLimit } = require('./_rate-limit');
 
 // XSS sanitization
 function sanitize(str) {
@@ -11,22 +12,9 @@ function sanitize(str) {
   }).trim().slice(0, 500);
 }
 
-// Rate limiting
-const rateLimits = new Map();
+// Rate limit: 5 signups/hour/IP, KV-backed with in-memory fallback.
 const RATE_LIMIT = 5;
 const RATE_WINDOW = 3600000;
-
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const entry = rateLimits.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW) {
-    rateLimits.set(ip, { start: now, count: 1 });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
 
 // Email validation
 function isValidEmail(email) {
@@ -46,7 +34,8 @@ module.exports = async (req, res) => {
 
   // Rate limiting
   const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
-  if (!checkRateLimit(ip)) {
+  const rl = await checkRateLimit({ ip, scope: 'waitlist', limit: RATE_LIMIT, windowMs: RATE_WINDOW });
+  if (!rl.allowed) {
     return res.status(429).json({ error: 'Rate limit exceeded. Max 5 signups/hour.' });
   }
 

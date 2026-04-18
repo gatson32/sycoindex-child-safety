@@ -4,6 +4,7 @@
 
 const crypto = require('crypto');
 const { kv } = require('@vercel/kv');
+const { checkRateLimit } = require('./_rate-limit');
 
 // XSS sanitization
 function sanitize(str) {
@@ -13,22 +14,9 @@ function sanitize(str) {
   }).trim().slice(0, 500);
 }
 
-// Rate limiting for key creation
-const rateLimits = new Map();
+// Rate limit: 3 key creations/hour/IP, KV-backed with in-memory fallback.
 const RATE_LIMIT = 3;
 const RATE_WINDOW = 3600000;
-
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const entry = rateLimits.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW) {
-    rateLimits.set(ip, { start: now, count: 1 });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
 
 // Email validation
 function isValidEmail(email) {
@@ -83,7 +71,8 @@ module.exports = async (req, res) => {
   // POST — Generate new key
   if (req.method === 'POST') {
     // Rate limit key creation
-    if (!checkRateLimit(ip)) {
+    const rl = await checkRateLimit({ ip, scope: 'keys', limit: RATE_LIMIT, windowMs: RATE_WINDOW });
+    if (!rl.allowed) {
       return res.status(429).json({ error: 'Rate limit exceeded. Max 3 key creations/hour.' });
     }
 

@@ -90,7 +90,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.0.0.1' },
     });
     const res = createRes();
-    scoreHandler(req, res);
+    await scoreHandler(req, res);
     assert.strictEqual(res._status, 200);
     assert.ok(res._json.pai, 'response should include pai');
     assert.ok(res._json.sycophancy, 'response should include sycophancy');
@@ -105,7 +105,7 @@ async function run() {
   await test('POST with missing fields returns 400', async () => {
     const req = createReq({ method: 'POST', body: { prompt: 'Hello' }, headers: { 'x-forwarded-for': '10.0.0.2' } });
     const res = createRes();
-    scoreHandler(req, res);
+    await scoreHandler(req, res);
     assert.strictEqual(res._status, 400);
     assert.ok(res._json.error);
   });
@@ -113,7 +113,7 @@ async function run() {
   await test('GET method returns 405', async () => {
     const req = createReq({ method: 'GET', headers: { 'x-forwarded-for': '10.0.0.3' } });
     const res = createRes();
-    scoreHandler(req, res);
+    await scoreHandler(req, res);
     assert.strictEqual(res._status, 405);
   });
 
@@ -127,7 +127,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.0.0.4' },
     });
     const childRes = createRes();
-    scoreHandler(childReq, childRes);
+    await scoreHandler(childReq, childRes);
 
     const safeReq = createReq({
       method: 'POST',
@@ -138,7 +138,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.0.0.5' },
     });
     const safeRes = createRes();
-    scoreHandler(safeReq, safeRes);
+    await scoreHandler(safeReq, safeRes);
 
     assert.strictEqual(childRes._status, 200);
     assert.strictEqual(safeRes._status, 200);
@@ -158,7 +158,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.0.0.6' },
     });
     const res = createRes();
-    scoreHandler(req, res);
+    await scoreHandler(req, res);
     assert.strictEqual(res._status, 200);
     assert.strictEqual(res._json.pai.risk, 'low');
   });
@@ -241,7 +241,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.1.0.1' },
     });
     const res = createRes();
-    verifyHandler(req, res);
+    await verifyHandler(req, res);
     assert.strictEqual(res._status, 200);
     assert.strictEqual(res._json.verified, true);
     assert.ok(res._json.report_id);
@@ -254,7 +254,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.1.0.2' },
     });
     const res = createRes();
-    verifyHandler(req, res);
+    await verifyHandler(req, res);
     assert.strictEqual(res._status, 200);
     assert.strictEqual(res._json.verified, false);
   });
@@ -266,7 +266,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.1.0.3' },
     });
     const res = createRes();
-    verifyHandler(req, res);
+    await verifyHandler(req, res);
     assert.strictEqual(res._status, 400);
     assert.ok(res._json.error);
   });
@@ -278,7 +278,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.1.0.4' },
     });
     const res = createRes();
-    verifyHandler(req, res);
+    await verifyHandler(req, res);
     assert.strictEqual(res._status, 400);
     assert.ok(res._json.error);
   });
@@ -417,7 +417,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.4.0.1' },
     });
     const res = createRes();
-    submitHandler(req, res);
+    await submitHandler(req, res);
     assert.strictEqual(res._status, 200);
     assert.strictEqual(res._json.success, true);
     assert.ok(res._json.id);
@@ -430,7 +430,7 @@ async function run() {
       headers: { 'x-forwarded-for': '10.4.0.2' },
     });
     const res = createRes();
-    submitHandler(req, res);
+    await submitHandler(req, res);
     assert.strictEqual(res._status, 400);
     assert.ok(res._json.error);
   });

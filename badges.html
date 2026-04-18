@@ -269,6 +269,16 @@
             .nav-links { display: none !important; }
         }
     </style>
+    <noscript>
+      <style>
+        /* Without JS, hide the hamburger and always show the mobile menu at
+           small widths so navigation is still usable. */
+        @media (max-width: 768px) {
+          .hamburger { display: none !important; }
+          .mobile-menu { display: flex !important; }
+        }
+      </style>
+    </noscript>
 </head>
 <body>
 
@@ -285,7 +295,7 @@
             <li><a href="enterprise.html">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+        <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">&#9776;</button>
 </div>
 </nav>
 <div class="mobile-menu" id="mobile-menu">
@@ -300,6 +310,8 @@
     <a href="extension.html">Extension</a>
     <a href="state-of-ai-safety.html">Reports</a>
 </div>
+    <script src="js/mobile-menu.js" defer></script>
+
 
 <!-- ══ HERO ══ -->
 <section class="hero">

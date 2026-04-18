@@ -2,22 +2,11 @@
 // GET /api/verify?hash=SHA256_HASH
 // Verifies a report hash against known report hashes
 
-// Rate limiting
-const rateLimits = new Map();
+const { checkRateLimit } = require('./_rate-limit');
+
+// Rate limit: 50 verifies/hour/IP, KV-backed with in-memory fallback.
 const RATE_LIMIT = 50;
 const RATE_WINDOW = 3600000;
-
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const entry = rateLimits.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW) {
-    rateLimits.set(ip, { start: now, count: 1 });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT) return false;
-  entry.count++;
-  return true;
-}
 
 // Known report hashes — populate as reports are generated
 const knownReports = new Map([
@@ -28,7 +17,7 @@ const knownReports = new Map([
   ['9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', { report_id: 'RPT-2026-010', model: 'deepseek-v3', report_type: 'sycophancy', generated_at: '2026-04-13T00:00:00Z' }],
 ]);
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -41,7 +30,8 @@ module.exports = (req, res) => {
 
   // Rate limiting
   const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
-  if (!checkRateLimit(ip)) {
+  const rl = await checkRateLimit({ ip, scope: 'verify', limit: RATE_LIMIT, windowMs: RATE_WINDOW });
+  if (!rl.allowed) {
     return res.status(429).json({ error: 'Rate limit exceeded. Max 50 requests/hour.' });
   }
 

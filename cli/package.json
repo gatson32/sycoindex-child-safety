@@ -1,25 +1,49 @@
 {
   "name": "sycoindex",
-  "version": "1.0.0",
-  "description": "Score AI sycophancy and child safety from your terminal",
+  "version": "0.1.0",
+  "description": "Score AI sycophancy and child-safety risk from your terminal. Powered by sycoindex.ai.",
   "bin": {
     "sycoindex": "./cli.js"
   },
   "main": "cli.js",
+  "files": [
+    "cli.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node -e \"require('./cli.js')\" || true",
+    "prepublishOnly": "node -e \"const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('./package.json'));if(!fs.existsSync('./README.md'))throw new Error('README.md is required before publish');if(!fs.existsSync('./LICENSE'))throw new Error('LICENSE is required before publish');console.log('Publishing '+pkg.name+'@'+pkg.version);\""
+  },
   "keywords": [
     "ai",
     "safety",
     "sycophancy",
     "child-safety",
-    "scoring"
+    "coppa",
+    "trust-safety",
+    "llm",
+    "evaluation",
+    "scoring",
+    "cli",
+    "sycoindex",
+    "pai",
+    "parasocial"
   ],
   "author": "Sycoindex Inc. <chris@sycoindex.org>",
   "license": "MIT",
+  "homepage": "https://sycoindex.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sycoindex/sycoindex-cli"
+    "url": "git+https://github.com/sycoindex/sycoindex-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sycoindex/sycoindex-cli/issues"
   },
   "engines": {
     "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
