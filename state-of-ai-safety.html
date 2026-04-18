@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The State of AI Safety — Q1 2026 — Sycoindex PAI</title>
+    <meta name="description" content="Sycoindex's inaugural quarterly report on AI child safety. Key findings: sycophancy decreased 12%, child safety scores improved in 7/10 models, and 3 new models entered the leaderboard.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* -- NAV -- */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 52px; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-inner { position: relative; }
+        }
+
+        /* -- HERO -- */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+        .hero-meta {
+            margin-top: 1.5rem; font-family: var(--mono); font-size: 12px;
+            color: var(--text-dim);
+        }
+        .hero-meta span { margin-right: 1.5rem; }
+
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+
+        /* -- KEY FINDINGS -- */
+        .findings-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .findings-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .finding-card {
+            background: var(--bg); padding: 2.5rem 2rem;
+        }
+        .finding-stat {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 36px);
+            font-weight: 700; line-height: 1; margin-bottom: 0.75rem;
+        }
+        .finding-stat.positive { color: var(--green); }
+        .finding-stat.neutral { color: var(--accent); }
+        .finding-text {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* -- EXECUTIVE SUMMARY -- */
+        .summary-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .summary-box {
+            border: 1px solid var(--border); padding: 2.5rem;
+        }
+        .summary-box h3 {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-bottom: 1.25rem;
+        }
+        .summary-box p {
+            font-size: 14px; color: var(--text-secondary);
+            line-height: 1.7; margin-bottom: 1rem;
+        }
+        .summary-box p:last-child { margin-bottom: 0; }
+
+        /* -- CHART -- */
+        .chart-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .chart-box {
+            border: 1px solid var(--border); padding: 2rem;
+        }
+        .chart-box canvas {
+            width: 100% !important;
+        }
+
+        /* -- METHODOLOGY -- */
+        .methodology-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .methodology-box {
+            border: 1px solid var(--border); padding: 2.5rem;
+        }
+        .methodology-box h3 {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-bottom: 1.25rem;
+        }
+        .methodology-box p {
+            font-size: 14px; color: var(--text-secondary);
+            line-height: 1.7; margin-bottom: 1rem;
+        }
+        .methodology-box p:last-child { margin-bottom: 0; }
+        .methodology-box a {
+            color: var(--accent); border-bottom: 1px solid rgba(0, 85, 255, 0.2);
+            transition: border-color 0.15s;
+        }
+        .methodology-box a:hover { border-color: var(--accent); }
+
+        /* -- DOWNLOAD -- */
+        .download-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+            display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start;
+        }
+        .download-btn {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.85rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .download-btn:hover { background: #0044cc; }
+
+        /* -- SUBSCRIBE -- */
+        .subscribe-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .subscribe-card {
+            border: 1px solid var(--border); padding: 3rem 2.5rem;
+            text-align: center; max-width: 600px; margin: 0 auto;
+        }
+        .subscribe-card h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .subscribe-card p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 2rem; line-height: 1.7;
+        }
+        .subscribe-form {
+            display: flex; gap: 0.75rem; max-width: 440px; margin: 0 auto;
+        }
+        .subscribe-form input {
+            flex: 1; font-family: var(--mono); font-size: 13px;
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 2px; background: var(--bg-elevated);
+            color: var(--text); outline: none;
+        }
+        .subscribe-form input:focus { border-color: var(--accent); }
+        .subscribe-form input::placeholder { color: var(--text-dim); }
+        .subscribe-btn {
+            font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; border: none; cursor: pointer;
+        }
+        .subscribe-btn:hover { background: #0044cc; }
+        .subscribe-success {
+            display: none; font-family: var(--mono); font-size: 13px;
+            color: var(--green); margin-top: 0.75rem;
+        }
+
+        /* -- ARCHIVE -- */
+        .archive-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .archive-list {
+            border: 1px solid var(--border);
+        }
+        .archive-item {
+            padding: 1.25rem 1.5rem; display: flex;
+            justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .archive-item:last-child { border-bottom: none; }
+        .archive-title {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+        }
+        .archive-badge {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--accent); font-weight: 700;
+            padding: 0.25rem 0.6rem; background: var(--accent-dim);
+            border: 1px solid rgba(0, 85, 255, 0.15); border-radius: 2px;
+        }
+        .archive-date {
+            font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+        }
+
+        /* -- CTA STRIP -- */
+        .cta-strip {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-strip p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* -- FOOTER -- */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        @media (max-width: 900px) {
+            .findings-grid { grid-template-columns: 1fr; }
+            .subscribe-form { flex-direction: column; }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 0; }
+            .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            --bg: #111111;
+            --bg-elevated: #1a1a1a;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #2a2a2a;
+            --text: #e5e5e5;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+        }
+        body.dark nav { background: rgba(17, 17, 17, 0.92); }
+        body.dark .mobile-menu { background: #111111; }
+        body.dark footer { background: #0a0a0a; }
+    </style>
+</head>
+<body>
+
+<!-- -- NAV -- -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- -- HERO -- -->
+<section class="hero">
+    <div class="hero-label">Quarterly Report</div>
+    <h1>The State of AI Safety &mdash; Q1 2026</h1>
+    <p>A comprehensive analysis of AI child safety trends across frontier models. How are the models your children use actually performing?</p>
+    <div class="hero-meta">
+        <span>Published: March 31, 2026</span>
+        <span>10 models evaluated</span>
+        <span>500 transcripts analyzed</span>
+    </div>
+</section>
+
+<!-- -- KEY FINDINGS -- -->
+<section class="findings-section">
+    <div class="section-label">Key Findings</div>
+    <div class="findings-grid">
+        <div class="finding-card">
+            <div class="finding-stat positive">-12%</div>
+            <div class="finding-text">Average sycophancy decreased 12% across frontier models compared to Q4 2025, suggesting providers are taking child safety seriously.</div>
+        </div>
+        <div class="finding-card">
+            <div class="finding-stat positive">7/10</div>
+            <div class="finding-text">Child safety scores improved in 7 out of 10 models tested. The three regressions were concentrated in the dependency reinforcement dimension.</div>
+        </div>
+        <div class="finding-card">
+            <div class="finding-stat neutral">+3</div>
+            <div class="finding-text">Three new models entered the leaderboard this quarter: Mistral Large 2, Llama 4, and DeepSeek V3. All scored below the COPPA advisory threshold.</div>
+        </div>
+    </div>
+</section>
+
+<!-- -- EXECUTIVE SUMMARY -- -->
+<section class="summary-section">
+    <div class="section-label">Executive Summary</div>
+    <div class="summary-box">
+        <h3>Q1 2026 Overview</h3>
+        <p>The first quarter of 2026 marked a turning point for AI child safety. For the first time, a majority of frontier model providers reduced sycophantic behavior in their models' interactions with minors &mdash; a trend we attribute to increased regulatory scrutiny (COPPA enforcement begins April 22, 2026) and growing public awareness of the risks.</p>
+        <p>The most significant improvement came in the <strong>emotional mirroring</strong> dimension, where the cross-model average dropped from 3.1 to 2.4 (lower is safer). This suggests providers are actively tuning their models to avoid mimicking and amplifying children's emotional states. However, <strong>dependency reinforcement</strong> remains stubbornly high, with an average of 3.6 &mdash; virtually unchanged from Q4 2025.</p>
+        <p>The entrance of three new models to the leaderboard expands coverage to 10 of the 12 most widely used AI assistants among minors. Our goal for Q2 2026 is full coverage of all models with significant youth exposure, plus the launch of our <strong>vendor dashboard</strong> for real-time monitoring.</p>
+    </div>
+</section>
+
+<!-- -- TRENDS CHART -- -->
+<section class="chart-section">
+    <div class="section-label">Score Trends Over Time</div>
+    <div class="chart-box">
+        <canvas id="trendsChart" height="320"></canvas>
+    </div>
+</section>
+
+<!-- -- METHODOLOGY -- -->
+<section class="methodology-section">
+    <div class="section-label">Methodology Highlights</div>
+    <div class="methodology-box">
+        <h3>How We Measure</h3>
+        <p>Each model is evaluated using 50 structured scenarios designed to probe 5 dimensions of child safety: emotional mirroring intensity, exclusivity language, boundary dissolution, dependency reinforcement, and authority displacement. Scenarios are age-appropriate and cover common interaction patterns children exhibit with AI assistants.</p>
+        <p>Responses are scored by a 5-judge cross-lab ensemble (Claude, GPT, Mistral, Gemini, Llama) using median aggregation. This eliminates single-vendor bias and produces scores that are reproducible within &plusmn;0.2 points across independent evaluations. Every assessment generates a SHA-256 hash for audit-trail verification.</p>
+        <p>For full details, see our <a href="methodology.html">complete methodology documentation</a>.</p>
+    </div>
+</section>
+
+<!-- -- DOWNLOAD -- -->
+<section class="download-section">
+    <a href="#" class="download-btn">Download Full Report (PDF)</a>
+</section>
+
+<!-- -- SUBSCRIBE -- -->
+<section class="subscribe-section">
+    <div class="subscribe-card">
+        <h3>Subscribe to Quarterly Updates</h3>
+        <p>Get the State of AI Safety report delivered to your inbox every quarter. No spam &mdash; just data.</p>
+        <form class="subscribe-form" id="subscribe-form" onsubmit="submitSubscribe(event)">
+            <input type="email" name="email" placeholder="you@example.com" required>
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+        </form>
+        <div class="subscribe-success" id="subscribe-success">You're subscribed. See you next quarter.</div>
+    </div>
+</section>
+
+<!-- -- ARCHIVE -- -->
+<section class="archive-section">
+    <div class="section-label">Report Archive</div>
+    <div class="archive-list">
+        <div class="archive-item">
+            <div>
+                <div class="archive-title">The State of AI Safety &mdash; Q1 2026</div>
+                <div class="archive-date">Published March 31, 2026</div>
+            </div>
+            <span class="archive-badge">Inaugural Edition</span>
+        </div>
+    </div>
+</section>
+
+<!-- -- CTA STRIP -- -->
+<section class="cta-strip">
+    <h3>See where your model stands.</h3>
+    <p>Explore the full leaderboard with dimension-level scores for every evaluated model.</p>
+    <a href="index.html">View Leaderboard</a>
+</section>
+
+<!-- -- FOOTER -- -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li><li><a href="state-of-ai-safety.html">Quarterly Report</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="verify.html">Verify Report</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+// Trends Chart
+const ctx = document.getElementById('trendsChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Q3 2025', 'Q4 2025', 'Q1 2026'],
+        datasets: [{
+            label: 'Emotional Mirroring',
+            data: [3.4, 3.1, 2.4],
+            borderColor: '#0055FF',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#0055FF'
+        }, {
+            label: 'Exclusivity Language',
+            data: [3.0, 2.8, 2.5],
+            borderColor: '#16a34a',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#16a34a'
+        }, {
+            label: 'Boundary Dissolution',
+            data: [2.8, 2.5, 2.2],
+            borderColor: '#d97706',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#d97706'
+        }, {
+            label: 'Dependency Reinforcement',
+            data: [3.8, 3.7, 3.6],
+            borderColor: '#dc2626',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#dc2626'
+        }, {
+            label: 'Authority Displacement',
+            data: [3.2, 2.9, 2.6],
+            borderColor: '#999999',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#999999'
+        }, {
+            label: 'COPPA Threshold',
+            data: [2.0, 2.0, 2.0],
+            borderColor: '#dc2626',
+            borderWidth: 1,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    font: { family: "'Helvetica Neue', sans-serif", size: 11 },
+                    boxWidth: 12,
+                    padding: 16
+                }
+            }
+        },
+        scales: {
+            y: {
+                min: 0, max: 5,
+                grid: { color: 'rgba(0,0,0,0.04)' },
+                ticks: {
+                    font: { family: "'Helvetica Neue', sans-serif", size: 11 },
+                    color: '#999'
+                },
+                title: {
+                    display: true,
+                    text: 'Average PAI Score (lower is safer)',
+                    font: { family: "'Helvetica Neue', sans-serif", size: 11 },
+                    color: '#999'
+                }
+            },
+            x: {
+                grid: { display: false },
+                ticks: {
+                    font: { family: "'Helvetica Neue', sans-serif", size: 11 },
+                    color: '#999'
+                }
+            }
+        }
+    }
+});
+
+// Subscribe form
+async function submitSubscribe(e) {
+    e.preventDefault();
+    const form = document.getElementById('subscribe-form');
+    const email = form.querySelector('input[name="email"]').value;
+    try {
+        await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, use_case: 'quarterly_report' })
+        });
+    } catch(err) {}
+    form.style.display = 'none';
+    document.getElementById('subscribe-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

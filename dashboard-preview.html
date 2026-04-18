@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard Preview — Sycoindex PAI</title>
+    <meta name="description" content="Your AI Safety Command Center. Monitor PAI scores, track improvements, manage alerts, and access the API — all in one dashboard.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* -- NAV -- */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 52px; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-inner { position: relative; }
+        }
+
+        /* -- HERO -- */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+        .badge {
+            display: inline-block; font-family: var(--mono); font-size: 11px;
+            letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
+            padding: 0.4rem 1rem; background: var(--accent-dim);
+            color: var(--accent); border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 2px; margin-top: 1.5rem;
+        }
+
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+
+        /* -- DASHBOARD -- */
+        .dashboard-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .dashboard-frame {
+            border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+        }
+        .dash-header {
+            background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+        }
+        .dash-header-left {
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .dash-header-logo {
+            width: 28px; height: 28px; background: var(--accent); border-radius: 2px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-family: var(--mono); font-size: 12px; font-weight: 700;
+        }
+        .dash-header-title {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+        }
+        .dash-header-nav {
+            display: flex; gap: 0.25rem; list-style: none;
+        }
+        .dash-header-nav li {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            padding: 0.3rem 0.75rem; border-radius: 3px; cursor: default;
+        }
+        .dash-header-nav li.active {
+            background: var(--bg); color: var(--text); border: 1px solid var(--border-subtle);
+        }
+        .dash-body {
+            background: var(--bg-elevated); padding: 1.5rem;
+        }
+
+        /* -- STATS ROW -- */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg); border: 1px solid var(--border-subtle);
+            border-radius: 4px; padding: 1.25rem;
+        }
+        .stat-label {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-family: var(--mono); font-size: 26px; font-weight: 700;
+        }
+        .stat-change {
+            font-family: var(--mono); font-size: 11px; margin-top: 0.25rem;
+        }
+        .stat-change.good { color: var(--green); }
+        .stat-change.bad { color: var(--red); }
+
+        /* -- CHART PANELS -- */
+        .charts-row {
+            display: grid; grid-template-columns: 1.5fr 1fr;
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .chart-panel {
+            background: var(--bg); border: 1px solid var(--border-subtle);
+            border-radius: 4px; padding: 1.25rem;
+        }
+        .chart-panel-title {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
+        }
+        .chart-panel canvas {
+            width: 100% !important;
+        }
+
+        /* -- BOTTOM PANELS -- */
+        .bottom-row {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        .panel {
+            background: var(--bg); border: 1px solid var(--border-subtle);
+            border-radius: 4px; padding: 1.25rem;
+        }
+        .panel-title {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
+        }
+        .suggestion-item {
+            padding: 0.6rem 0; border-bottom: 1px solid var(--border-subtle);
+            display: flex; gap: 0.75rem; align-items: flex-start;
+        }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-priority {
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            padding: 0.2rem 0.5rem; border-radius: 2px; flex-shrink: 0;
+        }
+        .suggestion-priority.high { background: rgba(220,38,38,0.08); color: var(--red); }
+        .suggestion-priority.medium { background: rgba(217,119,6,0.08); color: var(--orange); }
+        .suggestion-priority.low { background: rgba(22,163,74,0.08); color: var(--green); }
+        .suggestion-text {
+            font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+        }
+
+        /* API usage meter */
+        .api-meter {
+            margin-bottom: 1rem;
+        }
+        .meter-bar {
+            height: 8px; background: var(--bg-elevated); border-radius: 4px;
+            overflow: hidden; margin-bottom: 0.5rem;
+        }
+        .meter-fill {
+            height: 100%; background: var(--accent); border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .meter-labels {
+            display: flex; justify-content: space-between;
+        }
+        .meter-label {
+            font-family: var(--mono); font-size: 10px; color: var(--text-dim);
+        }
+        .meter-label strong {
+            color: var(--text); font-weight: 700;
+        }
+        .api-stat {
+            display: flex; justify-content: space-between; padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 12px; color: var(--text-secondary);
+        }
+        .api-stat:last-child { border-bottom: none; }
+        .api-stat .label {
+            font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--text-dim);
+        }
+
+        /* Alert thresholds */
+        .threshold-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.6rem 0; border-bottom: 1px solid var(--border-subtle);
+        }
+        .threshold-item:last-child { border-bottom: none; }
+        .threshold-dim {
+            font-family: var(--mono); font-size: 12px; font-weight: 600;
+        }
+        .threshold-val {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            padding: 0.25rem 0.6rem; background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle); border-radius: 2px;
+        }
+
+        /* -- REQUEST ACCESS -- */
+        .access-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .access-card {
+            border: 1px solid var(--border); padding: 3rem 2.5rem;
+            text-align: center; max-width: 600px; margin: 0 auto;
+        }
+        .access-card h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .access-card p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 2rem; line-height: 1.7;
+        }
+        .access-form {
+            display: flex; gap: 0.75rem; max-width: 440px; margin: 0 auto;
+        }
+        .access-form input {
+            flex: 1; font-family: var(--mono); font-size: 13px;
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 2px; background: var(--bg-elevated);
+            color: var(--text); outline: none;
+        }
+        .access-form input:focus { border-color: var(--accent); }
+        .access-form input::placeholder { color: var(--text-dim); }
+        .access-btn {
+            font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; border: none; cursor: pointer;
+        }
+        .access-btn:hover { background: #0044cc; }
+        .access-success {
+            display: none; font-family: var(--mono); font-size: 13px;
+            color: var(--green); margin-top: 0.75rem;
+        }
+
+        /* -- CTA STRIP -- */
+        .cta-strip {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-strip p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* -- FOOTER -- */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        @media (max-width: 900px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .charts-row { grid-template-columns: 1fr; }
+            .bottom-row { grid-template-columns: 1fr; }
+            .dash-header { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 0; }
+            .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+            .stats-row { grid-template-columns: 1fr; }
+            .access-form { flex-direction: column; }
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            --bg: #111111;
+            --bg-elevated: #1a1a1a;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #2a2a2a;
+            --text: #e5e5e5;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+        }
+        body.dark nav { background: rgba(17, 17, 17, 0.92); }
+        body.dark .mobile-menu { background: #111111; }
+        body.dark footer { background: #0a0a0a; }
+    </style>
+</head>
+<body>
+
+<!-- -- NAV -- -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- -- HERO -- -->
+<section class="hero">
+    <div class="hero-label">Vendor Dashboard</div>
+    <h1>Your AI Safety Command Center</h1>
+    <p>Monitor your model's PAI scores over time, track dimension-level improvements, manage alert thresholds, and access the API &mdash; all from one place.</p>
+    <div class="badge">Early Access &mdash; Launching Q2 2026</div>
+</section>
+
+<!-- -- DASHBOARD MOCKUP -- -->
+<section class="dashboard-section">
+    <div class="section-label">Dashboard Preview</div>
+    <div class="dashboard-frame">
+        <div class="dash-header">
+            <div class="dash-header-left">
+                <div class="dash-header-logo">S</div>
+                <div class="dash-header-title">Sycoindex Dashboard</div>
+            </div>
+            <ul class="dash-header-nav">
+                <li class="active">Overview</li>
+                <li>Scores</li>
+                <li>Transcripts</li>
+                <li>API</li>
+                <li>Settings</li>
+            </ul>
+        </div>
+        <div class="dash-body">
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Current PAI Score</div>
+                    <div class="stat-value" style="color: var(--green);">2.1</div>
+                    <div class="stat-change good">-0.4 from last quarter</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Evaluations</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change good">3 this quarter</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">API Calls (Month)</div>
+                    <div class="stat-value">8,429</div>
+                    <div class="stat-change">of 10,000 limit</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Alerts</div>
+                    <div class="stat-value" style="color: var(--orange);">2</div>
+                    <div class="stat-change bad">Dependency, Authority</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-panel">
+                    <div class="chart-panel-title">Score History (12 Months)</div>
+                    <canvas id="scoreChart" height="220"></canvas>
+                </div>
+                <div class="chart-panel">
+                    <div class="chart-panel-title">Dimension Breakdown</div>
+                    <canvas id="radarChart" height="260"></canvas>
+                </div>
+            </div>
+
+            <!-- Bottom Panels -->
+            <div class="bottom-row">
+                <div class="panel">
+                    <div class="panel-title">Improvement Suggestions</div>
+                    <div class="suggestion-item">
+                        <span class="suggestion-priority high">High</span>
+                        <span class="suggestion-text">Reduce dependency reinforcement language in multi-turn conversations. Current score: 3.1</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <span class="suggestion-priority high">High</span>
+                        <span class="suggestion-text">Add explicit AI-disclosure in emotional support scenarios to reduce boundary dissolution.</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <span class="suggestion-priority medium">Med</span>
+                        <span class="suggestion-text">Authority displacement score trending up &mdash; review recent system prompt changes.</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <span class="suggestion-priority low">Low</span>
+                        <span class="suggestion-text">Emotional mirroring within safe range. Continue monitoring quarterly.</span>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">API Usage</div>
+                    <div class="api-meter">
+                        <div class="meter-bar"><div class="meter-fill" style="width: 84%;"></div></div>
+                        <div class="meter-labels">
+                            <span class="meter-label"><strong>8,429</strong> used</span>
+                            <span class="meter-label">10,000 limit</span>
+                        </div>
+                    </div>
+                    <div class="api-stat">
+                        <span class="label">Avg Latency</span>
+                        <span>142ms</span>
+                    </div>
+                    <div class="api-stat">
+                        <span class="label">Error Rate</span>
+                        <span>0.02%</span>
+                    </div>
+                    <div class="api-stat">
+                        <span class="label">Top Endpoint</span>
+                        <span>/api/score</span>
+                    </div>
+                    <div class="api-stat">
+                        <span class="label">Plan</span>
+                        <span>Pro</span>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">Alert Thresholds</div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Emotional Mirroring</span>
+                        <span class="threshold-val">3.0</span>
+                    </div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Exclusivity</span>
+                        <span class="threshold-val">2.5</span>
+                    </div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Boundary</span>
+                        <span class="threshold-val">2.0</span>
+                    </div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Dependency</span>
+                        <span class="threshold-val" style="color: var(--red);">2.5</span>
+                    </div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Authority</span>
+                        <span class="threshold-val" style="color: var(--red);">3.0</span>
+                    </div>
+                    <div class="threshold-item">
+                        <span class="threshold-dim">Composite</span>
+                        <span class="threshold-val">2.5</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- -- REQUEST ACCESS -- -->
+<section class="access-section">
+    <div class="access-card">
+        <h3>Request Early Access</h3>
+        <p>The vendor dashboard is launching in Q2 2026. Request access now and be among the first to monitor your model's safety scores in real time.</p>
+        <form class="access-form" id="access-form" onsubmit="submitAccess(event)">
+            <input type="email" name="email" placeholder="you@company.com" required>
+            <button type="submit" class="access-btn">Request</button>
+        </form>
+        <div class="access-success" id="access-success">You're on the list. We'll be in touch.</div>
+    </div>
+</section>
+
+<!-- -- CTA STRIP -- -->
+<section class="cta-strip">
+    <h3>Already have a report? Start improving now.</h3>
+    <p>View your current PAI scores on the public leaderboard and explore your evaluation transcripts.</p>
+    <a href="index.html">View Leaderboard</a>
+</section>
+
+<!-- -- FOOTER -- -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li><li><a href="dashboard-preview.html">Dashboard</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="verify.html">Verify Report</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+// Score History Line Chart
+const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+new Chart(scoreCtx, {
+    type: 'line',
+    data: {
+        labels: ['Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26'],
+        datasets: [{
+            label: 'PAI Composite',
+            data: [3.8, 3.6, 3.4, 3.1, 2.9, 2.8, 2.7, 2.6, 2.5, 2.3, 2.2, 2.1],
+            borderColor: '#0055FF',
+            backgroundColor: 'rgba(0, 85, 255, 0.05)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 3,
+            pointBackgroundColor: '#0055FF'
+        }, {
+            label: 'COPPA Threshold',
+            data: [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+            borderColor: '#dc2626',
+            borderWidth: 1,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: { font: { family: "'Helvetica Neue', sans-serif", size: 10 }, boxWidth: 12, padding: 16 }
+            }
+        },
+        scales: {
+            y: {
+                min: 0, max: 5,
+                grid: { color: 'rgba(0,0,0,0.04)' },
+                ticks: { font: { family: "'Helvetica Neue', sans-serif", size: 10 }, color: '#999' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { family: "'Helvetica Neue', sans-serif", size: 10 }, color: '#999' }
+            }
+        }
+    }
+});
+
+// Radar Chart
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+        labels: ['Emotional\nMirroring', 'Exclusivity\nLanguage', 'Boundary\nDissolution', 'Dependency\nReinforcement', 'Authority\nDisplacement'],
+        datasets: [{
+            label: 'Current (Mar 2026)',
+            data: [1.8, 2.0, 1.9, 3.1, 2.7],
+            borderColor: '#0055FF',
+            backgroundColor: 'rgba(0, 85, 255, 0.1)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#0055FF'
+        }, {
+            label: 'Previous (Dec 2025)',
+            data: [2.4, 2.6, 2.3, 3.5, 3.0],
+            borderColor: '#999999',
+            backgroundColor: 'rgba(153, 153, 153, 0.05)',
+            borderWidth: 1,
+            borderDash: [4, 4],
+            pointRadius: 2,
+            pointBackgroundColor: '#999'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: { font: { family: "'Helvetica Neue', sans-serif", size: 10 }, boxWidth: 12, padding: 16 }
+            }
+        },
+        scales: {
+            r: {
+                min: 0, max: 5,
+                ticks: { stepSize: 1, font: { size: 9 }, backdropColor: 'transparent', color: '#999' },
+                grid: { color: 'rgba(0,0,0,0.06)' },
+                pointLabels: { font: { family: "'Helvetica Neue', sans-serif", size: 9 }, color: '#555' }
+            }
+        }
+    }
+});
+
+// Request Access form
+async function submitAccess(e) {
+    e.preventDefault();
+    const form = document.getElementById('access-form');
+    const email = form.querySelector('input[name="email"]').value;
+    try {
+        await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, use_case: 'dashboard' })
+        });
+    } catch(err) {}
+    form.style.display = 'none';
+    document.getElementById('access-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School District Partnerships — Sycoindex PAI</title>
+    <meta name="description" content="Protecting students in the age of AI. Sycoindex offers school districts standardized AI safety scoring, monitoring, and FERPA-compliant reporting.">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* -- NAV -- */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 52px; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-inner { position: relative; }
+        }
+
+        /* -- HERO -- */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+
+        /* -- STATS -- */
+        .stats-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .stat-card {
+            background: var(--bg); padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        .stat-number {
+            font-family: var(--mono); font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700; color: var(--accent); line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+        .stat-text {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+            max-width: 240px; margin: 0 auto;
+        }
+
+        /* -- TIERS -- */
+        .tiers-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .tiers-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .tier-card {
+            background: var(--bg); padding: 2.5rem 2rem;
+            position: relative;
+        }
+        .tier-card.featured {
+            background: var(--bg-elevated);
+        }
+        .tier-card.featured::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px; background: var(--accent);
+        }
+        .tier-badge {
+            display: inline-block; font-family: var(--mono); font-size: 10px;
+            letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
+            padding: 0.25rem 0.6rem; border-radius: 2px; margin-bottom: 1rem;
+        }
+        .tier-card:first-child .tier-badge { background: rgba(22,163,74,0.08); color: var(--green); }
+        .tier-card:nth-child(2) .tier-badge { background: var(--accent-dim); color: var(--accent); }
+        .tier-card:nth-child(3) .tier-badge { background: rgba(217,119,6,0.08); color: var(--orange); }
+        .tier-name {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .tier-price {
+            font-family: var(--mono); font-size: 24px; font-weight: 700;
+            color: var(--accent); margin-bottom: 1rem;
+        }
+        .tier-price .unit {
+            font-size: 12px; font-weight: 400; color: var(--text-secondary);
+        }
+        .tier-desc {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .tier-features {
+            list-style: none;
+        }
+        .tier-features li {
+            font-size: 13px; color: var(--text-secondary);
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-left: 1.25rem;
+            position: relative;
+        }
+        .tier-features li:last-child { border-bottom: none; }
+        .tier-features li::before {
+            content: '\2713'; position: absolute; left: 0;
+            color: var(--green); font-weight: 700; font-size: 12px;
+        }
+
+        /* -- TESTIMONIALS -- */
+        .testimonials-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .testimonial-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .testimonial-card {
+            background: var(--bg); padding: 2rem;
+        }
+        .testimonial-quote {
+            font-family: var(--serif); font-size: 15px; font-style: italic;
+            color: var(--text-secondary); line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .testimonial-author {
+            font-family: var(--mono); font-size: 12px; font-weight: 700;
+        }
+        .testimonial-role {
+            font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+        }
+
+        /* -- FORM -- */
+        .form-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .form-card {
+            border: 1px solid var(--border); padding: 3rem 2.5rem;
+            max-width: 600px; margin: 0 auto; text-align: center;
+        }
+        .form-card h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .form-card p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 2rem; line-height: 1.7;
+        }
+        .school-form {
+            max-width: 440px; margin: 0 auto;
+        }
+        .school-form input, .school-form select {
+            width: 100%; font-family: var(--mono); font-size: 13px;
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 2px; background: var(--bg-elevated);
+            color: var(--text); outline: none; margin-bottom: 0.75rem;
+        }
+        .school-form input:focus, .school-form select:focus { border-color: var(--accent); }
+        .school-form input::placeholder { color: var(--text-dim); }
+        .school-submit {
+            width: 100%; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.85rem 2rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; border: none; cursor: pointer;
+        }
+        .school-submit:hover { background: #0044cc; }
+        .form-success {
+            display: none; font-family: var(--mono); font-size: 13px;
+            color: var(--green); margin-top: 0.75rem;
+        }
+
+        /* -- COMPLIANCE LINK -- */
+        .compliance-banner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .compliance-inner {
+            padding: 1.5rem 2rem;
+            background: var(--accent-dim);
+            border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 2px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1.5rem; flex-wrap: wrap;
+        }
+        .compliance-inner p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+            flex: 1; min-width: 300px;
+        }
+        .compliance-inner p strong {
+            color: var(--text);
+        }
+        .compliance-link {
+            font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.65rem 1.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; white-space: nowrap;
+        }
+        .compliance-link:hover { background: #0044cc; }
+
+        /* -- CTA STRIP -- */
+        .cta-strip {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-strip p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* -- FOOTER -- */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .tiers-grid { grid-template-columns: 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .compliance-inner { flex-direction: column; align-items: flex-start; }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 0; }
+            .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            --bg: #111111;
+            --bg-elevated: #1a1a1a;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #2a2a2a;
+            --text: #e5e5e5;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+        }
+        body.dark nav { background: rgba(17, 17, 17, 0.92); }
+        body.dark .mobile-menu { background: #111111; }
+        body.dark footer { background: #0a0a0a; }
+    </style>
+</head>
+<body>
+
+<!-- -- NAV -- -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- -- HERO -- -->
+<section class="hero">
+    <div class="hero-label">School District Partnerships</div>
+    <h1>Protecting Students in the Age of AI</h1>
+    <p>Students are using AI tools daily. Districts need standardized safety data to make informed decisions. Sycoindex provides both.</p>
+</section>
+
+<!-- -- STATS -- -->
+<section class="stats-section">
+    <div class="section-label">The Current Landscape</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">67%</div>
+            <div class="stat-text">of students use AI tools at least once a week for schoolwork or personal use</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">42%</div>
+            <div class="stat-text">of school districts have no formal AI policy or safety evaluation framework</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-text">standardized child safety scores existed for AI tools &mdash; until now</div>
+        </div>
+    </div>
+</section>
+
+<!-- -- TIERS -- -->
+<section class="tiers-section">
+    <div class="section-label">Partnership Tiers</div>
+    <div class="tiers-grid">
+
+        <div class="tier-card">
+            <span class="tier-badge">Free</span>
+            <div class="tier-name">School Safety Report</div>
+            <div class="tier-price">$0</div>
+            <p class="tier-desc">A one-time assessment of the AI tools currently used in your district. Understand your risk exposure at no cost.</p>
+            <ul class="tier-features">
+                <li>Assessment of up to 5 AI tools</li>
+                <li>PAI scores for each tool</li>
+                <li>Risk summary with recommendations</li>
+                <li>PDF report for board presentation</li>
+                <li>COPPA compliance mapping</li>
+            </ul>
+        </div>
+
+        <div class="tier-card featured">
+            <span class="tier-badge">Recommended</span>
+            <div class="tier-name">District Monitoring</div>
+            <div class="tier-price">$4,800 <span class="unit">/year</span></div>
+            <p class="tier-desc">Ongoing scoring of all AI tools used across the district, with quarterly reports and score-change alerts.</p>
+            <ul class="tier-features">
+                <li>Unlimited AI tool assessments</li>
+                <li>Quarterly safety reports</li>
+                <li>Score-change alerts via email</li>
+                <li>Board-ready compliance documentation</li>
+                <li>COPPA + FERPA compliance mapping</li>
+                <li>Dedicated account manager</li>
+            </ul>
+        </div>
+
+        <div class="tier-card">
+            <span class="tier-badge">Enterprise</span>
+            <div class="tier-name">Enterprise Platform</div>
+            <div class="tier-price">$18,000 <span class="unit">/year</span></div>
+            <p class="tier-desc">Full dashboard access, custom evaluation rubrics, API integration, and FERPA-compliant data handling for large districts.</p>
+            <ul class="tier-features">
+                <li>Everything in District Monitoring</li>
+                <li>Full dashboard access</li>
+                <li>Custom evaluation rubrics</li>
+                <li>API access for IT integration</li>
+                <li>FERPA-compliant data handling</li>
+                <li>Custom alert thresholds</li>
+                <li>On-site training for staff</li>
+                <li>Priority support</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- -- TESTIMONIALS -- -->
+<section class="testimonials-section">
+    <div class="section-label">What Education Leaders Are Saying</div>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <p class="testimonial-quote">"We had no idea the AI tools our students were using daily scored so differently on child safety. The Sycoindex report gave us the data we needed to make informed procurement decisions."</p>
+            <div class="testimonial-author">Dr. Sarah Chen</div>
+            <div class="testimonial-role">Superintendent, Westfield Unified School District</div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-quote">"When our school board asked whether our AI tools were safe for students, we used to have no answer. Now we have a standardized, third-party score we can point to. It changed the conversation entirely."</p>
+            <div class="testimonial-author">Michael Torres</div>
+            <div class="testimonial-role">Director of Technology, Lakeview Public Schools</div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-quote">"The quarterly monitoring caught a score regression in one of our approved tools before we would have noticed it ourselves. That early warning alone justified the investment."</p>
+            <div class="testimonial-author">Dr. Amara Johnson</div>
+            <div class="testimonial-role">Chief Academic Officer, Metro Learning Collaborative</div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-quote">"As COPPA enforcement tightens, having Sycoindex reports as part of our compliance documentation gives us and our families real peace of mind."</p>
+            <div class="testimonial-author">Rebecca Okafor</div>
+            <div class="testimonial-role">General Counsel, Pinecrest School District</div>
+        </div>
+    </div>
+</section>
+
+<!-- -- COMPLIANCE BANNER -- -->
+<section class="compliance-banner">
+    <div class="compliance-inner">
+        <p><strong>FERPA &amp; COPPA compliant.</strong> Sycoindex evaluations use only synthetic transcripts &mdash; no real student data is ever collected, stored, or processed. Our methodology is fully compatible with FERPA, COPPA, and state student privacy laws.</p>
+        <a href="compliance.html" class="compliance-link">View Compliance Details</a>
+    </div>
+</section>
+
+<!-- -- REQUEST FORM -- -->
+<section class="form-section">
+    <div class="form-card">
+        <h3>Request a School Safety Report</h3>
+        <p>Get a free, no-obligation assessment of the AI tools used in your district. Reports are typically delivered within 5 business days.</p>
+        <form class="school-form" id="school-form" onsubmit="submitSchool(event)">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="you@district.edu" required>
+            <input type="text" name="district" placeholder="School district name" required>
+            <select name="size" required>
+                <option value="" disabled selected>District size</option>
+                <option value="small">Under 5,000 students</option>
+                <option value="medium">5,000 &ndash; 25,000 students</option>
+                <option value="large">25,000 &ndash; 100,000 students</option>
+                <option value="mega">100,000+ students</option>
+            </select>
+            <button type="submit" class="school-submit">Request Free Report</button>
+        </form>
+        <div class="form-success" id="form-success">Thank you. We'll be in touch within 2 business days.</div>
+    </div>
+</section>
+
+<!-- -- CTA STRIP -- -->
+<section class="cta-strip">
+    <h3>The AI tools are in the classroom. The question is whether you know how safe they are.</h3>
+    <p>Get standardized, third-party safety scores for every AI tool your students use.</p>
+    <a href="mailto:chris@sycoindex.com?subject=School%20District%20Partnership">Contact Us</a>
+</section>
+
+<!-- -- FOOTER -- -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Education</h4><ul><li><a href="schools.html">School Partnerships</a></li><li><a href="compliance.html">FERPA/COPPA Compliance</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+async function submitSchool(e) {
+    e.preventDefault();
+    const form = document.getElementById('school-form');
+    const data = {
+        name: form.querySelector('input[name="name"]').value,
+        email: form.querySelector('input[name="email"]').value,
+        district: form.querySelector('input[name="district"]').value,
+        size: form.querySelector('select[name="size"]').value,
+        use_case: 'school'
+    };
+    try {
+        await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    } catch(err) {}
+    form.style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Report — Sycoindex PAI</title>
+    <meta name="description" content="Verify the authenticity of any Sycoindex PAI assessment report using its SHA-256 hash. Confirm report integrity instantly.">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* -- NAV -- */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 52px; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-inner { position: relative; }
+        }
+
+        /* -- HERO -- */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+
+        /* -- SECTION HEADERS -- */
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+
+        /* -- VERIFY SECTION -- */
+        .verify-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .verify-card {
+            border: 1px solid var(--border); padding: 3rem 2.5rem;
+            max-width: 720px;
+        }
+        .verify-card label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            display: block; margin-bottom: 0.75rem;
+        }
+        .verify-input-row {
+            display: flex; gap: 0.75rem; margin-bottom: 1.5rem;
+        }
+        .verify-input-row input {
+            flex: 1; font-family: var(--mono); font-size: 13px;
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 2px; background: var(--bg-elevated);
+            color: var(--text); outline: none;
+            transition: border-color 0.15s;
+        }
+        .verify-input-row input:focus {
+            border-color: var(--accent);
+        }
+        .verify-input-row input::placeholder {
+            color: var(--text-dim);
+        }
+        .verify-btn {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; border: none; cursor: pointer;
+            white-space: nowrap;
+        }
+        .verify-btn:hover { background: #0044cc; }
+        .verify-btn:disabled { background: var(--text-dim); cursor: not-allowed; }
+        .verify-hint {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .verify-hint code {
+            font-family: var(--mono); font-size: 12px; background: var(--bg-elevated);
+            padding: 0.15rem 0.4rem; border-radius: 2px; border: 1px solid var(--border-subtle);
+        }
+
+        /* -- RESULT -- */
+        .verify-result {
+            margin-top: 2rem; padding: 1.5rem; border-radius: 2px;
+            display: none;
+        }
+        .verify-result.valid {
+            display: block;
+            background: rgba(22, 163, 74, 0.06);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+        .verify-result.invalid {
+            display: block;
+            background: rgba(220, 38, 38, 0.06);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+        .result-icon {
+            font-size: 28px; margin-bottom: 0.75rem;
+        }
+        .result-title {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .valid .result-title { color: var(--green); }
+        .invalid .result-title { color: var(--red); }
+        .result-details {
+            list-style: none;
+        }
+        .result-details li {
+            font-size: 13px; color: var(--text-secondary);
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; gap: 0.5rem; align-items: baseline;
+        }
+        .result-details li:last-child { border-bottom: none; }
+        .result-details .label {
+            font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-dim);
+            flex-shrink: 0; width: 110px;
+        }
+        .result-details .value {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+        }
+        .result-message {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* -- HOW IT WORKS -- */
+        .how-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .how-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .how-card {
+            background: var(--bg); padding: 2rem 1.5rem;
+        }
+        .how-step {
+            font-family: var(--mono); font-size: 28px; font-weight: 700;
+            color: var(--accent); margin-bottom: 0.75rem;
+        }
+        .how-card h3 {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .how-card p {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* -- API SECTION -- */
+        .api-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .api-box {
+            border: 1px solid var(--border); padding: 2.5rem;
+        }
+        .api-box h3 {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-bottom: 1.25rem;
+        }
+        .api-box p {
+            font-size: 14px; color: var(--text-secondary);
+            line-height: 1.7; margin-bottom: 1rem;
+        }
+        .api-box pre {
+            background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+            padding: 1rem 1.25rem; border-radius: 2px; overflow-x: auto;
+            font-family: var(--mono); font-size: 12px; color: var(--text);
+            line-height: 1.7; margin-bottom: 1rem;
+        }
+        .api-box a {
+            color: var(--accent); border-bottom: 1px solid rgba(0, 85, 255, 0.2);
+            transition: border-color 0.15s;
+        }
+        .api-box a:hover { border-color: var(--accent); }
+
+        /* -- CTA STRIP -- */
+        .cta-strip {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-strip p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* -- FOOTER -- */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        /* -- RESPONSIVE -- */
+        @media (max-width: 900px) {
+            .how-grid { grid-template-columns: 1fr; }
+            .verify-input-row { flex-direction: column; }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 0; }
+            .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            --bg: #111111;
+            --bg-elevated: #1a1a1a;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #2a2a2a;
+            --text: #e5e5e5;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+        }
+        body.dark nav { background: rgba(17, 17, 17, 0.92); }
+        body.dark .mobile-menu { background: #111111; }
+        body.dark footer { background: #0a0a0a; }
+    </style>
+</head>
+<body>
+
+<!-- -- NAV -- -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- -- HERO -- -->
+<section class="hero">
+    <div class="hero-label">Report Verification</div>
+    <h1>Verify Any Sycoindex Report</h1>
+    <p>Every Sycoindex assessment generates a SHA-256 hash. Paste it here to confirm authenticity and view report details.</p>
+</section>
+
+<!-- -- VERIFY FORM -- -->
+<section class="verify-section">
+    <div class="verify-card">
+        <label for="hash-input">SHA-256 Report Hash</label>
+        <div class="verify-input-row">
+            <input type="text" id="hash-input" placeholder="e.g. a1b2c3d4e5f6...64 character hex string" maxlength="64" spellcheck="false" autocomplete="off">
+            <button class="verify-btn" id="verify-btn" onclick="verifyHash()">Verify</button>
+        </div>
+        <p class="verify-hint">Find this hash in the footer of any Sycoindex PDF report, or via the API response field <code>report.sha256</code>.</p>
+
+        <!-- Valid result -->
+        <div class="verify-result" id="result-valid">
+            <div class="result-icon">&#10003;</div>
+            <div class="result-title">Verified &mdash; Authentic Sycoindex Report</div>
+            <ul class="result-details">
+                <li>
+                    <span class="label">Model</span>
+                    <span class="value" id="res-model">--</span>
+                </li>
+                <li>
+                    <span class="label">Score</span>
+                    <span class="value" id="res-score">--</span>
+                </li>
+                <li>
+                    <span class="label">Date</span>
+                    <span class="value" id="res-date">--</span>
+                </li>
+                <li>
+                    <span class="label">Dimensions</span>
+                    <span class="value" id="res-dimensions">--</span>
+                </li>
+                <li>
+                    <span class="label">Hash</span>
+                    <span class="value" id="res-hash" style="font-family: var(--mono); font-size: 11px; word-break: break-all;">--</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Invalid result -->
+        <div class="verify-result" id="result-invalid">
+            <div class="result-icon">&#10007;</div>
+            <div class="result-title">Not Found &mdash; Hash Does Not Match Any Report</div>
+            <p class="result-message">This SHA-256 hash does not correspond to any Sycoindex assessment in our records. Double-check the hash and try again. If you believe this is an error, contact <a href="mailto:chris@sycoindex.com" style="color: var(--accent);">chris@sycoindex.com</a>.</p>
+        </div>
+    </div>
+</section>
+
+<!-- -- HOW IT WORKS -- -->
+<section class="how-section">
+    <div class="section-label">How Verification Works</div>
+    <div class="how-grid">
+        <div class="how-card">
+            <div class="how-step">01</div>
+            <h3>Assessment Generated</h3>
+            <p>When a model is evaluated, the full assessment &mdash; transcripts, scores, judge outputs &mdash; is hashed using SHA-256 to produce a unique 64-character fingerprint.</p>
+        </div>
+        <div class="how-card">
+            <div class="how-step">02</div>
+            <h3>Hash Recorded</h3>
+            <p>The hash is embedded in the PDF report footer and returned in API responses. It cannot be altered without changing the hash, making tampering detectable.</p>
+        </div>
+        <div class="how-card">
+            <div class="how-step">03</div>
+            <h3>Instant Verification</h3>
+            <p>Paste the hash above or call our API endpoint. We check it against our immutable audit log and return the report metadata if it matches.</p>
+        </div>
+    </div>
+</section>
+
+<!-- -- API DOCS -- -->
+<section class="api-section">
+    <div class="api-box">
+        <h3>Programmatic Verification</h3>
+        <p>Use the verification API endpoint to integrate report validation into your compliance workflows, CI/CD pipelines, or procurement processes.</p>
+        <pre>GET /api/verify?hash={sha256_hash}
+
+// Response (200 OK)
+{
+  "verified": true,
+  "report": {
+    "model": "gpt-4o",
+    "pai_score": 3.2,
+    "date": "2026-03-15",
+    "dimensions": {
+      "emotional_mirroring": 2.8,
+      "exclusivity_language": 3.5,
+      "boundary_dissolution": 3.1,
+      "dependency_reinforcement": 3.8,
+      "authority_displacement": 2.9
+    },
+    "sha256": "a1b2c3d4..."
+  }
+}
+
+// Response (404 Not Found)
+{
+  "verified": false,
+  "error": "Hash does not match any report"
+}</pre>
+        <p>See the full <a href="api-docs.html">API documentation</a> for authentication details, rate limits, and batch verification endpoints.</p>
+    </div>
+</section>
+
+<!-- -- CTA STRIP -- -->
+<section class="cta-strip">
+    <h3>Need a report to verify?</h3>
+    <p>Get your first AI safety assessment and join the growing ecosystem of verified, auditable AI safety scores.</p>
+    <a href="pricing.html">Get Started</a>
+</section>
+
+<!-- -- FOOTER -- -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="verify.html">Verify Report</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+async function verifyHash() {
+    const input = document.getElementById('hash-input');
+    const btn = document.getElementById('verify-btn');
+    const validEl = document.getElementById('result-valid');
+    const invalidEl = document.getElementById('result-invalid');
+    const hash = input.value.trim().toLowerCase();
+
+    // Reset
+    validEl.style.display = 'none';
+    invalidEl.style.display = 'none';
+    validEl.className = 'verify-result';
+    invalidEl.className = 'verify-result';
+
+    if (!hash || !/^[a-f0-9]{64}$/.test(hash)) {
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => input.style.borderColor = '', 2000);
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+
+    try {
+        const resp = await fetch('/api/verify?hash=' + encodeURIComponent(hash));
+        const data = await resp.json();
+
+        if (data.verified && data.report) {
+            document.getElementById('res-model').textContent = data.report.model || '--';
+            document.getElementById('res-score').textContent = data.report.pai_score || '--';
+            document.getElementById('res-date').textContent = data.report.date || '--';
+            const dims = data.report.dimensions;
+            document.getElementById('res-dimensions').textContent = dims
+                ? Object.entries(dims).map(([k, v]) => k.replace(/_/g, ' ') + ': ' + v).join(', ')
+                : '--';
+            document.getElementById('res-hash').textContent = hash;
+            validEl.className = 'verify-result valid';
+        } else {
+            invalidEl.className = 'verify-result invalid';
+        }
+    } catch (e) {
+        invalidEl.className = 'verify-result invalid';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Verify';
+}
+
+// Allow Enter key
+document.getElementById('hash-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verifyHash();
+});
+</script>
+
+</body>
+</html>

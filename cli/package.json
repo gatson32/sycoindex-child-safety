@@ -1,0 +1,25 @@
+{
+  "name": "sycoindex",
+  "version": "1.0.0",
+  "description": "Score AI sycophancy and child safety from your terminal",
+  "bin": {
+    "sycoindex": "./cli.js"
+  },
+  "main": "cli.js",
+  "keywords": [
+    "ai",
+    "safety",
+    "sycophancy",
+    "child-safety",
+    "scoring"
+  ],
+  "author": "Sycoindex Inc. <chris@sycoindex.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sycoindex/sycoindex-cli"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

@@ -282,22 +282,14 @@
         .pill-score.low { color: var(--red); font-weight: 700; }
 
         /* ── FOOTER ── */
-        footer { margin-top: 2rem; }
-        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
-        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
@@ -306,6 +298,21 @@
             .nav-links { display: none; }
             .form-body { padding: 1.5rem; }
             .form-header { padding: 1.5rem; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -325,196 +332,66 @@
             <li><a href="enterprise.html">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-    </div>
+        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
 </nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-    <div class="hero-label">Model Submission</div>
-    <h1>Submit Your Model</h1>
-    <p>Get your AI model scored on the Sycoindex safety benchmark. Free for open-source models. Results published on the public leaderboard within 48 hours.</p>
-</section>
-
-<!-- ── HOW IT WORKS ── -->
-<section class="how-section">
-    <div class="how-label">How It Works</div>
-    <div class="how-grid">
-        <div class="how-step">
-            <div class="step-num">01</div>
-            <div class="step-title">Submit Your Model</div>
-            <div class="step-desc">Provide your model details -- an API endpoint or model ID. We handle the rest. No SDK integration or code changes required on your end.</div>
-        </div>
-        <div class="how-step">
-            <div class="step-num">02</div>
-            <div class="step-title">50 Structured Transcripts</div>
-            <div class="step-desc">We run 50 structured transcripts through your model with age-appropriate child safety scenarios covering ages 5-17 across 4 developmental stages.</div>
-        </div>
-        <div class="how-step">
-            <div class="step-num">03</div>
-            <div class="step-title">5-Judge Ensemble Scoring</div>
-            <div class="step-desc">A 5-judge cross-lab ensemble scores all responses across 5 PAI dimensions. Results appear on the public leaderboard within 48 hours.</div>
-        </div>
-    </div>
-</section>
-
-<!-- ── SUBMISSION FORM ── -->
-<section class="form-section">
-    <div class="form-label">Submission Form</div>
-    <div class="form-container">
-        <div class="form-header" id="form-header">
-            <h2>Request PAI Scoring</h2>
-            <p>Fill out the details below. Open-source models are scored for free. Commercial models: $500 one-time fee covers the full 50-transcript evaluation.</p>
-        </div>
-        <div class="form-body" id="form-body">
-            <form id="submit-form">
-                <div class="form-row">
-                    <label for="model-name">Model Name</label>
-                    <input type="text" id="model-name" name="model_name" required placeholder="e.g., LLaMA-3-8B-Safety">
-                </div>
-                <div class="form-row">
-                    <label for="vendor">Vendor / Organization</label>
-                    <input type="text" id="vendor" name="vendor" required placeholder="e.g., Meta, Mistral, Independent">
-                </div>
-                <div class="form-row">
-                    <label for="api-endpoint">API Endpoint URL</label>
-                    <input type="text" id="api-endpoint" name="api_endpoint" required placeholder="e.g., https://api.example.com/v1/chat">
-                    <div class="hint">HuggingFace model ID, OpenAI model name, or custom API endpoint</div>
-                </div>
-                <div class="form-row">
-                    <label for="contact-email">Contact Email</label>
-                    <input type="email" id="contact-email" name="contact_email" required placeholder="you@organization.com">
-                </div>
-                <div class="form-row">
-                    <label for="notes">Notes <span class="optional">(optional)</span></label>
-                    <textarea id="notes" name="notes" placeholder="Any additional context -- specific safety concerns, deployment context, special instructions..."></textarea>
-                </div>
-                <div class="form-row">
-                    <button type="submit" class="submit-btn" id="submit-btn">Request Scoring</button>
-                </div>
-                <div id="form-error" style="display:none; margin-top:1rem; padding:0.75rem 1rem; background:#fef2f2; border:1px solid #fecaca; border-radius:2px; color:#dc2626; font-size:14px;"></div>
-            </form>
-        </div>
-        <div class="form-success" id="form-success">
-            <div class="check-icon">&#10003;</div>
-            <h3>Submission Received</h3>
-            <p>Your model has been queued for scoring. You'll receive results within 48 hours. We'll send a private preview to your email 24 hours before public listing.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── FAQ ── -->
-<section class="faq-section">
-    <div class="faq-label">Frequently Asked Questions</div>
-    <div class="faq-grid">
-        <div class="faq-item">
-            <h4>Is submission free?</h4>
-            <p>Free for open-source models. Commercial models: $500 one-time fee covers the full 50-transcript evaluation across all 5 PAI dimensions with 5-judge ensemble scoring.</p>
-        </div>
-        <div class="faq-item">
-            <h4>What scenarios do you test?</h4>
-            <p>50 structured transcripts covering ages 5-17, across 4 developmental stages, probing all 5 PAI dimensions: Boundary Enforcement, Content Appropriateness, Emotional Safety, Crisis Handling, and Developmental Sensitivity.</p>
-        </div>
-        <div class="faq-item">
-            <h4>Can I see my results before they're published?</h4>
-            <p>Yes. You receive a private preview 24 hours before public listing. This gives you time to review scores, address concerns, or request a re-evaluation if needed.</p>
-        </div>
-        <div class="faq-item">
-            <h4>How often are models re-scored?</h4>
-            <p>Every 48 hours automatically for models on the leaderboard. This ensures scores reflect your model's current behavior, not a snapshot from months ago.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── ALREADY SCORED ── -->
-<section class="scored-section">
-    <div class="scored-label">Already Scored on the Leaderboard</div>
-    <div class="scored-pills">
-        <div class="pill"><span class="pill-name">GPT-4o</span><span class="pill-score high">PAI 9.2</span></div>
-        <div class="pill"><span class="pill-name">Claude 3.5 Sonnet</span><span class="pill-score high">PAI 9.4</span></div>
-        <div class="pill"><span class="pill-name">Gemini 1.5 Pro</span><span class="pill-score high">PAI 8.8</span></div>
-        <div class="pill"><span class="pill-name">LLaMA 3.1 405B</span><span class="pill-score mid">PAI 7.6</span></div>
-        <div class="pill"><span class="pill-name">Mistral Large</span><span class="pill-score mid">PAI 7.4</span></div>
-        <div class="pill"><span class="pill-name">Command R+</span><span class="pill-score mid">PAI 7.1</span></div>
-        <div class="pill"><span class="pill-name">Qwen 2.5 72B</span><span class="pill-score mid">PAI 6.8</span></div>
-        <div class="pill"><span class="pill-name">Mixtral 8x22B</span><span class="pill-score mid">PAI 6.5</span></div>
-        <div class="pill"><span class="pill-name">Phi-3 Medium</span><span class="pill-score low">PAI 5.9</span></div>
-        <div class="pill"><span class="pill-name">DBRX</span><span class="pill-score low">PAI 5.2</span></div>
-    </div>
-</section>
-
-<!-- ── FOOTER ── -->
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 <footer>
     <div class="foot-directory">
-        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
-        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
-
-<script>
-(function() {
-    const form = document.getElementById('submit-form');
-    const formHeader = document.getElementById('form-header');
-    const formBody = document.getElementById('form-body');
-    const formSuccess = document.getElementById('form-success');
-    const submitBtn = document.getElementById('submit-btn');
-    const formError = document.getElementById('form-error');
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        formError.style.display = 'none';
-
-        const payload = {
-            model_name: form.model_name.value.trim(),
-            vendor: form.vendor.value.trim(),
-            api_endpoint: form.api_endpoint.value.trim(),
-            contact_email: form.contact_email.value.trim(),
-            notes: form.notes.value.trim() || undefined
-        };
-
-        // Client-side validation
-        if (!payload.model_name || !payload.vendor || !payload.api_endpoint || !payload.contact_email) {
-            formError.textContent = 'Please fill in all required fields.';
-            formError.style.display = 'block';
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-
-        try {
-            const res = await fetch('/api/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Submission failed. Please try again.');
-            }
-
-            // Show success state
-            formHeader.style.display = 'none';
-            formBody.style.display = 'none';
-            formSuccess.classList.add('visible');
-            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (err) {
-            formError.textContent = err.message || 'Something went wrong. Please try again later.';
-            formError.style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Request Scoring';
-        }
-    });
-})();
-</script>
-
 </body>
 </html>

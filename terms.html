@@ -139,58 +139,14 @@
         }
 
         /* Footer */
-        footer {
-            margin-top: 6rem;
-            padding-bottom: 2rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .footer-disclaimer {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-
-        .footer-bottom {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-        }
-
-        .footer-copyright {
-            color: var(--text-secondary);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1rem;
-            color: var(--text-secondary);
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .footer-separator {
-            color: var(--text-dim);
-        }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         @media (max-width: 768px) {
             .nav-links {
@@ -215,10 +171,21 @@
                 font-size: 14px;
             }
 
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-            }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -237,79 +204,66 @@
                 <li><a href="enterprise.html">Providers</a></li>
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
-        </div>
+                <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
     </nav>
-
-    <!-- Main Content -->
-    <main>
-        <h1>Terms of Use</h1>
-        <div class="effective-date">Effective April 17, 2026 · Last Updated April 17, 2026</div>
-
-        <h2>1. Acceptance of Terms</h2>
-        <p>By accessing or using any part of the Sycoindex website, platform, APIs, or services (collectively, the "Service"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to all of these Terms, you may not access or use the Service. Sycoindex Inc. ("Sycoindex," "we," "us," or "our") reserves the right to modify these Terms at any time. Material changes will be posted on our website with an updated effective date. Your continued use of the Service after any such modification constitutes acceptance of the modified Terms.</p>
-
-        <h2>2. Description of Service</h2>
-        <p>Sycoindex provides an AI safety research platform that scores and benchmarks large language models on sycophancy and child safety indicators. The Service includes the Leaderboard, the Transcript Explorer, the Safety API, compliance mapping tools, and related documentation. We evaluate models using a proprietary multi-judge cross-lab ensemble methodology. The Service is provided for research, informational, and commercial purposes as described in our pricing and license agreements.</p>
-
-        <h2>3. Intellectual Property and Proprietary Rights</h2>
-        <p>All content, software, technology, data, text, graphics, user interfaces, visual interfaces, logos, trademarks, service marks, sounds, artwork, computer code, design, structure, selection, coordination, expression, "look and feel," and arrangement of the Service is owned, controlled, or licensed by or to Sycoindex Inc. and is protected by trade dress, copyright, patent, trademark laws, and various other intellectual property rights and unfair competition laws.</p>
-        <p>Without Sycoindex's express prior written consent, no part of the Service and no Content may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited for any purpose whatsoever.</p>
-
-        <h2 id="trade-secrets">4. Trade Secrets and Proprietary Methodology</h2>
-        <p>The Sycoindex scoring methodology, including but not limited to the PAI (Parasocial Attachment Indicators) framework, scoring rubrics, dimension definitions, calibration procedures, judge prompt engineering, ensemble aggregation methods, and the specific configuration of our multi-judge cross-lab pipeline, constitute trade secrets and confidential proprietary information of Sycoindex Inc. These materials are protected under the Defend Trade Secrets Act (18 U.S.C. § 1836), the Delaware Uniform Trade Secrets Act, and equivalent state and international laws.</p>
-        <p>You agree not to, and shall not permit any third party to: (a) reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code, algorithms, scoring logic, rubrics, or internal processes of the Service; (b) attempt to reconstruct, replicate, or approximate the scoring methodology through systematic querying, output analysis, or any other means; (c) use automated tools including but not limited to scripts, bots, crawlers, spiders, scrapers, or any other automatic device, program, algorithm, or methodology to access, acquire, copy, probe, test, or monitor any portion of the Service or its outputs; (d) train, fine-tune, or develop any machine learning model, algorithm, or competing product using outputs, scores, or data obtained from the Service; (e) breach, circumvent, disable, or interfere with any security, authentication, rate-limiting, or access-control features of the Service.</p>
-
-        <h2>5. Restrictions on Use</h2>
-        <p>You may not use any "deep-link," "page-scrape," "robot," "spider," or other automatic device, program, algorithm, or methodology, or any similar or equivalent manual process, to access, acquire, copy, or monitor any portion of the Service or any Content, or in any way reproduce or circumvent the navigational structure or presentation of the Service, to obtain or attempt to obtain any materials, documents, or information through any means not purposefully made available through the Service.</p>
-        <p>You may not attempt to gain unauthorized access to any portion or feature of the Service, or any other systems or networks connected to the Service, by hacking, password "mining," or any other illegitimate means. You may not probe, scan, or test the vulnerability of the Service or any network connected to the Service, nor breach the security or authentication measures on the Service.</p>
-
-        <h2>6. Scoring Assessments — Disclaimer</h2>
-        <p>Sycoindex scores and assessments reflect model behavior during structured evaluation scenarios under controlled conditions only. Scores are not regulatory certifications, compliance guarantees, endorsements, or warranties of any kind regarding the safety, fitness, or suitability of any AI model. They do not constitute a complete safety evaluation and should not be treated as the sole basis for deployment, procurement, or regulatory decisions. Model behavior in production use may differ materially from behavior observed during our evaluations. Users should conduct their own independent safety assessments.</p>
-
-        <h2>7. API Usage</h2>
-        <p>Access to the Sycoindex API is governed by these Terms and any additional API-specific license agreement. API users agree to comply with all published rate limits, usage restrictions, and attribution requirements. API keys are personal, non-transferable, and must not be shared, published, or embedded in client-side code. You are responsible for maintaining the confidentiality of your API credentials and for all activity that occurs under your account. Sycoindex reserves the right to suspend or terminate API access at any time for violation of these Terms.</p>
-
-        <h2>8. Disclaimer of Warranties</h2>
-        <p>THE SERVICE IS PROVIDED STRICTLY ON AN "AS IS" AND "AS AVAILABLE" BASIS. SYCOINDEX MAKES NO REPRESENTATION OR WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, OR ACCURACY. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE, OR THAT DEFECTS WILL BE CORRECTED.</p>
-
-        <h2 id="liability">9. Limitation of Liability</h2>
-        <p>IN NO EVENT SHALL SYCOINDEX INC., ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, AFFILIATES, SUCCESSORS, OR ASSIGNS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOSS OF PROFITS, GOODWILL, DATA, USE, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR IN CONNECTION WITH YOUR ACCESS TO OR USE OF (OR INABILITY TO ACCESS OR USE) THE SERVICE.</p>
-        <p>Sycoindex's total aggregate liability arising out of or related to these Terms or the Service shall in no event exceed the greater of: (a) the total fees paid by you to Sycoindex in the six (6) months preceding the date of the initial claim; or (b) one hundred U.S. dollars (US$100.00). This limitation applies regardless of the legal theory on which the claim is based, whether in contract, tort (including negligence), strict liability, or otherwise.</p>
-
-        <h2>10. Indemnification</h2>
-        <p>You agree to indemnify, defend, and hold harmless Sycoindex Inc. and its officers, directors, employees, agents, affiliates, successors, and assigns from and against any and all claims, demands, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to: (a) your use of the Service; (b) your violation of these Terms; (c) your violation of any third-party rights, including intellectual property rights; or (d) any content you submit, post, or transmit through the Service.</p>
-
-        <h2>11. DMCA and Copyright Complaints</h2>
-        <p>Sycoindex respects the intellectual property rights of others. If you believe that any content on the Service infringes your copyright, please send a written notice to our designated agent at <strong>chris@sycoindex.com</strong> containing: (a) a description of the copyrighted work; (b) the URL of the infringing material; (c) your contact information; (d) a statement of good faith belief; and (e) a statement under penalty of perjury that you are authorized to act on behalf of the copyright owner.</p>
-
-        <h2>12. Governing Law and Dispute Resolution</h2>
-        <p>These Terms shall be governed by and construed in accordance with the laws of the State of Delaware, United States, without regard to its conflict of law principles. Any dispute arising out of or relating to these Terms or the Service shall be resolved exclusively in the state or federal courts located in Wilmington, Delaware. You irrevocably consent to the personal jurisdiction and venue of such courts and waive any objection based on inconvenient forum.</p>
-
-        <h2>13. Severability</h2>
-        <p>If any provision of these Terms is held to be unlawful, void, or unenforceable, that provision shall be deemed severable from these Terms and shall not affect the validity and enforceability of any remaining provisions.</p>
-
-        <h2>14. Entire Agreement</h2>
-        <p>These Terms, together with the Privacy Policy and any applicable API license agreement, constitute the entire agreement between you and Sycoindex Inc. regarding the Service, and supersede all prior or contemporaneous agreements, representations, warranties, and understandings.</p>
-
-        <h2>15. Contact</h2>
-        <p>For questions about these Terms, to report violations, or for legal inquiries, contact us at <strong>chris@sycoindex.com</strong>. For general inquiries: <strong>chris@sycoindex.com</strong>.</p>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-disclaimer">
-            Sycoindex is an AI safety research platform operated by Sycoindex Inc. Our assessments reflect model behavior during structured evaluations and do not constitute regulatory compliance certifications. All information provided on this site is for research and informational purposes.
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
         </div>
-        <div class="footer-bottom">
-            <div class="footer-copyright">© 2026 Sycoindex Inc. All rights reserved.</div>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <span class="footer-separator">|</span>
-                <a href="terms.html">Terms of Use</a>
-                <span class="footer-separator">|</span>
-                <a href="index.html">Home</a>
-            </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
         </div>
-    </footer>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot-legal">
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
+    </div>
+</footer>
 </body>
 </html>

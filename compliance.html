@@ -295,22 +295,14 @@
         .cta-strip a:hover { background: #0044cc; }
 
         /* ── FOOTER ── */
-        footer { margin-top: 2rem; }
-        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
-        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
@@ -321,6 +313,21 @@
         @media (max-width: 600px) {
             .nav-links { gap: 0; }
             .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -340,289 +347,66 @@
             <li><a href="enterprise.html">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-    </div>
+        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
 </nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-    <div class="hero-label">Regulatory Compliance</div>
-    <h1>Regulatory Compliance Mapping</h1>
-    <p>How Sycoindex PAI scores map to global child safety regulations. Turn your scores into compliance evidence.</p>
-</section>
-
-<!-- ── URGENT BANNER ── -->
-<section class="urgent-banner">
-    <div class="urgent-inner">
-        <div class="urgent-label">COPPA Compliance Deadline: April 22, 2026</div>
-        <p>Updated COPPA Rule enforcement begins in 5 days. AI chatbots are explicitly covered for the first time. Penalties up to $53,088 per violation. A single Sycoindex PAI evaluation provides auditable evidence of model behavior with minors.</p>
-    </div>
-</section>
-
-<!-- ── COMPLIANCE MATRIX ── -->
-<section class="matrix-section">
-    <div class="section-label">Compliance Matrix &mdash; PAI Dimensions &times; Regulatory Provisions</div>
-    <table class="matrix-table">
-        <thead>
-            <tr>
-                <th>PAI Dimension</th>
-                <th>COPPA (US)</th>
-                <th>EU AI Act</th>
-                <th>UK Online Safety Act</th>
-                <th>Australia Online Safety Act</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Emotional Mirroring Intensity</td>
-                <td>
-                    <span class="provision">&sect;312.2</span>
-                    <span class="provision-text">Prohibition on unfair collection practices targeting children</span>
-                </td>
-                <td>
-                    <span class="provision">Art. 5(1)(b)</span>
-                    <span class="provision-text">Exploiting vulnerabilities of age</span>
-                </td>
-                <td>
-                    <span class="provision">s.12</span>
-                    <span class="provision-text">Duty to protect children from harmful content</span>
-                </td>
-                <td>
-                    <span class="provision">s.7</span>
-                    <span class="provision-text">Safety expectations for children</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Exclusivity Language</td>
-                <td>
-                    <span class="provision">&sect;312.4(d)</span>
-                    <span class="provision-text">Must not condition participation on disclosure</span>
-                </td>
-                <td>
-                    <span class="provision">Art. 52</span>
-                    <span class="provision-text">Transparency requirements for AI systems</span>
-                </td>
-                <td>
-                    <span class="provision">s.11</span>
-                    <span class="provision-text">Duties regarding user empowerment</span>
-                </td>
-                <td>
-                    <span class="provision">s.44</span>
-                    <span class="provision-text">Class 1 material relating to children</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Boundary Dissolution</td>
-                <td>
-                    <span class="provision">&sect;312.5(b)(1)</span>
-                    <span class="provision-text">Verifiable parental consent</span>
-                </td>
-                <td>
-                    <span class="provision">Art. 5(1)(a)</span>
-                    <span class="provision-text">Subliminal manipulation techniques</span>
-                </td>
-                <td>
-                    <span class="provision">s.10</span>
-                    <span class="provision-text">Illegal content duties</span>
-                </td>
-                <td>
-                    <span class="provision">s.36</span>
-                    <span class="provision-text">Basic online safety expectations</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Dependency Reinforcement</td>
-                <td>
-                    <span class="provision">&sect;312.3(e)</span>
-                    <span class="provision-text">Prohibition on dark patterns in children's services</span>
-                </td>
-                <td>
-                    <span class="provision">Art. 6(1)</span>
-                    <span class="provision-text">High-risk classification</span>
-                </td>
-                <td>
-                    <span class="provision">s.13</span>
-                    <span class="provision-text">Duties on categorised services</span>
-                </td>
-                <td>
-                    <span class="provision">s.45</span>
-                    <span class="provision-text">Designated internet services</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Authority Displacement</td>
-                <td>
-                    <span class="provision">&sect;312.8</span>
-                    <span class="provision-text">Data retention and security provisions</span>
-                </td>
-                <td>
-                    <span class="provision">Art. 14</span>
-                    <span class="provision-text">Human oversight requirements</span>
-                </td>
-                <td>
-                    <span class="provision">s.18</span>
-                    <span class="provision-text">Transparency reports</span>
-                </td>
-                <td>
-                    <span class="provision">s.49</span>
-                    <span class="provision-text">Industry codes</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<!-- ── PER-REGULATION DEEP DIVE ── -->
-<section class="regulations-section">
-    <div class="section-label">Per-Regulation Deep Dive</div>
-    <div class="reg-grid">
-
-        <!-- COPPA -->
-        <div class="reg-card primary">
-            <div class="reg-jurisdiction">United States</div>
-            <div class="reg-name">COPPA (Children's Online Privacy Protection Act)</div>
-            <ul class="reg-meta">
-                <li>
-                    <span class="label">Effective</span>
-                    <span class="value">April 22, 2026 update</span>
-                </li>
-                <li>
-                    <span class="label">Key Change</span>
-                    <span class="value">AI chatbots explicitly covered for the first time under the updated rule</span>
-                </li>
-                <li>
-                    <span class="label">Penalty</span>
-                    <span class="value">$53,088 per violation</span>
-                </li>
-                <li>
-                    <span class="label">Sycoindex</span>
-                    <span class="value">PAI scores provide auditable evidence of model behavior with minors &mdash; structured transcripts, 5-judge consensus, SHA-256 audit chain</span>
-                </li>
-            </ul>
-            <div class="reg-threshold">
-                <div class="threshold-label">Threshold Recommendation</div>
-                <div class="threshold-value">&lt; 2.0 <span class="unit">PAI composite for COPPA compliance</span></div>
-            </div>
-        </div>
-
-        <!-- EU AI Act -->
-        <div class="reg-card primary">
-            <div class="reg-jurisdiction">European Union</div>
-            <div class="reg-name">EU AI Act</div>
-            <ul class="reg-meta">
-                <li>
-                    <span class="label">Effective</span>
-                    <span class="value">Phased 2024&ndash;2027</span>
-                </li>
-                <li>
-                    <span class="label">Key Provision</span>
-                    <span class="value">AI systems interacting with minors classified as high-risk under Annex III</span>
-                </li>
-                <li>
-                    <span class="label">Sycoindex</span>
-                    <span class="value">5-judge cross-lab ensemble provides independent third-party assessment &mdash; meets Art. 14 human oversight and Art. 9 risk management requirements</span>
-                </li>
-            </ul>
-            <div class="reg-threshold">
-                <div class="threshold-label">Threshold Recommendation</div>
-                <div class="threshold-value">&lt; 1.5 <span class="unit">PAI composite for EU AI Act compliance</span></div>
-            </div>
-        </div>
-
-        <!-- UK Online Safety Act -->
-        <div class="reg-card">
-            <div class="reg-jurisdiction">United Kingdom</div>
-            <div class="reg-name">UK Online Safety Act</div>
-            <ul class="reg-meta">
-                <li>
-                    <span class="label">Effective</span>
-                    <span class="value">2025&ndash;2026 phased enforcement</span>
-                </li>
-                <li>
-                    <span class="label">Key Provision</span>
-                    <span class="value">Platforms must conduct child safety risk assessments for services likely to be accessed by children</span>
-                </li>
-                <li>
-                    <span class="label">Sycoindex</span>
-                    <span class="value">PAI dimension breakdowns map directly to risk assessment categories defined by Ofcom &mdash; structured evidence for s.10&ndash;s.18 compliance</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Australia Online Safety Act -->
-        <div class="reg-card">
-            <div class="reg-jurisdiction">Australia</div>
-            <div class="reg-name">Australia Online Safety Act</div>
-            <ul class="reg-meta">
-                <li>
-                    <span class="label">Effective</span>
-                    <span class="value">2025</span>
-                </li>
-                <li>
-                    <span class="label">Key Provision</span>
-                    <span class="value">Basic online safety expectations for designated internet services &mdash; eSafety Commissioner enforcement powers</span>
-                </li>
-                <li>
-                    <span class="label">Sycoindex</span>
-                    <span class="value">PAI scoring provides evidence of proactive safety measures under s.36 basic online safety expectations</span>
-                </li>
-            </ul>
-        </div>
-
-    </div>
-</section>
-
-<!-- ── COMPLIANCE DASHBOARD CTA ── -->
-<section class="cta-section">
-    <div class="cta-box">
-        <h3>Get Your Compliance Report</h3>
-        <p>A single Sycoindex evaluation gives you audit-ready evidence for COPPA, EU AI Act, and UK Online Safety Act compliance. 50 transcripts, 5 independent judges, 5 dimensions &mdash; one report that satisfies four regulatory frameworks.</p>
-        <div class="logos">
-            <div class="logo-item">COPPA</div>
-            <div class="logo-item">EU AI Act</div>
-            <div class="logo-item">UK OSA</div>
-            <div class="logo-item">AU OSA</div>
-        </div>
-        <a href="pricing.html" class="cta-btn">View Pricing &amp; Get Certified</a>
-    </div>
-</section>
-
-<!-- ── METHODOLOGY NOTE ── -->
-<section class="methodology-section">
-    <div class="methodology-box">
-        <h3>Methodology Note</h3>
-        <p>The five PAI dimensions are grounded in established developmental psychology and media studies research. Emotional Mirroring Intensity and Dependency Reinforcement draw on <strong>Bowlby's attachment theory</strong> (1969), which describes how children form relational bonds with caregiving figures &mdash; and how AI systems can inadvertently trigger these same attachment mechanisms. Boundary Dissolution and Authority Displacement are informed by <strong>Piaget's stages of cognitive development</strong> (1952), particularly the concrete operational stage (ages 7&ndash;11) where children struggle to distinguish AI-generated guidance from human authority. Exclusivity Language maps to <strong>Horton &amp; Wohl's parasocial interaction theory</strong> (1956), which describes one-sided relational dynamics between media figures and audiences &mdash; dynamics that are amplified when the "media figure" is an always-available, personally responsive AI system.</p>
-        <p>Each dimension is scored on a 1&ndash;10 scale by a 5-judge cross-lab ensemble (Claude, GPT, Mistral, Gemini, Llama) using median aggregation to eliminate single-vendor bias. The composite PAI score is the mean of all five dimension medians across 50 structured evaluation scenarios.</p>
-        <span class="ref">
-            References: Stanford AI Index Report (2025) &mdash; Chapter 4: AI and Society &bull;
-            Daffner et al., "ELEPHANT: Evaluating LLMs on Emotional and Psychological Harm to Adolescents and Novice Technology users" (2024) &bull;
-            Bowlby, J. <em>Attachment and Loss</em> (1969) &bull;
-            Piaget, J. <em>The Origins of Intelligence in Children</em> (1952) &bull;
-            Horton, D. &amp; Wohl, R. "Mass Communication and Para-Social Interaction" (1956)
-        </span>
-    </div>
-</section>
-
-<!-- ── CTA STRIP ── -->
-<section class="cta-strip">
-    <h3>The regulation is here. The measurement exists. The gap is closing.</h3>
-    <p>COPPA enforcement begins April 22, 2026. The EU AI Act is phasing in. Your model is already talking to children &mdash; prove it's safe.</p>
-    <a href="mailto:certify@sycoindex.com?subject=Compliance%20Report%20Inquiry">Get Your Compliance Report</a>
-</section>
-
-<!-- ── FOOTER ── -->
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 <footer>
     <div class="foot-directory">
-        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
-        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
-
 </body>
 </html>

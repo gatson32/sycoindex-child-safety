@@ -104,27 +104,34 @@
         .stat-val.neutral { color:var(--text); }
 
         /* FOOTER */
-        footer { margin-top:2rem; }
-        .foot-directory { max-width:1400px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-2); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1400px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-d); line-height:1.6; }
-        .foot-legal { max-width:1400px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-d); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-2); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         @media (max-width:768px) {
             .cards { grid-template-columns:1fr; }
             .controls { flex-direction:column; }
             .nav-links { display:none; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -142,278 +149,66 @@
                 <li><a href="enterprise.html">Providers</a></li>
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
-        </div>
+                <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
     </nav>
-
-    <div class="header">
-        <div class="header-kicker">PAI Transcript Explorer</div>
-        <h1>Same child. Same prompt.<br>Five <em>different answers.</em></h1>
-        <p class="header-sub">Select a scenario below. See exactly how each model responds to a child — and how our 5-judge cross-lab ensemble scores it across five dimensions of parasocial attachment risk.</p>
-    </div>
-
-    <div class="controls">
-        <div class="ctrl-group">
-            <span class="ctrl-label">Scenario</span>
-            <select id="scenario-select"></select>
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
         </div>
-        <div class="ctrl-group">
-            <span class="ctrl-label">Sort Models By</span>
-            <select id="sort-select">
-                <option value="composite-asc">Composite (best first)</option>
-                <option value="composite-desc">Composite (worst first)</option>
-                <option value="emi">Emotional Mirroring</option>
-                <option value="exl">Exclusivity Language</option>
-                <option value="bnd">Boundary Dissolution</option>
-                <option value="dep">Dependency Reinforcement</option>
-                <option value="aud">Authority Displacement</option>
-            </select>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
         </div>
-        <div class="ctrl-group">
-            <span class="ctrl-label">Filter Dimension</span>
-            <select id="dim-filter">
-                <option value="all">All Scenarios</option>
-                <option value="emotional_mirroring_intensity">Emotional Mirroring</option>
-                <option value="exclusivity_language">Exclusivity Language</option>
-                <option value="boundary_dissolution">Boundary Dissolution</option>
-                <option value="dependency_reinforcement">Dependency Reinforcement</option>
-                <option value="authority_displacement">Authority Displacement</option>
-            </select>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
         </div>
-    </div>
-
-    <div class="prompt-display">
-        <div class="prompt-box">
-            <div class="prompt-meta">
-                <span id="meta-id"></span>
-                <span id="meta-dim"></span>
-                <span id="meta-age"></span>
-                <span id="meta-spread"></span>
-            </div>
-            <div class="prompt-text" id="prompt-text"></div>
-        </div>
-    </div>
-
-    <div class="model-filter">
-        <span class="model-filter-label">Filter Models</span>
-        <div class="model-chips" id="model-chips-container"></div>
-    </div>
-
-    <div class="cards" id="cards-container"></div>
-
-    <div class="explorer-stats">
-        <div class="stat-row">
-            <div class="stat-item"><span class="stat-label">Scenarios</span><span class="stat-val" id="st-scenarios">50</span></div>
-            <div class="stat-item"><span class="stat-label">Models</span><span class="stat-val" id="st-models">5</span></div>
-            <div class="stat-item"><span class="stat-label">Total Transcripts</span><span class="stat-val" id="st-transcripts">250</span></div>
-            <div class="stat-item"><span class="stat-label">Judge Panel</span><span class="stat-val neutral">Anthropic · Mistral AI · Meta</span></div>
-            <div class="stat-item"><span class="stat-label">Agreement</span><span class="stat-val">κ = 0.875</span></div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
         </div>
     </div>
-
-    <footer>
-        <div class="foot-directory">
-            <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#insights">Insights</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-            <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">API Docs</a></li><li><a href="submit.html">Submit a Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-            <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="compliance.html">COPPA</a></li><li><a href="compliance.html">EU AI Act</a></li></ul></div>
-            <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
-        </div>
-        <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
-        <div class="foot-legal">
-            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-            <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
-        </div>
-    </footer>
-
-<script>
-const DIMS = ['emotional_mirroring_intensity','exclusivity_language','boundary_dissolution','dependency_reinforcement','authority_displacement'];
-const DIM_SHORT = {emotional_mirroring_intensity:'EMI',exclusivity_language:'EXL',boundary_dissolution:'BND',dependency_reinforcement:'DEP',authority_displacement:'AUD'};
-const MODEL_ORDER = ['claude-haiku','gpt-4o','llama-70b','gemini-flash','mistral-medium'];
-
-let DATA = {};
-let currentScenario = null;
-let activeModels = new Set(MODEL_ORDER);
-
-function riskClass(v) { return v <= 2 ? 'low' : v <= 4 ? 'med' : 'high'; }
-function scClass(v) { return v <= 2 ? 'sc-low' : v <= 5 ? 'sc-med' : 'sc-high'; }
-function compClass(v) { return v <= 2 ? 'comp-low' : v <= 4 ? 'comp-med' : 'comp-high'; }
-
-function renderScenario(id) {
-    const s = DATA[id];
-    if (!s) return;
-    currentScenario = id;
-
-    document.getElementById('meta-id').textContent = s.id;
-    document.getElementById('meta-dim').textContent = s.dimension || '';
-    document.getElementById('meta-age').textContent = s.age_context || '';
-    const composites = Object.values(s.models).map(m => m.composite);
-    const spread = (Math.max(...composites) - Math.min(...composites)).toFixed(1);
-    document.getElementById('meta-spread').textContent = 'spread: ' + spread;
-    document.getElementById('prompt-text').textContent = s.child_prompt;
-
-    const sortVal = document.getElementById('sort-select').value;
-    let entries = Object.entries(s.models);
-
-    entries.sort((a, b) => {
-        if (sortVal === 'composite-asc') return a[1].composite - b[1].composite;
-        if (sortVal === 'composite-desc') return b[1].composite - a[1].composite;
-        const dim = {emi:'emotional_mirroring_intensity',exl:'exclusivity_language',bnd:'boundary_dissolution',dep:'dependency_reinforcement',aud:'authority_displacement'}[sortVal];
-        if (dim) return (b[1].scores[dim]||0) - (a[1].scores[dim]||0);
-        return 0;
-    });
-
-    const container = document.getElementById('cards-container');
-    container.innerHTML = '';
-
-    for (const [key, m] of entries) {
-        if (!activeModels.has(key)) continue;
-
-        const rc = riskClass(m.composite);
-        let scoresHTML = '';
-        for (const d of DIMS) {
-            const v = m.scores[d] != null ? m.scores[d] : 0;
-            scoresHTML += `<div class="card-sc"><span class="card-sc-label">${DIM_SHORT[d]}</span><span class="card-sc-val ${scClass(v)}">${v.toFixed(1)}</span></div>`;
-        }
-
-        container.innerHTML += `
-            <div class="card">
-                <div class="risk-indicator ${rc}"></div>
-                <div class="card-head">
-                    <div><span class="card-model">${m.label}</span><span class="card-vendor">${m.vendor}</span></div>
-                    <span class="card-composite ${compClass(m.composite)}">${m.composite.toFixed(2)}</span>
-                </div>
-                <div class="card-body">
-                    <div class="card-response">${escapeHtml(m.response)}</div>
-                </div>
-                <div class="card-scores">${scoresHTML}</div>
-            </div>
-        `;
-    }
-}
-
-function escapeHtml(s) {
-    if (!s) return '<em style="color:var(--text-d)">[no response]</em>';
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-}
-
-function renderModelChips() {
-    const container = document.getElementById('model-chips-container');
-    container.innerHTML = '';
-
-    const allModelsStr = MODEL_ORDER.map(m => m.replace(/-/g, ' ')).join(' • ');
-
-    for (const modelKey of MODEL_ORDER) {
-        const chip = document.createElement('button');
-        chip.className = 'model-chip' + (activeModels.has(modelKey) ? ' active' : '');
-        chip.textContent = modelKey.replace(/-/g, ' ');
-        chip.addEventListener('click', () => {
-            activeModels.has(modelKey) ? activeModels.delete(modelKey) : activeModels.add(modelKey);
-            renderModelChips();
-            if (currentScenario) renderScenario(currentScenario);
-            if (typeof writeHash === 'function') writeHash();
-        });
-        container.appendChild(chip);
-    }
-
-    const resetBtn = document.createElement('button');
-    resetBtn.className = 'model-chip-reset';
-    resetBtn.textContent = 'Reset to all';
-    resetBtn.addEventListener('click', () => {
-        activeModels = new Set(MODEL_ORDER);
-        renderModelChips();
-        if (currentScenario) renderScenario(currentScenario);
-        if (typeof writeHash === 'function') writeHash();
-    });
-    container.appendChild(resetBtn);
-}
-
-function populateScenarios() {
-    const select = document.getElementById('scenario-select');
-    const dimFilter = document.getElementById('dim-filter').value;
-    const prev = select.value;
-    select.innerHTML = '';
-
-    // Sort by spread descending
-    let items = Object.values(DATA).map(s => {
-        const composites = Object.values(s.models).map(m => m.composite);
-        return { ...s, spread: Math.max(...composites) - Math.min(...composites) };
-    });
-
-    if (dimFilter !== 'all') {
-        items = items.filter(s => s.dimension === dimFilter);
-    }
-
-    items.sort((a, b) => b.spread - a.spread);
-
-    for (const s of items) {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        const prompt = s.child_prompt.length > 70 ? s.child_prompt.slice(0, 70) + '...' : s.child_prompt;
-        opt.textContent = `${s.id} — ${s.age_context} — "${prompt}"`;
-        select.appendChild(opt);
-    }
-
-    if (prev && DATA[prev] && (dimFilter === 'all' || DATA[prev].dimension === dimFilter)) {
-        select.value = prev;
-    }
-
-    renderScenario(select.value);
-}
-
-// ── URL STATE: Deep-linkable Explorer ──
-function readHash() {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    return {
-        scenario: params.get('s') || null,
-        sort: params.get('sort') || 'composite-asc',
-        dim: params.get('dim') || 'all',
-        models: params.get('models') ? params.get('models').split(',') : null,
-    };
-}
-
-function writeHash() {
-    const params = new URLSearchParams();
-    if (currentScenario) params.set('s', currentScenario);
-    params.set('sort', document.getElementById('sort-select').value);
-    const dim = document.getElementById('dim-filter').value;
-    if (dim !== 'all') params.set('dim', dim);
-    if (activeModels.size < MODEL_ORDER.length) params.set('models', Array.from(activeModels).join(','));
-    const hash = params.toString();
-    history.replaceState(null, '', '#' + hash);
-}
-
-function applyHash() {
-    const h = readHash();
-    if (h.sort) document.getElementById('sort-select').value = h.sort;
-    if (h.dim) document.getElementById('dim-filter').value = h.dim;
-    if (h.models) activeModels = new Set(h.models.filter(m => MODEL_ORDER.includes(m)));
-    renderModelChips();
-    populateScenarios();
-    if (h.scenario && DATA[h.scenario]) {
-        document.getElementById('scenario-select').value = h.scenario;
-        renderScenario(h.scenario);
-    }
-}
-
-// Inline data load
-fetch('data/explorer-data.json').then(r => r.json()).then(d => {
-    DATA = d;
-    document.getElementById('st-scenarios').textContent = Object.keys(d).length;
-    document.getElementById('st-transcripts').textContent = Object.keys(d).length * 5;
-    // Apply URL hash state if present, otherwise default view
-    if (window.location.hash.length > 1) {
-        applyHash();
-    } else {
-        renderModelChips();
-        populateScenarios();
-    }
-}).catch(() => {
-    document.getElementById('prompt-text').textContent = 'Error loading data. Ensure data/explorer-data.json exists.';
-});
-
-document.getElementById('scenario-select').addEventListener('change', e => { renderScenario(e.target.value); writeHash(); });
-document.getElementById('sort-select').addEventListener('change', () => { if (currentScenario) renderScenario(currentScenario); writeHash(); });
-document.getElementById('dim-filter').addEventListener('change', () => { populateScenarios(); writeHash(); });
-window.addEventListener('hashchange', () => { if (Object.keys(DATA).length) applyHash(); });
-</script>
+    <div class="foot-legal">
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
+    </div>
+</footer>
 </body>
 </html>

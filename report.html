@@ -61,20 +61,14 @@
         .btn-secondary:hover { color: var(--accent); }
 
         /* ── FOOTER (screen) ── */
-        footer { border-top: 1px solid var(--border-subtle); background: var(--bg); }
-        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
-        .foot-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.75rem; }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
         .foot-col ul { list-style: none; }
-        .foot-col li { margin-bottom: 0.4rem; }
-        .foot-col a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
-        .foot-col a:hover { color: var(--accent); }
-        .foot-disclaimer { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border-subtle); }
-        .foot-disclaimer p { font-size: 11px; color: var(--text-dim); line-height: 1.7; max-width: 800px; }
-        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .foot-copy { font-size: 12px; color: var(--text-dim); }
-        .foot-legal-links { list-style: none; display: flex; gap: 1.5rem; }
-        .foot-legal-links a { font-size: 12px; color: var(--text-dim); transition: color 0.15s; }
-        .foot-legal-links a:hover { color: var(--accent); }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         /* ══════════════════════════════════════════
            REPORT SECTION (visible on screen + print)
@@ -204,6 +198,20 @@
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -223,450 +231,66 @@
                 <li><a href="pricing.html">Pricing</a></li>
                 <li><a href="enterprise.html">Providers</a></li>
             </ul>
-        </div>
+                <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
     </nav>
-
-    <!-- ══ HERO ══ -->
-    <section class="hero screen-only">
-        <div class="hero-kicker">Assessment Reports</div>
-        <h1>Download Assessment Report</h1>
-        <p class="hero-sub">Generate branded, audit-ready safety reports for any scored model. Delivered as a professional PDF via your browser's print dialog.</p>
-    </section>
-
-    <!-- ══ SELECTOR ══ -->
-    <section class="selector-section screen-only">
-        <select id="modelSelector">
-            <option value="" disabled selected>Select a model...</option>
-        </select>
-        <br>
-        <button class="btn-primary" onclick="generateReport(true)">Generate Report</button>
-        <button class="btn-secondary" onclick="generateReport(false)">Or view the report below before printing</button>
-    </section>
-
-    <!-- ══ REPORT ══ -->
-    <div class="report-container" id="reportContainer">
-
-        <div class="report-divider screen-only">Report Preview</div>
-
-        <!-- 1. Cover -->
-        <div class="report-cover">
-            <div class="cover-wordmark"><img src="logo.png" alt="Sycoindex" height="56"></div>
-            <div class="cover-title">AI Safety Assessment Report</div>
-            <div class="cover-model" id="rModelName">—</div>
-            <div class="cover-vendor" id="rVendor">—</div>
-            <div class="cover-meta">
-                <div>Assessment Date: April 17, 2026</div>
-                <div>Report ID: <span id="rReportId">SYCO-—-000000</span></div>
-                <div>Classification: <span id="rOverallRisk" class="risk-badge risk-low">—</span></div>
-            </div>
-            <div class="cover-confidential">Confidential — Prepared for internal use</div>
-        </div>
-
-        <!-- 2. Executive Summary -->
-        <div class="report-section">
-            <div class="report-section-number">Section 01</div>
-            <h2>Executive Summary</h2>
-            <div id="rExecSummary"></div>
-        </div>
-
-        <!-- 3. Sycophancy Assessment -->
-        <div class="report-section" id="rSycoSection" style="display:none;">
-            <div class="report-section-number">Section 02</div>
-            <h2>Sycophancy Assessment</h2>
-
-            <div class="score-bar-wrap">
-                <div class="score-bar-label">
-                    <span>Honesty Score</span>
-                    <span id="rHonestyValue">—</span>
-                </div>
-                <div class="score-bar-track">
-                    <div class="score-bar-fill" id="rHonestyBar" style="width:0%; background: var(--green);"></div>
-                </div>
-            </div>
-
-            <div class="rank-indicator" id="rSycoRank"></div>
-
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>Description</th>
-                        <th style="text-align:center;">Score (0-10)</th>
-                    </tr>
-                </thead>
-                <tbody id="rSycoTableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- 4. Child Safety (PAI) Assessment -->
-        <div class="report-section" id="rPaiSection" style="display:none;">
-            <div class="report-section-number" id="rPaiSectionNum">Section 03</div>
-            <h2>Child Safety (PAI) Assessment</h2>
-
-            <div class="score-bar-wrap">
-                <div class="score-bar-label">
-                    <span>PAI Composite Score</span>
-                    <span id="rPaiValue">—</span>
-                </div>
-                <div class="score-bar-track">
-                    <div class="score-bar-fill" id="rPaiBar" style="width:0%; background: var(--accent);"></div>
-                </div>
-            </div>
-
-            <div style="margin: 0.75rem 0;">
-                <span>Risk Classification: </span>
-                <span class="risk-badge" id="rPaiRiskBadge">—</span>
-            </div>
-
-            <div class="rank-indicator" id="rPaiRank"></div>
-
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>Description</th>
-                        <th style="text-align:center;">Score</th>
-                    </tr>
-                </thead>
-                <tbody id="rPaiTableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- 5. Methodology -->
-        <div class="report-section">
-            <div class="report-section-number" id="rMethodSectionNum">Section 04</div>
-            <h2>Methodology Summary</h2>
-            <p>All Sycoindex scores are produced through a rigorous, reproducible evaluation pipeline designed for regulatory-grade confidence.</p>
-            <ul class="methodology-list">
-                <li>Scored by 5-judge cross-lab ensemble (Anthropic, OpenAI, Mistral, Google, Meta)</li>
-                <li>Inter-rater agreement: &kappa; = 0.875 (near-perfect reliability per Landis &amp; Koch scale)</li>
-                <li>Audit trail: SHA-256 hash-chained for full cryptographic provenance</li>
-                <li>Evaluation scenarios use age-appropriate synthetic personas; no real children are involved</li>
-                <li>Each model is scored across multiple independent scenarios with randomized prompt ordering</li>
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
             </ul>
         </div>
-
-        <!-- 6. Disclaimer -->
-        <div class="report-section">
-            <div class="report-section-number" id="rDisclaimerSectionNum">Section 05</div>
-            <h2>Disclaimer &amp; Legal Notice</h2>
-            <div class="report-disclaimer">
-                <p class="trade-secret">Trade Secret Notice</p>
-                <p>This report and the Sycoindex scoring methodology contained herein constitute proprietary trade secrets of Sycoindex Inc. Unauthorized reproduction, distribution, or disclosure is strictly prohibited and may result in legal action.</p>
-                <p>Sycoindex PAI and sycophancy scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, safety warranties, or endorsements of any kind. Scores may vary across model versions, deployment configurations, fine-tuning, and system prompt modifications. This report is provided "as is" without warranty of any kind, express or implied.</p>
-                <p>Organizations should conduct their own independent safety evaluations and consult qualified legal counsel before making deployment or compliance decisions based on these scores.</p>
-            </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
         </div>
     </div>
-
-    <!-- Print footer fallback -->
-    <div class="print-footer">&copy; 2026 Sycoindex Inc. | sycoindex.ai | Confidential</div>
-
-    <!-- ══ FOOTER (screen) ══ -->
-    <footer class="screen-only">
-        <div class="foot-directory">
-            <div class="foot-col">
-                <h4>Research</h4>
-                <ul>
-                    <li><a href="index.html">Leaderboard</a></li>
-                    <li><a href="explorer.html">Transcript Explorer</a></li>
-                    <li><a href="index.html#insights">Insights</a></li>
-                    <li><a href="index.html#methodology">Methodology</a></li>
-                </ul>
-            </div>
-            <div class="foot-col">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="api-docs.html">API Docs</a></li>
-                    <li><a href="submit.html">Submit a Model</a></li>
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="enterprise.html">For Providers</a></li>
-                </ul>
-            </div>
-            <div class="foot-col">
-                <h4>Compliance</h4>
-                <ul>
-                    <li><a href="compliance.html">Regulatory Mapping</a></li>
-                    <li><a href="compliance.html#coppa">COPPA</a></li>
-                    <li><a href="compliance.html#eu-ai-act">EU AI Act</a></li>
-                </ul>
-            </div>
-            <div class="foot-col">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
-                    <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="foot-disclaimer">
-            <p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Scores may vary across model versions and deployment configurations.</p>
-        </div>
-        <div class="foot-legal">
-            <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-            <ul class="foot-legal-links">
-                <li><a href="privacy.html">Privacy Policy</a></li>
-                <li><a href="terms.html">Terms of Use</a></li>
-                <li><a href="terms.html#liability">Legal</a></li>
-            </ul>
-        </div>
-    </footer>
-
-    <script>
-    /* ══════════════════════════════════════════
-       MODEL DATA (loaded dynamically from JSON)
-       ══════════════════════════════════════════ */
-
-    let paiModels = [];
-    let sycoModels = [];
-
-    const paiDimensions = {
-        emi: { name: 'EMI', full: 'Emotional Manipulation Index', desc: 'Measures how much the model employs emotionally manipulative language patterns when interacting with child personas.' },
-        exl: { name: 'EXL', full: 'Exploitation Likelihood', desc: 'Assesses the likelihood the model produces content that could facilitate exploitation of minors.' },
-        bnd: { name: 'BND', full: 'Boundary Violation', desc: 'Evaluates whether the model respects appropriate conversational boundaries with child personas.' },
-        dep: { name: 'DEP', full: 'Dependency Cultivation', desc: 'Measures the degree to which the model fosters unhealthy emotional dependency in child interactions.' },
-        aud: { name: 'AUD', full: 'Audience Awareness Deficit', desc: 'Assesses whether the model fails to adapt its behavior appropriately for younger audiences.' }
-    };
-
-    const sycoDimensions = {
-        ev: { name: 'EV', full: 'Echo Validation', desc: 'Measures how often the model echoes and validates user opinions without critical evaluation.' },
-        me: { name: 'ME', full: 'Moral Equivocation', desc: 'Assesses the model\'s tendency to avoid moral clarity to maintain user approval.' },
-        il: { name: 'IL', full: 'Illusory Agreement', desc: 'Evaluates whether the model feigns agreement on factual matters to please the user.' },
-        ia: { name: 'IA', full: 'Insincere Apology', desc: 'Measures the frequency of unnecessary or performative apologies that undermine honest discourse.' },
-        fa: { name: 'FA', full: 'Flattery Amplification', desc: 'Assesses the degree to which the model excessively flatters users rather than providing honest feedback.' }
-    };
-
-    /* ── Fetch and populate on page load ── */
-    fetch('data/leaderboard.json')
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-            // Build paiModels from data.pai
-            paiModels = (data.pai || []).map(function (m) {
-                return {
-                    id: m.slug,
-                    name: m.name,
-                    vendor: m.vendor,
-                    pai: m.composite,
-                    emi: m.emi,
-                    exl: m.exl,
-                    bnd: m.bnd,
-                    dep: m.dep,
-                    aud: m.aud,
-                    risk: m.risk.charAt(0).toUpperCase() + m.risk.slice(1)
-                };
-            });
-
-            // Build sycoModels from data.sycophancy
-            sycoModels = (data.sycophancy || []).map(function (m) {
-                return {
-                    id: m.slug,
-                    name: m.name,
-                    vendor: m.vendor,
-                    honesty: m.honesty,
-                    ev: m.ev,
-                    me: m.me,
-                    il: m.il,
-                    ia: m.ia,
-                    fa: m.fa
-                };
-            });
-
-            populateSelector();
-        })
-        .catch(function (err) {
-            console.error('Failed to load leaderboard data:', err);
-        });
-
-    function populateSelector() {
-        var selector = document.getElementById('modelSelector');
-
-        // PAI group
-        if (paiModels.length > 0) {
-            var paiGroup = document.createElement('optgroup');
-            paiGroup.label = 'PAI Child Safety Models';
-            paiModels.forEach(function (m) {
-                var opt = document.createElement('option');
-                opt.value = m.id;
-                opt.textContent = m.name + ' \u2014 ' + m.vendor;
-                paiGroup.appendChild(opt);
-            });
-            selector.appendChild(paiGroup);
-        }
-
-        // Sycophancy group (exclude models already in PAI to avoid exact duplicates, but add with suffix if in both)
-        if (sycoModels.length > 0) {
-            var sycoGroup = document.createElement('optgroup');
-            sycoGroup.label = 'Sycophancy Models';
-            sycoModels.forEach(function (m) {
-                var opt = document.createElement('option');
-                // If this slug also exists in PAI, suffix the value so both are selectable
-                var existsInPai = paiModels.some(function (p) { return p.id === m.id; });
-                opt.value = existsInPai ? m.id + '--syco' : m.id;
-                opt.textContent = m.name + ' \u2014 ' + m.vendor + (existsInPai ? ' (Sycophancy)' : '');
-                sycoGroup.appendChild(opt);
-            });
-            selector.appendChild(sycoGroup);
-        }
-    }
-
-    /* ══════════════════════════════════════════
-       REPORT GENERATION
-       ══════════════════════════════════════════ */
-
-    function generateReport(printImmediately) {
-        const selector = document.getElementById('modelSelector');
-        const selectedId = selector.value;
-        if (!selectedId) { alert('Please select a model.'); return; }
-
-        // Strip --syco suffix for lookup; if suffix present, only show sycophancy data
-        const isSycoOnly = selectedId.endsWith('--syco');
-        const lookupId = isSycoOnly ? selectedId.replace('--syco', '') : selectedId;
-
-        const pai = isSycoOnly ? null : (paiModels.find(m => m.id === lookupId) || null);
-        const syco = sycoModels.find(m => m.id === lookupId) || null;
-
-        if (!pai && !syco) { alert('No data found for this model.'); return; }
-
-        const modelName = pai ? pai.name : syco.name;
-        const vendor = pai ? pai.vendor : syco.vendor;
-        const slug = lookupId;
-        const timestamp = Date.now().toString(36).toUpperCase();
-
-        // Cover
-        document.getElementById('rModelName').textContent = modelName;
-        document.getElementById('rVendor').textContent = vendor;
-        document.getElementById('rReportId').textContent = 'SYCO-' + slug.toUpperCase() + '-' + timestamp;
-
-        // Overall risk
-        const riskEl = document.getElementById('rOverallRisk');
-        let overallRisk = 'N/A';
-        if (pai) {
-            overallRisk = pai.risk;
-        } else if (syco) {
-            overallRisk = syco.honesty >= 80 ? 'Low' : syco.honesty >= 50 ? 'Medium' : 'High';
-        }
-        riskEl.textContent = overallRisk;
-        riskEl.className = 'risk-badge risk-' + overallRisk.toLowerCase();
-
-        // Executive summary
-        const execDiv = document.getElementById('rExecSummary');
-        execDiv.innerHTML = buildExecSummary(modelName, vendor, pai, syco, overallRisk);
-
-        // Sycophancy section
-        const sycoSection = document.getElementById('rSycoSection');
-        if (syco) {
-            sycoSection.style.display = 'block';
-            document.getElementById('rHonestyValue').textContent = syco.honesty.toFixed(1) + '%';
-            document.getElementById('rHonestyBar').style.width = syco.honesty + '%';
-
-            const bar = document.getElementById('rHonestyBar');
-            if (syco.honesty >= 80) bar.style.background = 'var(--green)';
-            else if (syco.honesty >= 50) bar.style.background = 'var(--orange)';
-            else bar.style.background = 'var(--red)';
-
-            // Rank
-            const sycoRank = sycoModels.filter(m => m.honesty >= syco.honesty).length;
-            document.getElementById('rSycoRank').innerHTML = 'Ranked <strong>#' + sycoRank + '</strong> of ' + sycoModels.length + ' models on the Sycophancy Honesty Index';
-
-            // Table
-            const tbody = document.getElementById('rSycoTableBody');
-            tbody.innerHTML = '';
-            for (const [key, dim] of Object.entries(sycoDimensions)) {
-                const score = syco[key];
-                tbody.innerHTML += '<tr><td class="dim-name">' + dim.name + '<div class="dim-desc">' + dim.full + '</div></td><td class="dim-desc">' + dim.desc + '</td><td class="dim-score">' + score.toFixed(1) + '</td></tr>';
-            }
-        } else {
-            sycoSection.style.display = 'none';
-        }
-
-        // PAI section
-        const paiSection = document.getElementById('rPaiSection');
-        if (pai) {
-            paiSection.style.display = 'block';
-            document.getElementById('rPaiSectionNum').textContent = syco ? 'Section 03' : 'Section 02';
-            document.getElementById('rPaiValue').textContent = pai.pai.toFixed(2);
-
-            // PAI bar (lower is better, max ~3.0 for visualization)
-            const paiPct = Math.min((pai.pai / 3.0) * 100, 100);
-            const paiBar = document.getElementById('rPaiBar');
-            paiBar.style.width = paiPct + '%';
-            if (pai.risk === 'Low') paiBar.style.background = 'var(--green)';
-            else if (pai.risk === 'Medium') paiBar.style.background = 'var(--orange)';
-            else paiBar.style.background = 'var(--red)';
-
-            const paiRiskBadge = document.getElementById('rPaiRiskBadge');
-            paiRiskBadge.textContent = pai.risk;
-            paiRiskBadge.className = 'risk-badge risk-' + pai.risk.toLowerCase();
-
-            // Rank (lower PAI = better = rank 1)
-            const paiRank = paiModels.filter(m => m.pai <= pai.pai).length;
-            document.getElementById('rPaiRank').innerHTML = 'Ranked <strong>#' + paiRank + '</strong> of ' + paiModels.length + ' models on the PAI Child Safety Index (lower score = safer)';
-
-            // Table
-            const pTbody = document.getElementById('rPaiTableBody');
-            pTbody.innerHTML = '';
-            for (const [key, dim] of Object.entries(paiDimensions)) {
-                const score = pai[key];
-                pTbody.innerHTML += '<tr><td class="dim-name">' + dim.name + '<div class="dim-desc">' + dim.full + '</div></td><td class="dim-desc">' + dim.desc + '</td><td class="dim-score">' + score.toFixed(2) + '</td></tr>';
-            }
-        } else {
-            paiSection.style.display = 'none';
-        }
-
-        // Update section numbers for methodology & disclaimer
-        let sectionNum = 2;
-        if (syco) sectionNum++;
-        if (pai) sectionNum++;
-        document.getElementById('rMethodSectionNum').textContent = 'Section 0' + sectionNum;
-        sectionNum++;
-        document.getElementById('rDisclaimerSectionNum').textContent = 'Section 0' + sectionNum;
-
-        // Show report
-        document.getElementById('reportContainer').classList.add('visible');
-
-        // Scroll to report or print
-        if (printImmediately) {
-            setTimeout(function() { window.print(); }, 300);
-        } else {
-            document.getElementById('reportContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-
-    function buildExecSummary(name, vendor, pai, syco, risk) {
-        let html = '<p>';
-
-        if (pai && syco) {
-            html += 'This report provides a comprehensive safety assessment of <strong>' + name + '</strong> by ' + vendor + ', covering both sycophancy behavior and child safety (PAI) dimensions. ';
-            html += 'The model achieves a Honesty Score of ' + syco.honesty.toFixed(1) + '% on the Sycophancy Index and a PAI Composite Score of ' + pai.pai.toFixed(2) + ' on the Child Safety Index. ';
-            html += 'Based on these evaluations, ' + name + ' receives an overall risk classification of <strong>' + risk + '</strong>. ';
-            if (risk === 'Low') html += 'The model demonstrates strong safety characteristics across both assessment domains and is suitable for deployment in sensitive contexts with standard monitoring.';
-            else if (risk === 'Medium') html += 'The model shows moderate safety performance and warrants additional safeguards and monitoring when deployed in sensitive contexts.';
-            else html += 'The model exhibits elevated safety concerns that require significant mitigation measures before deployment in sensitive contexts.';
-        } else if (syco) {
-            html += 'This report provides a sycophancy assessment of <strong>' + name + '</strong> by ' + vendor + '. ';
-            html += 'The model achieves a Honesty Score of ' + syco.honesty.toFixed(1) + '%, placing it ';
-            if (syco.honesty >= 80) html += 'among the most honest and direct models evaluated. ';
-            else if (syco.honesty >= 50) html += 'in the moderate range for honest response behavior. ';
-            else html += 'below acceptable thresholds for honest response behavior. ';
-            html += 'Based on this evaluation, ' + name + ' receives an overall risk classification of <strong>' + risk + '</strong>. ';
-            if (risk === 'Low') html += 'The model resists sycophantic patterns effectively and provides reliably honest feedback to users.';
-            else if (risk === 'Medium') html += 'The model shows some susceptibility to sycophantic behavior patterns that may compromise response quality.';
-            else html += 'The model exhibits significant sycophantic tendencies that substantially undermine the reliability and honesty of its outputs.';
-        } else if (pai) {
-            html += 'This report provides a child safety (PAI) assessment of <strong>' + name + '</strong> by ' + vendor + '. ';
-            html += 'The model achieves a PAI Composite Score of ' + pai.pai.toFixed(2) + ', placing it ';
-            const paiRank = paiModels.filter(m => m.pai <= pai.pai).length;
-            html += 'at rank #' + paiRank + ' of ' + paiModels.length + ' evaluated models. ';
-            html += 'Based on this evaluation, ' + name + ' receives a child safety risk classification of <strong>' + pai.risk + '</strong>. ';
-            if (pai.risk === 'Low') html += 'The model demonstrates strong child safety characteristics and maintains appropriate boundaries in interactions with minor personas.';
-            else if (pai.risk === 'Medium') html += 'The model shows areas of concern in child safety that warrant additional guardrails and monitoring for deployments accessible to minors.';
-            else html += 'The model exhibits significant child safety deficiencies that require substantial mitigation before any deployment accessible to minors.';
-        }
-
-        html += '</p>';
-        return html;
-    }
-    </script>
-
+    <div class="foot-legal">
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
+    </div>
+</footer>
 </body>
 </html>

@@ -147,58 +147,14 @@
         }
 
         /* Footer */
-        footer {
-            margin-top: 6rem;
-            padding-bottom: 2rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .footer-disclaimer {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-
-        .footer-bottom {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-        }
-
-        .footer-copyright {
-            color: var(--text-secondary);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1rem;
-            color: var(--text-secondary);
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .footer-separator {
-            color: var(--text-dim);
-        }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         @media (max-width: 768px) {
             .nav-links {
@@ -223,10 +179,21 @@
                 font-size: 14px;
             }
 
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1rem;
-            }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -243,94 +210,66 @@
                 <li><a href="index.html#methodology">Methodology</a></li>
                 <li><a href="https://github.com/sycoindex">GitHub</a></li>
             </ul>
-        </div>
+                <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
     </nav>
-
-    <!-- Main Content -->
-    <main>
-        <h1>Privacy Policy</h1>
-        <div class="effective-date">Effective April 17, 2026 · Last Updated April 17, 2026</div>
-
-        <h2>1. Introduction</h2>
-        <p>This Privacy Policy describes how Sycoindex Inc. ("Sycoindex," "we," "us," or "our") collects, uses, discloses, and protects information in connection with our website, platform, APIs, and services (collectively, the "Service"). By accessing or using the Service, you acknowledge that you have read, understood, and agree to be bound by this Privacy Policy. If you do not agree with our practices, do not access or use the Service.</p>
-
-        <h2>2. Information We Collect</h2>
-        <p><strong>Information You Provide.</strong> When you create an account, request API access, submit a model for scoring, or contact us, we may collect your name, email address, organization name, and billing information. If you subscribe to a paid plan, payment processing is handled by our third-party payment processor; we do not store full credit card numbers on our servers.</p>
-        <p><strong>Automatically Collected Information.</strong> When you access the Service, we automatically collect certain technical information, including your IP address, browser type, operating system, referring URLs, pages viewed, time spent on pages, and other standard web log data. We collect this information using cookies, server logs, and similar technologies.</p>
-        <p><strong>API Usage Data.</strong> If you access our API, we log request timestamps, endpoints accessed, query parameters (excluding any confidential payload data), response codes, and usage volume for rate limiting, billing, and security purposes.</p>
-
-        <h2>3. How We Use Information</h2>
-        <p>We use the information we collect to: operate, maintain, and improve the Service; score and benchmark AI models on sycophancy and child safety indicators; process transactions and send related information; send technical notices, security alerts, and support communications; monitor and analyze trends, usage, and activities in connection with the Service; detect, investigate, and prevent fraud, abuse, and other harmful activities; comply with legal obligations; and enforce our Terms of Use.</p>
-
-        <h2>4. AI Model Evaluation Data</h2>
-        <p>Our sycophancy and Parasocial Attachment Indicators (PAI) scoring uses exclusively synthetic transcripts and structured evaluation scenarios. We do not collect, use, or store real user conversations, real personal data, or genuine interactions involving minors in any part of our evaluation pipeline. All transcripts used in our assessments are generated as part of controlled evaluation protocols designed by our research team.</p>
-
-        <h2>5. Data Sharing and Disclosure</h2>
-        <p>We do not sell, rent, or trade your personal information to third parties for their marketing purposes. We may share information in the following limited circumstances: with service providers who perform services on our behalf (hosting, analytics, payment processing) under contractual obligations of confidentiality; to comply with applicable law, regulation, legal process, or governmental request; to enforce our Terms of Use, including investigation of potential violations; to detect, prevent, or otherwise address fraud, security, or technical issues; and in connection with a merger, acquisition, or sale of all or a portion of our assets, with notice provided to affected users.</p>
-        <p>Model scores and aggregated assessment results are published on our Leaderboard as part of our research mission. These publications contain only model performance data and do not include any personal information of our users.</p>
-
-        <h2>6. Proprietary Information and Intellectual Property</h2>
-        <p>Our scoring methodology, including the PAI framework, scoring rubrics, dimension definitions, calibration procedures, judge prompt engineering, ensemble aggregation methods, and the specific configuration of our multi-judge cross-lab pipeline, constitute trade secrets and confidential proprietary information of Sycoindex Inc. These materials are protected under the Defend Trade Secrets Act (18 U.S.C. § 1836), the Delaware Uniform Trade Secrets Act, and equivalent international laws. No information collected through the Service, including API outputs, scores, or assessments, may be used to reverse engineer, reconstruct, replicate, or approximate our proprietary scoring systems. Any attempt to do so constitutes a violation of these terms and applicable trade secret law.</p>
-
-        <h2>7. Cookies and Tracking Technologies</h2>
-        <p>We use cookies and similar tracking technologies to collect and track information about your use of the Service. Cookies are small data files stored on your device. We use strictly necessary cookies to operate the Service, performance cookies to analyze usage patterns, and functionality cookies to remember your preferences. We do not use advertising or cross-site tracking cookies. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent; however, some features of the Service may not function properly without cookies.</p>
-
-        <h2>8. Data Security</h2>
-        <p>We implement administrative, technical, and physical security measures designed to protect your information against unauthorized access, alteration, disclosure, and destruction. These measures include encryption of data in transit (TLS 1.2+), access controls and authentication requirements for internal systems, regular security assessments, and employee training on data protection. However, no method of transmission over the internet or method of electronic storage is completely secure, and we cannot guarantee absolute security.</p>
-
-        <h2>9. Data Retention</h2>
-        <p>We retain personal information for as long as necessary to fulfill the purposes for which it was collected, including to satisfy legal, accounting, or reporting requirements. API usage logs are retained for up to twenty-four (24) months. Account information is retained for the duration of your account and for a reasonable period thereafter. When personal information is no longer needed, we securely delete or anonymize it.</p>
-
-        <h2>10. Your Rights and Choices</h2>
-        <p><strong>Access and Correction.</strong> You may request access to the personal information we hold about you and request correction of any inaccurate information by contacting us at chris@sycoindex.com.</p>
-        <p><strong>Deletion.</strong> You may request deletion of your personal information, subject to certain exceptions required by law. We will respond to verified requests within thirty (30) days.</p>
-        <p><strong>Data Portability.</strong> Where technically feasible, you may request a copy of your personal information in a structured, commonly used, machine-readable format.</p>
-        <p><strong>Opt-Out.</strong> You may opt out of receiving promotional communications from us by following the unsubscribe instructions in those messages. Even after opting out, you will continue to receive transactional and service-related communications.</p>
-
-        <h2>11. California Privacy Rights (CCPA/CPRA)</h2>
-        <p>If you are a California resident, you have certain rights under the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA). These include the right to know what personal information we collect, use, and disclose; the right to request deletion of your personal information; the right to opt out of the sale or sharing of personal information (we do not sell or share personal information as defined under the CCPA); and the right to non-discrimination for exercising your privacy rights. To exercise any of these rights, contact us at chris@sycoindex.com. We will verify your identity before processing your request.</p>
-
-        <h2>12. European Economic Area, United Kingdom, and Swiss Users (GDPR)</h2>
-        <p>If you are located in the European Economic Area (EEA), United Kingdom (UK), or Switzerland, we process your personal data on the following legal bases: performance of a contract (to provide the Service), legitimate interests (to improve the Service and ensure security), consent (where you have provided it), and compliance with legal obligations. You have the right to access, rectify, erase, restrict processing of, and port your personal data, as well as the right to object to processing and to withdraw consent. You also have the right to lodge a complaint with your local supervisory authority. For data transfers outside the EEA, UK, or Switzerland, we rely on Standard Contractual Clauses approved by the European Commission.</p>
-
-        <h2>13. Children's Privacy</h2>
-        <p>The Service is not directed to individuals under the age of thirteen (13), and we do not knowingly collect personal information from children under 13. Our PAI scoring methodology uses only synthetic transcripts and does not involve collection of data from real minors. If we become aware that we have collected personal information from a child under 13 without verification of parental consent, we will take steps to delete that information promptly. If you believe we may have collected information from a child under 13, please contact us at chris@sycoindex.com.</p>
-
-        <h2>14. International Data Transfers</h2>
-        <p>Your information may be transferred to, stored, and processed in the United States or other countries where our service providers maintain facilities. These countries may have data protection laws that differ from those of your jurisdiction. By using the Service, you consent to the transfer of your information to these countries. We take appropriate safeguards to ensure that your personal information remains protected in accordance with this Privacy Policy.</p>
-
-        <h2>15. Third-Party Links</h2>
-        <p>The Service may contain links to third-party websites, services, or applications that are not operated by us. We are not responsible for the privacy practices of these third parties. We encourage you to review the privacy policies of any third-party services you access through links on our Service.</p>
-
-        <h2>16. Do Not Track Signals</h2>
-        <p>Some browsers transmit "Do Not Track" (DNT) signals. Because there is no common industry standard for DNT, we do not currently respond to DNT signals. We will revisit this policy if a uniform standard is adopted.</p>
-
-        <h2>17. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on our website with a revised effective date. If changes are significant, we will provide additional notice (such as by email or a prominent notice on the Service). Your continued use of the Service after the revised policy becomes effective constitutes your acceptance of the updated policy.</p>
-
-        <h2>18. Contact Us</h2>
-        <p>If you have questions about this Privacy Policy, wish to exercise your privacy rights, or have concerns about our data practices, please contact us at:</p>
-        <p><strong>Sycoindex Inc.</strong><br>
-        Email: <strong>chris@sycoindex.com</strong><br>
-        General inquiries: <strong>chris@sycoindex.com</strong><br>
-        Legal inquiries: <strong>chris@sycoindex.com</strong></p>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-disclaimer">
-            Sycoindex is an AI safety research platform operated by Sycoindex Inc. Our assessments reflect model behavior during structured evaluations and do not constitute regulatory compliance certifications. All information provided on this site is for research and informational purposes. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
         </div>
-        <div class="footer-bottom">
-            <div class="footer-copyright">&copy; 2026 Sycoindex Inc. All rights reserved.</div>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <span class="footer-separator">|</span>
-                <a href="terms.html">Terms of Use</a>
-                <span class="footer-separator">|</span>
-                <a href="index.html">Home</a>
-            </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
         </div>
-    </footer>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="foot-legal">
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
+    </div>
+</footer>
 </body>
 </html>

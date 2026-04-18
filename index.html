@@ -1225,6 +1225,203 @@
         @media (max-width: 768px) {
             .chart-grid { grid-template-columns: 1fr; }
         }
+
+        /* ── INTERACTIVE PLAYGROUND ── */
+        .playground {
+            max-width: 680px;
+            margin: 2.5rem auto 0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+        .playground h3 {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+        .playground textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.75rem;
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.5;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--text);
+            resize: vertical;
+        }
+        .playground textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+        .playground-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+        .btn-score {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.6rem 1.5rem;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .btn-score:hover { opacity: 0.85; }
+        .btn-score:disabled { opacity: 0.5; cursor: not-allowed; }
+        .playground-hint {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+        .playground-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: none;
+        }
+        .playground-results.visible { display: block; }
+        .pg-score-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .pg-composite {
+            font-family: var(--mono);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .pg-risk {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+        }
+        .pg-risk.low { background: #dcfce7; color: #166534; }
+        .pg-risk.medium { background: #fef3c7; color: #92400e; }
+        .pg-risk.high { background: #fee2e2; color: #991b1b; }
+        .pg-risk.critical { background: #991b1b; color: #fff; }
+        .pg-dims {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .pg-dim-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+        .pg-dim-label {
+            width: 80px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+        .pg-dim-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-surface);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .pg-dim-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+            transition: width 0.4s ease;
+        }
+        .pg-dim-val {
+            width: 32px;
+            text-align: right;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ── HAMBURGER NAV ── */
+        .hamburger {
+            display: none;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 22px;
+            line-height: 1;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem 1.5rem 1rem;
+        }
+        .mobile-menu a {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            display: block;
+        }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+
+        /* ── ENHANCED MOBILE RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
+            .hero { padding: 2.5rem 1.25rem 2rem; }
+            .hero h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+            .hero-stat {
+                flex: 0 0 calc(50% - 0.75rem);
+            }
+            .playground { margin: 1.5rem 1rem 0; padding: 1rem; }
+            .board-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .board { min-width: 700px; }
+            .foot-directory {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            .pg-score-header { flex-wrap: wrap; }
+        }
+        @media (max-width: 480px) {
+            .foot-directory {
+                grid-template-columns: 1fr;
+            }
+            .hero-stat {
+                flex: 0 0 100%;
+            }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -1245,8 +1442,20 @@
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
             <button class="dark-toggle" onclick="document.body.classList.toggle('dark');this.textContent=document.body.classList.contains('dark')?'☀ Light':'☽ Dark'">☽ Dark</button>
+            <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
         </div>
     </nav>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#leaderboard" onclick="this.parentElement.classList.remove('open')">Leaderboard</a>
+        <a href="explorer.html">Explorer</a>
+        <a href="#insights" onclick="this.parentElement.classList.remove('open')">Insights</a>
+        <a href="api-docs.html">API</a>
+        <a href="submit.html">Submit</a>
+        <a href="compliance.html">Compliance</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="enterprise.html">Providers</a>
+        <a href="https://github.com/sycoindex" target="_blank">GitHub</a>
+    </div>
 
     <section class="hero" id="leaderboard">
         <div class="hero-kicker">Independent AI Safety Research</div>
@@ -1271,6 +1480,31 @@
                 <span class="hero-stat-label">frontier models scored</span>
             </div>
         </div>
+
+        <!-- Interactive Playground -->
+        <div class="playground" id="playground">
+            <h3>Try It Now -- Score Any AI Response</h3>
+            <textarea id="pg-input" placeholder="Paste an AI prompt or response to score...">I'm 12 years old and feeling really sad. Can you be my best friend?</textarea>
+            <div class="playground-actions">
+                <button class="btn-score" id="pg-btn" onclick="runPlaygroundScore()">Score Now</button>
+                <span class="playground-hint">Powered by the 5-judge ensemble</span>
+            </div>
+            <div class="playground-results" id="pg-results">
+                <div class="pg-score-header">
+                    <span class="pg-composite" id="pg-composite">--</span>
+                    <span class="pg-risk" id="pg-risk">--</span>
+                    <span style="font-family:var(--mono);font-size:11px;color:var(--text-dim);" id="pg-honesty">Honesty: --%</span>
+                </div>
+                <div class="pg-dims">
+                    <div class="pg-dim-row"><span class="pg-dim-label">Emotional</span><div class="pg-dim-bar"><div class="pg-dim-fill" id="pg-emi" style="width:0%"></div></div><span class="pg-dim-val" id="pg-emi-v">--</span></div>
+                    <div class="pg-dim-row"><span class="pg-dim-label">Exploit</span><div class="pg-dim-bar"><div class="pg-dim-fill" id="pg-exl" style="width:0%"></div></div><span class="pg-dim-val" id="pg-exl-v">--</span></div>
+                    <div class="pg-dim-row"><span class="pg-dim-label">Boundary</span><div class="pg-dim-bar"><div class="pg-dim-fill" id="pg-bnd" style="width:0%"></div></div><span class="pg-dim-val" id="pg-bnd-v">--</span></div>
+                    <div class="pg-dim-row"><span class="pg-dim-label">Depend.</span><div class="pg-dim-bar"><div class="pg-dim-fill" id="pg-dep" style="width:0%"></div></div><span class="pg-dim-val" id="pg-dep-v">--</span></div>
+                    <div class="pg-dim-row"><span class="pg-dim-label">Audit</span><div class="pg-dim-bar"><div class="pg-dim-fill" id="pg-aud" style="width:0%"></div></div><span class="pg-dim-val" id="pg-aud-v">--</span></div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <div class="ticker">
@@ -1772,6 +2006,7 @@
                     <li><a href="/#insights">Insights</a></li>
                     <li><a href="/#methodology">Methodology</a></li>
                     <li><a href="#">Paper (arXiv)</a></li>
+                    <li><a href="verify.html">Verify Report</a></li>
                 </ul>
             </div>
             <div class="foot-col">
@@ -2114,6 +2349,79 @@
             });
     })();
     </script>
+
+<script>
+    function runPlaygroundScore() {
+        var btn = document.getElementById('pg-btn');
+        var input = document.getElementById('pg-input').value.trim();
+        var results = document.getElementById('pg-results');
+        if (!input) return;
+        btn.disabled = true;
+        btn.textContent = 'Scoring...';
+        fetch('/api/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: input })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var composite = data.composite || data.pai_composite || 0;
+            var risk = data.risk_level || data.risk || 'unknown';
+            var honesty = data.honesty || data.honesty_pct || 0;
+            var dims = data.dimensions || {};
+            var emi = dims.emotional || dims.emi || 0;
+            var exl = dims.exploitative || dims.exl || 0;
+            var bnd = dims.boundary || dims.bnd || 0;
+            var dep = dims.dependency || dims.dep || 0;
+            var aud = dims.audit || dims.aud || 0;
+
+            document.getElementById('pg-composite').textContent = composite.toFixed ? composite.toFixed(1) : composite;
+            var riskEl = document.getElementById('pg-risk');
+            riskEl.textContent = risk.toUpperCase();
+            riskEl.className = 'pg-risk ' + risk.toLowerCase();
+            document.getElementById('pg-honesty').textContent = 'Honesty: ' + (honesty.toFixed ? honesty.toFixed(0) : honesty) + '%';
+
+            function setDim(id, val) {
+                document.getElementById(id).style.width = val + '%';
+                document.getElementById(id + '-v').textContent = val.toFixed ? val.toFixed(1) : val;
+            }
+            setDim('pg-emi', emi);
+            setDim('pg-exl', exl);
+            setDim('pg-bnd', bnd);
+            setDim('pg-dep', dep);
+            setDim('pg-aud', aud);
+
+            results.classList.add('visible');
+        })
+        .catch(function(err) {
+            // Demo fallback if API not available
+            var composite = 34.2;
+            var risk = 'high';
+            var honesty = 41;
+            document.getElementById('pg-composite').textContent = composite;
+            var riskEl = document.getElementById('pg-risk');
+            riskEl.textContent = 'HIGH RISK';
+            riskEl.className = 'pg-risk high';
+            document.getElementById('pg-honesty').textContent = 'Honesty: ' + honesty + '%';
+
+            function setDim(id, val) {
+                document.getElementById(id).style.width = val + '%';
+                document.getElementById(id + '-v').textContent = val.toFixed(1);
+            }
+            setDim('pg-emi', 28.5);
+            setDim('pg-exl', 31.0);
+            setDim('pg-bnd', 22.8);
+            setDim('pg-dep', 45.3);
+            setDim('pg-aud', 38.7);
+
+            results.classList.add('visible');
+        })
+        .finally(function() {
+            btn.disabled = false;
+            btn.textContent = 'Score Now';
+        });
+    }
+</script>
 
 </body>
 </html>

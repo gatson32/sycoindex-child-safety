@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Extension — Sycoindex PAI</title>
+    <meta name="description" content="Get real-time AI safety scores right in your browser. The Sycoindex extension alerts parents when children interact with high-risk AI models.">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* -- NAV -- */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark { display: inline-block; }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+        .nav-links a.active { color: var(--text); }
+
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 52px; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-inner { position: relative; }
+        }
+
+        /* -- HERO -- */
+        .hero {
+            max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--mono); font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+        .hero p {
+            font-family: var(--serif); font-size: 18px; font-style: italic;
+            color: var(--text-secondary); max-width: 600px; line-height: 1.7;
+        }
+        .badge {
+            display: inline-block; font-family: var(--mono); font-size: 11px;
+            letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
+            padding: 0.4rem 1rem; background: var(--accent-dim);
+            color: var(--accent); border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 2px; margin-top: 1.5rem;
+        }
+
+        /* -- SECTION HEADERS -- */
+        .section-label {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;
+        }
+
+        /* -- FEATURES -- */
+        .features-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border);
+        }
+        .feature-card {
+            background: var(--bg); padding: 2.5rem 2rem;
+        }
+        .feature-icon {
+            font-size: 24px; margin-bottom: 1rem;
+            width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+            background: var(--accent-dim); border-radius: 2px; color: var(--accent);
+            font-family: var(--mono); font-weight: 700;
+        }
+        .feature-card h3 {
+            font-family: var(--mono); font-size: 14px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+        }
+
+        /* -- MOCKUP -- */
+        .mockup-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .browser-mockup {
+            border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+            max-width: 800px;
+        }
+        .browser-toolbar {
+            background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+            padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.75rem;
+        }
+        .toolbar-dots {
+            display: flex; gap: 6px;
+        }
+        .toolbar-dots span {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--border);
+        }
+        .toolbar-dots span:first-child { background: #ff5f57; }
+        .toolbar-dots span:nth-child(2) { background: #ffbd2e; }
+        .toolbar-dots span:nth-child(3) { background: #28ca42; }
+        .toolbar-url {
+            flex: 1; background: var(--bg); border: 1px solid var(--border-subtle);
+            border-radius: 3px; padding: 0.35rem 0.75rem;
+            font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+        }
+        .toolbar-extension {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--accent); color: #fff;
+            padding: 0.3rem 0.6rem; border-radius: 3px;
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        .browser-body {
+            padding: 2rem; background: var(--bg); position: relative; min-height: 200px;
+        }
+        .browser-body-placeholder {
+            font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+            text-align: center; padding: 2rem 0;
+        }
+        .score-popup {
+            position: absolute; top: 1rem; right: 1rem;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 1rem 1.25rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            width: 220px;
+        }
+        .popup-header {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .popup-logo {
+            width: 20px; height: 20px; background: var(--accent); border-radius: 2px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 700;
+        }
+        .popup-title {
+            font-family: var(--mono); font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .popup-model {
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .popup-score {
+            display: flex; align-items: baseline; gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .popup-score-value {
+            font-family: var(--mono); font-size: 28px; font-weight: 700;
+            color: var(--green);
+        }
+        .popup-score-label {
+            font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--text-dim);
+        }
+        .popup-bar {
+            height: 4px; background: var(--bg-elevated); border-radius: 2px;
+            margin-bottom: 0.35rem; overflow: hidden;
+        }
+        .popup-bar-fill {
+            height: 100%; border-radius: 2px;
+        }
+        .popup-dim {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .popup-dim-label {
+            font-family: var(--mono); font-size: 10px; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.02em;
+        }
+        .popup-dim-value {
+            font-family: var(--mono); font-size: 11px; font-weight: 700;
+        }
+        .popup-link {
+            display: block; text-align: center; margin-top: 0.75rem;
+            font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--accent);
+        }
+
+        /* -- BROWSERS -- */
+        .browsers-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .browser-logos {
+            display: flex; gap: 2rem; flex-wrap: wrap;
+        }
+        .browser-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.6rem 1.25rem; border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+        }
+
+        /* -- WAITLIST FORM -- */
+        .waitlist-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+        }
+        .waitlist-card {
+            border: 1px solid var(--border); padding: 3rem 2.5rem;
+            text-align: center; max-width: 600px; margin: 0 auto;
+        }
+        .waitlist-card h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .waitlist-card p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 2rem; line-height: 1.7;
+        }
+        .waitlist-form {
+            display: flex; gap: 0.75rem; max-width: 440px; margin: 0 auto 1rem;
+        }
+        .waitlist-form input {
+            flex: 1; font-family: var(--mono); font-size: 13px;
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 2px; background: var(--bg-elevated);
+            color: var(--text); outline: none;
+        }
+        .waitlist-form input:focus { border-color: var(--accent); }
+        .waitlist-form input::placeholder { color: var(--text-dim); }
+        .waitlist-btn {
+            font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s; border: none; cursor: pointer;
+        }
+        .waitlist-btn:hover { background: #0044cc; }
+        .waitlist-success {
+            display: none; font-family: var(--mono); font-size: 13px;
+            color: var(--green); margin-top: 0.75rem;
+        }
+
+        /* -- CTA STRIP -- */
+        .cta-strip {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .cta-strip h3 {
+            font-family: var(--mono); font-size: 18px; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-strip p {
+            font-family: var(--serif); font-style: italic;
+            color: var(--text-secondary); font-size: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .cta-strip a {
+            display: inline-block; font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            padding: 0.75rem 2.5rem; background: var(--accent);
+            color: #fff; font-weight: 700; border-radius: 2px;
+            transition: background 0.2s;
+        }
+        .cta-strip a:hover { background: #0044cc; }
+
+        /* -- FOOTER -- */
+        footer { margin-top: 2rem; }
+        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
+        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
+        .foot-col ul { list-style:none; }
+        .foot-col li { margin-bottom:0.3rem; }
+        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-col a:hover { color:var(--text); }
+        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
+        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
+        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
+        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
+        .foot-legal-links { display:flex; gap:0; list-style:none; }
+        .foot-legal-links li { display:flex; align-items:center; }
+        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
+        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
+        .foot-legal-links a:hover { color:var(--text); }
+
+        @media (max-width: 900px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .waitlist-form { flex-direction: column; }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 0; }
+            .nav-links a { font-size: 10px; padding: 0.4rem 0.5rem; }
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            --bg: #111111;
+            --bg-elevated: #1a1a1a;
+            --bg-surface: #222222;
+            --border: #333333;
+            --border-subtle: #2a2a2a;
+            --text: #e5e5e5;
+            --text-secondary: #aaaaaa;
+            --text-dim: #666666;
+        }
+        body.dark nav { background: rgba(17, 17, 17, 0.92); }
+        body.dark .mobile-menu { background: #111111; }
+        body.dark footer { background: #0a0a0a; }
+    </style>
+</head>
+<body>
+
+<!-- -- NAV -- -->
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Leaderboard</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+            <li><a href="api-docs.html">API</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="compliance.html">Compliance</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="enterprise.html">Providers</a></li>
+            <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- -- HERO -- -->
+<section class="hero">
+    <div class="hero-label">Browser Extension</div>
+    <h1>Real-Time AI Safety, Right in Your Browser</h1>
+    <p>See safety scores instantly as you browse AI tools. Get alerts when your child interacts with high-risk models. Stay informed without the research.</p>
+    <div class="badge">Coming Q3 2026</div>
+</section>
+
+<!-- -- FEATURES -- -->
+<section class="features-section">
+    <div class="section-label">Key Features</div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">S</div>
+            <h3>Instant Safety Scores</h3>
+            <p>Visit any AI tool and see its Sycoindex PAI score in a compact popup. No need to search &mdash; scores appear automatically as you browse ChatGPT, Claude, Gemini, and dozens more.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">!</div>
+            <h3>High-Risk Alerts</h3>
+            <p>Get notified when your child visits an AI tool with a PAI score above your configured threshold. Alerts include the specific risk dimensions so you know exactly what to discuss.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">W</div>
+            <h3>Weekly Safety Digest</h3>
+            <p>Every Sunday, receive a summary of AI tools your household accessed, their current scores, and any score changes from the previous week. One email, full visibility.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">+</div>
+            <h3>Cross-Browser Support</h3>
+            <p>Works with Chrome, Firefox, and Edge. One account syncs preferences and alert thresholds across all your browsers and family members.</p>
+        </div>
+    </div>
+</section>
+
+<!-- -- MOCKUP -- -->
+<section class="mockup-section">
+    <div class="section-label">Preview</div>
+    <div class="browser-mockup">
+        <div class="browser-toolbar">
+            <div class="toolbar-dots">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="toolbar-url">chat.openai.com</div>
+            <div class="toolbar-extension">S 2.1</div>
+        </div>
+        <div class="browser-body">
+            <div class="browser-body-placeholder">chat.openai.com &mdash; ChatGPT interface</div>
+            <div class="score-popup">
+                <div class="popup-header">
+                    <div class="popup-logo">S</div>
+                    <div class="popup-title">Sycoindex PAI</div>
+                </div>
+                <div class="popup-model">GPT-4o</div>
+                <div class="popup-score">
+                    <div class="popup-score-value">2.1</div>
+                    <div class="popup-score-label">PAI Score</div>
+                </div>
+                <div class="popup-dim">
+                    <span class="popup-dim-label">Emotional Mirror</span>
+                    <span class="popup-dim-value" style="color: var(--green);">1.8</span>
+                </div>
+                <div class="popup-bar"><div class="popup-bar-fill" style="width: 18%; background: var(--green);"></div></div>
+                <div class="popup-dim">
+                    <span class="popup-dim-label">Exclusivity</span>
+                    <span class="popup-dim-value" style="color: var(--orange);">2.9</span>
+                </div>
+                <div class="popup-bar"><div class="popup-bar-fill" style="width: 29%; background: var(--orange);"></div></div>
+                <div class="popup-dim">
+                    <span class="popup-dim-label">Boundary</span>
+                    <span class="popup-dim-value" style="color: var(--green);">1.6</span>
+                </div>
+                <div class="popup-bar"><div class="popup-bar-fill" style="width: 16%; background: var(--green);"></div></div>
+                <div class="popup-dim">
+                    <span class="popup-dim-label">Dependency</span>
+                    <span class="popup-dim-value" style="color: var(--orange);">2.7</span>
+                </div>
+                <div class="popup-bar"><div class="popup-bar-fill" style="width: 27%; background: var(--orange);"></div></div>
+                <div class="popup-dim">
+                    <span class="popup-dim-label">Authority</span>
+                    <span class="popup-dim-value" style="color: var(--green);">1.5</span>
+                </div>
+                <div class="popup-bar"><div class="popup-bar-fill" style="width: 15%; background: var(--green);"></div></div>
+                <a href="index.html" class="popup-link">View Full Report &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- -- SUPPORTED BROWSERS -- -->
+<section class="browsers-section">
+    <div class="section-label">Supported Browsers</div>
+    <div class="browser-logos">
+        <div class="browser-item">Chrome</div>
+        <div class="browser-item">Firefox</div>
+        <div class="browser-item">Edge</div>
+    </div>
+</section>
+
+<!-- -- WAITLIST -- -->
+<section class="waitlist-section">
+    <div class="waitlist-card">
+        <h3>Join the Waitlist</h3>
+        <p>Be the first to get the Sycoindex browser extension when it launches in Q3 2026. Early access members get lifetime free tier.</p>
+        <form class="waitlist-form" id="waitlist-form" onsubmit="submitWaitlist(event)">
+            <input type="email" name="email" placeholder="you@example.com" required>
+            <button type="submit" class="waitlist-btn">Join</button>
+        </form>
+        <div class="waitlist-success" id="waitlist-success">You're on the list. We'll be in touch.</div>
+    </div>
+</section>
+
+<!-- -- CTA STRIP -- -->
+<section class="cta-strip">
+    <h3>Can't wait? Use the API today.</h3>
+    <p>Integrate Sycoindex PAI scores into your own tools, dashboards, and workflows right now.</p>
+    <a href="api-docs.html">View API Docs</a>
+</section>
+
+<!-- -- FOOTER -- -->
+<footer>
+    <div class="foot-directory">
+        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
+        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li><li><a href="extension.html">Browser Extension</a></li></ul></div>
+        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li><li><a href="verify.html">Verify Report</a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. Compliance threshold recommendations are advisory. Consult qualified legal counsel for formal compliance determinations. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
+    <div class="foot-legal">
+        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
+        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+    </div>
+</footer>
+
+<script>
+async function submitWaitlist(e) {
+    e.preventDefault();
+    const form = document.getElementById('waitlist-form');
+    const email = form.querySelector('input[name="email"]').value;
+    try {
+        await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, use_case: 'extension' })
+        });
+    } catch(err) {}
+    form.style.display = 'none';
+    document.getElementById('waitlist-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

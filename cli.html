@@ -257,28 +257,35 @@
         .output-block .dim { color: var(--code-comment); }
 
         /* ── FOOTER ── */
-        footer { margin-top: 2rem; }
-        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
-        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
             .nav-links { gap: 0; }
             .nav-links a { padding: 0.4rem 0.5rem; font-size: 10px; }
             .pricing-callout { flex-direction: column; gap: 0.75rem; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -298,274 +305,66 @@
             <li><a href="enterprise.html">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-    </div>
+        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
 </nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-    <div class="hero-label">CLI &amp; Docker</div>
-    <h1>Score Any Model. Anywhere.</h1>
-    <p>Run the full Sycoindex evaluation suite against local, self-hosted, or fine-tuned models. Same 5-judge ensemble. Same methodology. Your infrastructure.</p>
-</section>
-
-<!-- ── INSTALLATION ── -->
-<section class="cli-section" id="installation">
-    <div class="section-label">Installation</div>
-    <div class="section-title">Install the Sycoindex CLI</div>
-    <div class="section-desc">Choose your preferred package manager. The CLI wraps the full scoring pipeline and handles authentication, batching, and retry logic automatically.</div>
-
-    <div class="tab-bar">
-        <button class="tab-btn active" data-tab="pip">pip</button>
-        <button class="tab-btn" data-tab="docker">Docker</button>
-        <button class="tab-btn" data-tab="npm">npm</button>
-    </div>
-
-    <div class="tab-content active" id="tab-pip">
-        <div class="code-block" style="border-top-left-radius:0;">
-            <span class="label">pip</span>
-<span class="comment"># Install the Sycoindex CLI</span>
-<span class="method">pip</span> install sycoindex</div>
-    </div>
-
-    <div class="tab-content" id="tab-docker">
-        <div class="code-block" style="border-top-left-radius:0;">
-            <span class="label">Docker</span>
-<span class="comment"># Pull the official scorer image</span>
-<span class="method">docker</span> pull sycoindex/scorer:latest</div>
-    </div>
-
-    <div class="tab-content" id="tab-npm">
-        <div class="code-block" style="border-top-left-radius:0;">
-            <span class="label">npm</span>
-<span class="comment"># Install globally via npm</span>
-<span class="method">npm</span> install -g @sycoindex/cli</div>
-    </div>
-</section>
-
-<!-- ── QUICK START ── -->
-<section class="cli-section" id="quickstart">
-    <div class="section-label">Quick Start</div>
-    <div class="section-title">Score a model in one command</div>
-    <div class="section-desc">Point the CLI at any OpenAI-compatible endpoint. It sends structured prompts, collects responses, and returns scored results through the 5-judge ensemble.</div>
-
-    <div class="code-block">
-        <span class="label">Basic Usage</span>
-<span class="comment"># Score a local model endpoint</span>
-<span class="method">sycoindex</span> score --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
-  --scenarios <span class="key">all</span> \
-  --output <span class="string">report.json</span></div>
-
-    <div class="code-block">
-        <span class="label">Scenario Filter</span>
-<span class="comment"># Score with specific scenario set</span>
-<span class="method">sycoindex</span> score --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
-  --scenarios <span class="key">pai-only</span> \
-  --format <span class="key">table</span></div>
-
-    <div class="code-block">
-        <span class="label">Compare</span>
-<span class="comment"># Compare against leaderboard</span>
-<span class="method">sycoindex</span> compare --endpoint <span class="string">http://localhost:8080/v1/chat</span> \
-  --baseline <span class="key">claude-haiku-4.5</span></div>
-</section>
-
-<!-- ── DOCKER USAGE ── -->
-<section class="cli-section" id="docker">
-    <div class="section-label">Docker Usage</div>
-    <div class="section-title">Containerized scoring</div>
-    <div class="section-desc">Run the scorer as a self-contained Docker container. Ideal for CI/CD pipelines, air-gapped environments, and reproducible evaluations.</div>
-
-    <div class="code-block">
-        <span class="label">Docker Run</span>
-<span class="method">docker</span> run -it --rm \
-  -e <span class="key">SYCOINDEX_API_KEY</span>=<span class="string">$SYCOINDEX_API_KEY</span> \
-  sycoindex/scorer:latest \
-  score --endpoint <span class="string">http://host.docker.internal:8080/v1/chat</span> \
-  --output <span class="string">/results/report.json</span> \
-  -v <span class="string">$(pwd)/results:/results</span></div>
-</section>
-
-<!-- ── OUTPUT FORMATS ── -->
-<section class="cli-section" id="output">
-    <div class="section-label">Output Formats</div>
-    <div class="section-title">Table and JSON output</div>
-    <div class="section-desc">Use <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">--format table</code> for terminal-friendly results or <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">--format json</code> for machine-readable output.</div>
-
-    <div class="output-block"><span class="label">Table Output</span><span class="dim">
-&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
-<span class="dim">&#9474;</span> SYCOINDEX ASSESSMENT &#8212; my-fine-tuned-model  <span class="dim">&#9474;</span>
-<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
-<span class="dim">&#9474;</span> Dimension<span class="dim">&#9474;</span> Score <span class="dim">&#9474;</span> Status <span class="dim">&#9474;</span> &#916; Base <span class="dim">&#9474;</span> Gate   <span class="dim">&#9474;</span>
-<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
-<span class="dim">&#9474;</span> EMI      <span class="dim">&#9474;</span> <span class="number">1.24</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.35</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9474;</span> EXL      <span class="dim">&#9474;</span> <span class="number">2.10</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.24</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9474;</span> BND      <span class="dim">&#9474;</span> <span class="number">1.35</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.18</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9474;</span> DEP      <span class="dim">&#9474;</span> <span class="number">1.82</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.28</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9474;</span> AUD      <span class="dim">&#9474;</span> <span class="number">0.85</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.53</span>  <span class="dim">&#9474;</span> &lt; 3.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
-<span class="dim">&#9474;</span> PAI      <span class="dim">&#9474;</span> <span class="number">1.47</span>  <span class="dim">&#9474;</span> <span class="pass">&#10003; Pass</span> <span class="dim">&#9474;</span> <span class="pass">-0.32</span>  <span class="dim">&#9474;</span> &lt; 2.0  <span class="dim">&#9474;</span>
-<span class="dim">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span></div>
-
-    <div class="code-block">
-        <span class="label">JSON Output</span>
-{
-  <span class="key">"model"</span>: <span class="string">"my-fine-tuned-model"</span>,
-  <span class="key">"timestamp"</span>: <span class="string">"2026-04-17T14:32:01Z"</span>,
-  <span class="key">"pai_composite"</span>: <span class="number">1.47</span>,
-  <span class="key">"status"</span>: <span class="string">"pass"</span>,
-  <span class="key">"dimensions"</span>: {
-    <span class="key">"emotional_manipulation"</span>:  { <span class="key">"score"</span>: <span class="number">1.24</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.35</span> },
-    <span class="key">"exclusivity"</span>:              { <span class="key">"score"</span>: <span class="number">2.10</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.24</span> },
-    <span class="key">"boundary_erosion"</span>:         { <span class="key">"score"</span>: <span class="number">1.35</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.18</span> },
-    <span class="key">"dependency_creation"</span>:      { <span class="key">"score"</span>: <span class="number">1.82</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.28</span> },
-    <span class="key">"adult_undermining"</span>:        { <span class="key">"score"</span>: <span class="number">0.85</span>, <span class="key">"gate"</span>: <span class="number">3.0</span>, <span class="key">"delta"</span>: <span class="number">-0.53</span> }
-  },
-  <span class="key">"audit_hash"</span>: <span class="string">"sha256:e3b0c44298fc1c149afbf4c8996fb924..."</span>
-}</div>
-</section>
-
-<!-- ── CONFIGURATION ── -->
-<section class="cli-section" id="config">
-    <div class="section-label">Configuration</div>
-    <div class="section-title">CLI flags reference</div>
-    <div class="section-desc">All flags can also be set via environment variables (prefix <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">SYCOINDEX_</code>) or a <code style="font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-elevated);padding:0.15rem 0.4rem;border-radius:3px;">.sycoindex.yml</code> config file.</div>
-
-    <table class="flags-table">
-        <thead>
-            <tr>
-                <th>Flag</th>
-                <th>Default</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="flag">--endpoint</td>
-                <td>&#8212;</td>
-                <td>URL of the model's OpenAI-compatible chat endpoint (required)</td>
-            </tr>
-            <tr>
-                <td class="flag">--scenarios</td>
-                <td>all</td>
-                <td>Scenario set to run: <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">all</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">pai-only</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">syco-only</code>, or comma-separated IDs</td>
-            </tr>
-            <tr>
-                <td class="flag">--output</td>
-                <td>stdout</td>
-                <td>File path for results output (JSON or table)</td>
-            </tr>
-            <tr>
-                <td class="flag">--format</td>
-                <td>table</td>
-                <td>Output format: <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">table</code>, <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">json</code>, or <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">csv</code></td>
-            </tr>
-            <tr>
-                <td class="flag">--baseline</td>
-                <td>&#8212;</td>
-                <td>Model slug to compare against (from the public leaderboard)</td>
-            </tr>
-            <tr>
-                <td class="flag">--threshold</td>
-                <td>3.0</td>
-                <td>Custom pass/fail gate threshold (overrides defaults)</td>
-            </tr>
-            <tr>
-                <td class="flag">--api-key</td>
-                <td>&#8212;</td>
-                <td>Sycoindex API key (or set <code style="font-family:'SF Mono','Fira Code',monospace;font-size:12px;">SYCOINDEX_API_KEY</code> env var)</td>
-            </tr>
-            <tr>
-                <td class="flag">--verbose</td>
-                <td>false</td>
-                <td>Print per-scenario scores and judge-level detail</td>
-            </tr>
-            <tr>
-                <td class="flag">--timeout</td>
-                <td>120s</td>
-                <td>Per-request timeout for model endpoint calls</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<!-- ── SELF-HOSTED SCORING ── -->
-<section class="cli-section" id="self-hosted">
-    <div class="section-label">Self-Hosted Scoring</div>
-    <div class="section-title">How it works</div>
-    <div class="section-desc">The CLI is designed so your model weights and infrastructure stay completely under your control throughout the evaluation process.</div>
-
-    <div class="info-box">
-        <h3>Data flow</h3>
-        <p>The Sycoindex CLI sends structured prompts from our scenario bank to your local model endpoint, collects the model's responses, then transmits the prompt+response pairs to the Sycoindex API where the 5-judge cross-lab ensemble scores them.</p>
-        <ul>
-            <li>Your model weights never leave your infrastructure</li>
-            <li>Only the text of prompt/response pairs is transmitted for scoring</li>
-            <li>All scoring uses the same 5-judge ensemble as the public leaderboard</li>
-            <li>Results include SHA-256 audit hashes for tamper evidence</li>
-        </ul>
-    </div>
-
-    <div class="info-box">
-        <h3>Enterprise: On-premise scoring</h3>
-        <p>For organizations that cannot transmit any data externally, the Enterprise plan includes an on-premise scoring option. The full 5-judge ensemble runs within your network boundary. Contact <a href="mailto:chris@sycoindex.com" style="color:var(--accent);text-decoration:underline;">chris@sycoindex.com</a> for details.</p>
-    </div>
-</section>
-
-<!-- ── PRICING ── -->
-<section class="cli-section" id="pricing">
-    <div class="section-label">Pricing</div>
-    <div class="section-title">CLI usage &amp; limits</div>
-
-    <div class="pricing-callout">
-        <div class="pc-label">Free Tier</div>
-        <p>CLI usage counts against your API plan. Free tier includes <strong>100 scored transcripts per month</strong> &mdash; enough to evaluate a fine-tuned model across the full scenario bank. Upgrade for higher volume and on-premise scoring.</p>
-    </div>
-</section>
-
-<!-- ── CTA ── -->
-<section class="cli-section" id="cta">
-    <div class="section-label">Get Started</div>
-    <div class="section-title">Ready to score your model?</div>
-    <div class="section-desc">Install the CLI, point it at your endpoint, and get a full PAI assessment in minutes. Same methodology trusted by the public leaderboard.</div>
-
-    <div class="cta-row">
-        <a href="pricing.html" class="cta-primary">Get started &rarr;</a>
-        <a href="api-docs.html" class="cta-secondary">View API docs &rarr;</a>
-    </div>
-</section>
-
-<!-- ── FOOTER ── -->
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 <footer>
     <div class="foot-directory">
-        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="cli.html">CLI &amp; Docker</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
-        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
-
-<script>
-(function() {
-    // Tab switcher
-    var tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            // Deactivate all
-            tabBtns.forEach(function(b) { b.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
-            // Activate clicked
-            btn.classList.add('active');
-            var target = document.getElementById('tab-' + btn.getAttribute('data-tab'));
-            if (target) target.classList.add('active');
-        });
-    });
-})();
-</script>
-
 </body>
 </html>

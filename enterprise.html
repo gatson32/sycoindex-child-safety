@@ -222,27 +222,34 @@
         .cta-strip a:hover { background: #0044cc; }
 
         /* ── FOOTER ── */
-        footer { margin-top: 2rem; }
-        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
-        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         @media (max-width: 768px) {
             .problem-grid, .leg-grid { grid-template-columns: 1fr; }
             .offering-grid { grid-template-columns: 1fr; }
             .timeline-grid { grid-template-columns: 1fr 1fr; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -262,154 +269,66 @@
             <li><a href="enterprise.html" style="color: var(--text);">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-    </div>
+        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
 </nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-    <div class="hero-label">For Model Providers</div>
-    <h1>Prove your model is safe before the regulator asks.</h1>
-    <p>78 AI chatbot safety bills are live across 27 states. California SB 243 is law. Character.AI settled 5 wrongful death suits. Pre-deployment PAI scoring gives you an auditable, published safety score before your model ships — not after the lawsuit.</p>
-    <div style="margin-top:2rem;padding:1.25rem 1.5rem;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:4px;max-width:620px;">
-        <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:0.5rem;">COPPA Compliance Deadline: April 22, 2026</div>
-        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin:0;">Updated COPPA Rule enforcement begins in 5 days. Penalties up to $53,088 per violation. Get scored before the deadline.</p>
-    </div>
-</section>
-
-<!-- ── THE PROBLEM ── -->
-<section class="problem">
-    <div class="problem-label">The Regulatory Landscape</div>
-    <div class="problem-grid">
-        <div class="problem-card">
-            <div class="stat">78</div>
-            <div class="stat-label">State Bills Live</div>
-            <p>AI chatbot safety bills across 27 U.S. states. California, New York, Texas, Colorado, Kentucky all moving. Each requires demonstrable safeguards around minor interactions.</p>
-        </div>
-        <div class="problem-card">
-            <div class="stat">49%</div>
-            <div class="stat-label">More Sycophantic</div>
-            <p>Stanford's peer-reviewed Science study (March 2026) proved AI models affirm users 49% more than humans — even on harmful decisions. This is now the baseline regulators and plaintiffs cite.</p>
-        </div>
-        <div class="problem-card">
-            <div class="stat">$0</div>
-            <div class="stat-label">Cost of Prevention</div>
-            <p>Character.AI's settlement terms are sealed. The reputational damage isn't. Pre-deployment scoring costs a fraction of one deposition. Independent measurement is the insurance policy.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── WHAT YOU GET ── -->
-<section class="offering">
-    <div class="offering-label">Pre-Deployment Scoring</div>
-    <div class="offering-grid">
-        <div class="offering-card">
-            <div class="tag">Core Assessment</div>
-            <h3>PAI Certification</h3>
-            <p>50 structured child-safety scenarios scored by a 5-judge cross-lab ensemble — independent judges from Anthropic, OpenAI, Mistral AI, Google, and Meta. Five parasocial attachment dimensions. SHA-256 audit chain. Published composite score and leaderboard listing. Turnaround: 5 business days.</p>
-        </div>
-        <div class="offering-card">
-            <div class="tag">Compliance Ready</div>
-            <h3>Carrier Packet</h3>
-            <p>Everything in Certification, plus SB 243 and KIDS Act compliance documentation, custom scenario design (up to 25), age-band risk analysis (5-8, 9-12, 13-17), remediation recommendations, and 2 re-evaluations within 12 months. Turnaround: 48 hours.</p>
-        </div>
-        <div class="offering-card">
-            <div class="tag">Continuous</div>
-            <h3>Safety API</h3>
-            <p>Score any prompt/response pair on child safety in one HTTP call. Full 5-judge ensemble on every score. Integrate into your CI/CD pipeline, moderation stack, or red-team workflow. 100 free scores/month.</p>
-        </div>
-        <div class="offering-card">
-            <div class="tag">Sycophancy</div>
-            <h3>Honesty Scoring</h3>
-            <p>Separate sycophancy evaluation across 20 scenarios measuring agreement bias, harmful affirmation, and false validation. Combined with PAI scoring for a complete safety profile. Published on the Sycoindex leaderboard.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── HOW IT WORKS ── -->
-<section class="timeline">
-    <div class="timeline-label">How It Works</div>
-    <div class="timeline-grid">
-        <div class="timeline-step">
-            <div class="step-num">01</div>
-            <h4>API Access</h4>
-            <p>Provide inference access to the model version you want scored. We send structured prompts — no training data, no weights, no fine-tuning.</p>
-        </div>
-        <div class="timeline-step">
-            <div class="step-num">02</div>
-            <h4>Evaluation</h4>
-            <p>50 synthetic child-safety scenarios run through your model. Each response scored independently by 5 judges from 5 competing AI labs — Anthropic, OpenAI, Mistral AI, Google, and Meta. Median scoring eliminates single-vendor bias.</p>
-        </div>
-        <div class="timeline-step">
-            <div class="step-num">03</div>
-            <h4>Scoring</h4>
-            <p>5 PAI dimensions computed with additive marker counting. Composite score, risk classification (LOW/MEDIUM/HIGH), per-dimension breakdown, and full SHA-256 audit trail.</p>
-        </div>
-        <div class="timeline-step">
-            <div class="step-num">04</div>
-            <h4>Delivery</h4>
-            <p>PDF certification report, leaderboard listing, and (for Carrier Packet) compliance-ready documentation mapped to SB 243 and KIDS Act requirements. Your score is published when you're ready.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── LEGISLATION THEY NEED TO WORRY ABOUT ── -->
-<section class="legislation">
-    <div class="legislation-label">Active Legislation</div>
-    <div class="leg-grid">
-        <div class="leg-card">
-            <h4>California SB 243</h4>
-            <span class="status signed">Signed Into Law</span>
-            <p>First-in-the-nation AI chatbot safeguards. Requires "critical safeguards" around chatbot-minor interactions. Private right of action for families. PAI scoring maps directly to its requirements.</p>
-        </div>
-        <div class="leg-card">
-            <h4>KIDS Act + SAFEBOTs</h4>
-            <span class="status committee">Cleared Committee</span>
-            <p>Cleared House Energy and Commerce Committee 28-24. Includes SAFEBOTs Act mandating chatbot safety measures with minors. Federal enforcement on the horizon.</p>
-        </div>
-        <div class="leg-card">
-            <h4>Youth AI Privacy Act</h4>
-            <span class="status committee">Introduced</span>
-            <p>Sen. Markey's bill prohibits AI companies from using minors' data to train models. Companion to COPPA 2.0 which passed Senate Commerce unanimously.</p>
-        </div>
-        <div class="leg-card">
-            <h4>California SB 867</h4>
-            <span class="status committee">Introduced</span>
-            <p>4-year moratorium on AI chatbot toys for children under 18. Signal of where regulation is heading — total product bans for unscored AI-child interaction.</p>
-        </div>
-        <div class="leg-card">
-            <h4>New York S9051</h4>
-            <span class="status committee">Passed Committee</span>
-            <p>Would ban AI chatbots for minors with unsafe features. Passed Internet and Technology Committee. Another state following California's lead.</p>
-        </div>
-        <div class="leg-card">
-            <h4>Character.AI Settlements</h4>
-            <span class="status settled">5 Lawsuits Settled</span>
-            <p>Character.AI and Google settled 5 wrongful death lawsuits in January 2026. Kentucky AG first state to sue an AI chatbot company. The legal precedent is set.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── CTA ── -->
-<section class="cta-strip">
-    <h3>Score your model before it ships.</h3>
-    <p>Independent safety scoring is cheaper than one deposition. Get your PAI score before the next bill passes.</p>
-    <a href="mailto:certify@sycoindex.com?subject=Enterprise%20PAI%20Scoring%20Inquiry">Request Pre-Deployment Scoring</a>
-</section>
-
-<!-- ── FOOTER ── -->
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 <footer>
     <div class="foot-directory">
-        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
-        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
-
 </body>
 </html>

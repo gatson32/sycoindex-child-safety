@@ -797,6 +797,19 @@
                 print-color-adjust: exact;
             }
         }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -815,9 +828,22 @@
                 <li><a href="enterprise.html">Providers</a></li>
                 <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
             </ul>
+            <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
             <button class="dark-toggle" onclick="document.body.classList.toggle('dark');this.textContent=document.body.classList.contains('dark')?'&#9788; Light':'&#9789; Dark'" style="font-family:var(--mono);font-size:11px;background:none;border:1px solid var(--border);padding:0.3rem 0.75rem;border-radius:4px;cursor:pointer;color:var(--text-secondary);">&#9789; Dark</button>
         </div>
     </nav>
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 
     <main class="paper">
 
@@ -1410,6 +1436,8 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
                     <li><a href="index.html#insights">Insights</a></li>
                     <li><a href="methodology.html">Methodology</a></li>
                     <li><a href="#">Paper (arXiv)</a></li>
+                    <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                    <li><a href="verify.html">Verify Report</a></li>
                 </ul>
             </div>
             <div class="foot-col">
@@ -1419,6 +1447,8 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
                     <li><a href="submit.html">Submit a Model</a></li>
                     <li><a href="pricing.html">Pricing</a></li>
                     <li><a href="enterprise.html">For Providers</a></li>
+                    <li><a href="extension.html">Browser Extension</a></li>
+                    <li><a href="dashboard-preview.html">Dashboard</a></li>
                 </ul>
             </div>
             <div class="foot-col">
@@ -1434,6 +1464,7 @@ Sycoindex. https://sycoindex.ai/methodology.html</pre>
                 <ul>
                     <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
                     <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+                    <li><a href="schools.html">Schools</a></li>
                 </ul>
             </div>
         </div>

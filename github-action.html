@@ -263,22 +263,14 @@
         .cta-strip a:hover { background: #0044cc; }
 
         /* ── FOOTER ── */
-        footer { margin-top: 2rem; }
-        .foot-directory { max-width:1200px; margin:0 auto; padding:1.5rem 2rem; border-top:1px solid var(--border); display:flex; gap:3rem; flex-wrap:wrap; }
-        .foot-col h4 { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text); margin-bottom:0.6rem; }
-        .foot-col ul { list-style:none; }
-        .foot-col li { margin-bottom:0.3rem; }
-        .foot-col a { font-family:var(--sans); font-size:12px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-col a:hover { color:var(--text); }
-        .foot-disclaimer { max-width:1200px; margin:0 auto; padding:1rem 2rem; border-top:1px solid var(--border); }
-        .foot-disclaimer p { font-family:var(--sans); font-size:11px; color:var(--text-dim); line-height:1.6; }
-        .foot-legal { max-width:1200px; margin:0 auto; padding:1rem 2rem 2rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; }
-        .foot-copy { font-family:var(--sans); font-size:11px; color:var(--text-dim); }
-        .foot-legal-links { display:flex; gap:0; list-style:none; }
-        .foot-legal-links li { display:flex; align-items:center; }
-        .foot-legal-links li + li::before { content:'|'; color:var(--border); font-size:11px; margin:0 0.75rem; }
-        .foot-legal-links a { font-family:var(--sans); font-size:11px; color:var(--text-secondary); transition:color 0.15s; }
-        .foot-legal-links a:hover { color:var(--text); }
+        footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
+        .foot-directory { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .foot-col h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem; }
+        .foot-col ul { list-style: none; }
+        .foot-col li { margin-bottom: 0.5rem; }
+        .foot-col a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .foot-col a:hover { color: var(--text); }
+        .foot-legal { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
@@ -288,6 +280,21 @@
             .nav-links { gap: 0; }
             .nav-links a { padding: 0.4rem 0.5rem; font-size: 10px; }
             .config-table { display: block; overflow-x: auto; }
+            .foot-directory { grid-template-columns: repeat(2, 1fr); }
+            .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+    
+        /* ── HAMBURGER NAV ── */
+        .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .hamburger:hover { background: var(--bg-surface); }
+        .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
+        .mobile-menu a { font-family: var(--mono); font-size: 13px; color: var(--text-secondary); padding: 0.5rem 0; text-decoration: none; border-bottom: 1px solid var(--border-subtle); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--accent); }
+        .mobile-menu.open { display: flex; }
+        @media (max-width: 768px) {
+            .hamburger { display: inline-flex; }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
@@ -306,197 +313,66 @@
             <li><a href="enterprise.html">Providers</a></li>
             <li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li>
         </ul>
-    </div>
+        <button class="hamburger" aria-label="Menu" onclick="document.getElementById('mobile-menu').classList.toggle('open')">&#9776;</button>
+</div>
 </nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-    <div class="hero-label">CI/CD Integration</div>
-    <h1>Safety Checks in Your CI Pipeline</h1>
-    <p>Block deploys that regress on child safety. One YAML file, zero configuration.</p>
-</section>
-
-<!-- ── QUICK START ── -->
-<section class="section" id="quickstart">
-    <div class="section-label">Quick Start</div>
-    <div class="section-title">Add to your repo in 60 seconds</div>
-    <div class="section-desc">Create <code>.github/workflows/safety.yml</code> in your repository and paste the following configuration. That's it.</div>
-
-    <div class="code-block">
-        <span class="label">YAML</span>
-<span class="key">name</span>: <span class="string">Sycoindex Safety Check</span>
-<span class="key">on</span>: [<span class="string">pull_request</span>]
-
-<span class="key">jobs</span>:
-  <span class="key">safety-check</span>:
-    <span class="key">runs-on</span>: <span class="string">ubuntu-latest</span>
-    <span class="key">steps</span>:
-      - <span class="key">uses</span>: <span class="string">actions/checkout@v4</span>
-      - <span class="key">uses</span>: <span class="string">sycoindex/safety-check@v1</span>
-        <span class="key">with</span>:
-          <span class="key">api-key</span>: <span class="method">${{ secrets.SYCOINDEX_API_KEY }}</span>
-          <span class="key">model-endpoint</span>: <span class="method">${{ secrets.MODEL_ENDPOINT }}</span>
-          <span class="key">threshold-pai</span>: <span class="number">2.0</span>
-          <span class="key">threshold-sycophancy</span>: <span class="number">60</span>
-          <span class="key">fail-on-regression</span>: <span class="number">true</span>
-    </div>
-</section>
-
-<!-- ── HOW IT WORKS ── -->
-<section class="section" id="how-it-works">
-    <div class="section-label">How It Works</div>
-    <div class="section-title">From PR to safety score in minutes</div>
-    <div class="section-desc">The action integrates directly with GitHub's check system. Results appear inline on your pull request, blocking merges when safety thresholds are violated.</div>
-
-    <div class="flow-grid">
-        <div class="flow-step">
-            <div class="flow-number">1</div>
-            <div class="flow-title">PR Opened</div>
-            <div class="flow-desc">A pull request is opened or updated on your repository. The GitHub Action triggers automatically.</div>
-            <div class="flow-arrow">&#8250;</div>
-        </div>
-        <div class="flow-step">
-            <div class="flow-number">2</div>
-            <div class="flow-title">Scenarios Executed</div>
-            <div class="flow-desc">Sycoindex runs 50 child-safety and sycophancy scenarios against your model endpoint via the API.</div>
-            <div class="flow-arrow">&#8250;</div>
-        </div>
-        <div class="flow-step">
-            <div class="flow-number">3</div>
-            <div class="flow-title">Scores Compared</div>
-            <div class="flow-desc">Results are compared against your configured thresholds and the previous baseline from the main branch.</div>
-            <div class="flow-arrow">&#8250;</div>
-        </div>
-        <div class="flow-step">
-            <div class="flow-number">4</div>
-            <div class="flow-title">PR Annotated</div>
-            <div class="flow-desc">The PR is annotated with detailed results. If a regression is detected, the check fails and the merge is blocked.</div>
-        </div>
-    </div>
-</section>
-
-<!-- ── CONFIGURATION REFERENCE ── -->
-<section class="section" id="configuration">
-    <div class="section-label">Configuration Reference</div>
-    <div class="section-title">Action inputs</div>
-    <div class="section-desc">All inputs are passed via the <code>with:</code> block in your workflow YAML. Required inputs must be set for the action to run.</div>
-
-    <table class="config-table">
-        <thead>
-            <tr>
-                <th>Input</th>
-                <th>Description</th>
-                <th>Default</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>api-key <span class="config-badge badge-required">Required</span></td>
-                <td>Your Sycoindex API key. Store as a repository secret.</td>
-                <td>&mdash;</td>
-            </tr>
-            <tr>
-                <td>model-endpoint <span class="config-badge badge-required">Required</span></td>
-                <td>URL of your model's API endpoint. The action sends evaluation prompts here and scores the responses.</td>
-                <td>&mdash;</td>
-            </tr>
-            <tr>
-                <td>threshold-pai <span class="config-badge badge-optional">Optional</span></td>
-                <td>Maximum allowed PAI composite score. The check fails if the model scores above this value.</td>
-                <td><code>2.0</code></td>
-            </tr>
-            <tr>
-                <td>threshold-sycophancy <span class="config-badge badge-optional">Optional</span></td>
-                <td>Minimum sycophancy honesty score. The check fails if the model scores below this value.</td>
-                <td><code>60</code></td>
-            </tr>
-            <tr>
-                <td>fail-on-regression <span class="config-badge badge-optional">Optional</span></td>
-                <td>Block the PR if the safety score worsens compared to the baseline branch, even if absolute thresholds pass.</td>
-                <td><code>true</code></td>
-            </tr>
-            <tr>
-                <td>scenarios <span class="config-badge badge-optional">Optional</span></td>
-                <td>Which scenario set to run. Options: <code>all</code>, <code>pai-only</code>, <code>syco-only</code>.</td>
-                <td><code>all</code></td>
-            </tr>
-            <tr>
-                <td>baseline-branch <span class="config-badge badge-optional">Optional</span></td>
-                <td>Branch to compare against for regression detection. Typically your main or production branch.</td>
-                <td><code>main</code></td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<!-- ── OUTPUT EXAMPLES ── -->
-<section class="section" id="output-examples">
-    <div class="section-label">Output Examples</div>
-    <div class="section-title">What your team sees on every PR</div>
-    <div class="section-desc">The action posts a detailed comment on the pull request with scoring results. Here's what a passing and a failing check look like.</div>
-
-    <!-- Passing example -->
-    <div class="pr-mock">
-        <div class="pr-mock-header">
-            <div class="status-icon status-pass">&#10003;</div>
-            Sycoindex Safety Check &mdash; Passed
-        </div>
-        <div class="pr-mock-body">
-            <div><span class="check-pass">Sycophancy Honesty: 86.4</span> (threshold: 60) <span class="check-pass">&#10003;</span></div>
-            <div><span class="check-pass">PAI Composite: 1.15</span> (threshold: 2.0) <span class="check-pass">&#10003;</span></div>
-            <div><span class="check-pass">Regression Check: +0.3 improvement</span> <span class="check-pass">&#10003;</span></div>
-            <a class="report-link" href="#">View full report &#8594; sycoindex.ai/report/abc123</a>
-        </div>
-    </div>
-
-    <!-- Failing example -->
-    <div class="pr-mock">
-        <div class="pr-mock-header">
-            <div class="status-icon status-fail">&#10007;</div>
-            Sycoindex Safety Check &mdash; Failed
-        </div>
-        <div class="pr-mock-body">
-            <div><span class="check-fail">PAI Composite: 2.31</span> (threshold: 2.0) <span class="check-fail">&#10007;</span></div>
-            <div><span class="check-fail">Regression: +0.45 worse than baseline</span> <span class="check-fail">&#10007;</span></div>
-            <br>
-            <div style="color: var(--text-dim); margin-bottom: 0.25rem;">2 dimensions regressed:</div>
-            <div class="dim-detail">EXL: 2.84 &#8594; 3.21 (+0.37)</div>
-            <div class="dim-detail">DEP: 2.51 &#8594; 2.89 (+0.38)</div>
-        </div>
-    </div>
-</section>
-
-<!-- ── PRICING ── -->
-<section class="section" id="pricing">
-    <div class="section-label">Pricing</div>
-    <div class="section-title">Included in all paid plans</div>
-
-    <div class="pricing-strip">
-        <h3>GitHub Action Usage</h3>
-        <p>GitHub Action usage is included in all paid plans. Free tier: 5 checks/month. No additional per-run fees. Upgrade anytime from the <a href="pricing.html" style="color: var(--accent); font-weight: 600;">pricing page</a>.</p>
-    </div>
-</section>
-
-<!-- ── CTA ── -->
-<section class="cta-strip">
-    <h3>Start blocking unsafe deploys today</h3>
-    <p>Get your API key and add the Sycoindex Safety Check to your CI pipeline in under a minute.</p>
-    <a href="pricing.html">Get your API key &#8594;</a>
-</section>
-
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Leaderboard</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="api-docs.html">API</a>
+    <a href="submit.html">Submit</a>
+    <a href="compliance.html">Compliance</a>
+    <a href="schools.html">Schools</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="enterprise.html">Providers</a>
+    <a href="extension.html">Extension</a>
+    <a href="state-of-ai-safety.html">Reports</a>
+</div>
 <footer>
     <div class="foot-directory">
-        <div class="foot-col"><h4>Research</h4><ul><li><a href="index.html">Leaderboard</a></li><li><a href="explorer.html">Transcript Explorer</a></li><li><a href="index.html#methodology">Methodology</a></li></ul></div>
-        <div class="foot-col"><h4>Product</h4><ul><li><a href="api-docs.html">Safety API</a></li><li><a href="submit.html">Submit Model</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="enterprise.html">For Providers</a></li></ul></div>
-        <div class="foot-col"><h4>Compliance</h4><ul><li><a href="compliance.html">Regulatory Mapping</a></li></ul></div>
-        <div class="foot-col"><h4>Company</h4><ul><li><a href="https://github.com/sycoindex" target="_blank">GitHub</a></li><li><a href="mailto:chris@sycoindex.com">Contact</a></li></ul></div>
+        <div class="foot-col">
+            <h4>Research</h4>
+            <ul>
+                <li><a href="index.html">Leaderboard</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
+                <li><a href="verify.html">Verify Report</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="api-docs.html">API Docs</a></li>
+                <li><a href="cli.html">CLI</a></li>
+                <li><a href="extension.html">Browser Extension</a></li>
+                <li><a href="dashboard-preview.html">Dashboard</a></li>
+                <li><a href="badges.html">Badges</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Compliance</h4>
+            <ul>
+                <li><a href="compliance.html">Regulatory Map</a></li>
+                <li><a href="schools.html">Schools</a></li>
+                <li><a href="report.html">Reports</a></li>
+                <li><a href="submit.html">Submit Model</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="enterprise.html">Enterprise</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+                <li><a href="mailto:chris@sycoindex.com">Contact</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="foot-disclaimer"><p>Sycoindex PAI scores reflect model behavior during structured evaluation scenarios only and do not constitute regulatory certifications, compliance guarantees, or endorsements. All test transcripts are synthetic. No real children were involved in any evaluation. Our scoring methodology and evaluation systems are proprietary trade secrets of Sycoindex Inc., protected under applicable federal and state law.</p></div>
     <div class="foot-legal">
-        <div class="foot-copy">Copyright &copy; 2026 Sycoindex Inc. All rights reserved.</div>
-        <ul class="foot-legal-links"><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Use</a></li><li><a href="terms.html#trade-secrets">IP &amp; Trade Secrets</a></li></ul>
+        <span>&copy; 2026 Sycoindex Inc.</span>
+        <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
-
 </body>
 </html>
