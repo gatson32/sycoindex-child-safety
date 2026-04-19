@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sycoindex API — OpenAPI 3.1 Reference</title>
+  <meta name="description" content="Machine-readable OpenAPI 3.1 reference for the Sycoindex PAI and sycophancy scoring API. Pairs with the prose reference at /api-docs.html.">
+  <!--
+    Renders /docs/openapi.yaml with Redoc from jsDelivr. No build step, no
+    runtime dependency, no analytics. The prose-style API reference lives
+    separately at /api-docs.html and is linked from the banner.
+  -->
+  <style>
+    html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .banner {
+      background: #0b1020;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid #222;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .banner a { color: #8ab4f8; text-decoration: none; }
+    .banner a:hover { text-decoration: underline; }
+    .banner .left { font-weight: 600; }
+    .banner .right { font-size: 13px; opacity: 0.9; }
+    #redoc-container { min-height: 80vh; }
+    .fallback {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 20px 24px;
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      background: #fafafa;
+      color: #333;
+    }
+    .fallback code { background: #eee; padding: 1px 6px; border-radius: 3px; }
+    .fallback a { color: #0055FF; }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <span class="left">Sycoindex API &mdash; OpenAPI 3.1 Reference</span>
+    <span class="right">
+      Raw spec:
+      <a href="/docs/openapi.yaml">YAML</a> &middot;
+      <a href="/docs/openapi.json">JSON</a> &middot;
+      Prose: <a href="/api-docs.html">/api-docs.html</a> &middot;
+      <a href="/">sycoindex.ai</a>
+    </span>
+  </div>
+
+  <div id="redoc-container">
+    <div class="fallback">
+      <h2>Loading API reference&hellip;</h2>
+      <p>
+        If this message persists for more than a few seconds, the Redoc CDN
+        is unreachable from your network. You can still read the raw spec
+        directly:
+      </p>
+      <ul>
+        <li><a href="/docs/openapi.yaml">docs/openapi.yaml</a> (canonical)</li>
+        <li><a href="/docs/openapi.json">docs/openapi.json</a></li>
+      </ul>
+      <p>
+        Both are valid OpenAPI 3.1 documents &mdash; open either in
+        <a href="https://editor.swagger.io/">editor.swagger.io</a> or via a
+        local install of <code>redoc-cli</code>.
+      </p>
+    </div>
+  </div>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/redoc@2.1.5/bundles/redoc.standalone.js"
+    crossorigin="anonymous"
+    defer></script>
+  <script>
+    (function () {
+      var tries = 0;
+      function init() {
+        if (typeof Redoc !== 'undefined') {
+          var container = document.getElementById('redoc-container');
+          container.innerHTML = '';
+          Redoc.init('/docs/openapi.yaml', {
+            hideDownloadButton: false,
+            expandResponses: '200,201',
+            jsonSampleExpandLevel: 2,
+            theme: {
+              colors: { primary: { main: '#0b1020' } },
+              typography: {
+                fontSize: '15px',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                headings: { fontWeight: '600' },
+              },
+            },
+          }, container);
+          return;
+        }
+        if (tries++ < 25) setTimeout(init, 200);
+      }
+      init();
+    })();
+  </script>
+
+  <noscript>
+    <div class="fallback">
+      <h2>JavaScript required</h2>
+      <p>
+        This page renders the OpenAPI spec with Redoc, which requires
+        JavaScript. The prose-style API reference at
+        <a href="/api-docs.html">/api-docs.html</a> works without JS, or you
+        can read the raw spec directly:
+      </p>
+      <ul>
+        <li><a href="/docs/openapi.yaml">docs/openapi.yaml</a></li>
+        <li><a href="/docs/openapi.json">docs/openapi.json</a></li>
+      </ul>
+    </div>
+  </noscript>
+</body>
+</html>

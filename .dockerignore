@@ -1,0 +1,56 @@
+# Keep the container small and the build fast — only ship what the runtime
+# server.js actually needs to serve.
+
+# ---------- VCS / editor ----------
+.git
+.gitignore
+.gitattributes
+.github
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# ---------- local dev ----------
+node_modules
+npm-debug.log*
+yarn-debug.log*
+.env
+.env.*
+!.env.example
+*.log
+
+# ---------- tests / lint ----------
+test
+eslint.config.js
+.eslintrc*
+.mocharc*
+
+# ---------- CLI (separately published to npm) ----------
+cli
+
+# ---------- preprint / research artifacts ----------
+# LaTeX sources, figure generator, PDFs — not needed at runtime.
+preprint
+
+# ---------- Python beta server (not included in Node image) ----------
+api/server.py
+api/__pycache__
+api/*.pyc
+
+# ---------- docs / misc ----------
+# Keep README-style docs so /healthz-era operators can curl them.
+# Drop scratch markdown, v0 homepage variants, screenshots.
+sycoindex-homepage-v*.html
+screenshots
+*.draft.md
+
+# ---------- Docker self ----------
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# ---------- misc large files we don't need ----------
+*.tar
+*.tar.gz
+*.zip

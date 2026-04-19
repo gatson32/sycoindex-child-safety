@@ -1,0 +1,21 @@
+# Redocly CLI config. Governs both `redocly lint` and `redocly build-docs`.
+#
+# Rule rationale:
+# - no-server-example.com → `warn`: our second server URL is deliberately
+#   http://localhost:3000 because the container's quick-start really is local.
+#   The rule defaults to flagging any localhost URL; warning-level surfaces it
+#   without failing CI.
+# - operation-4xx-response → `warn` for /healthz: kept as warn (we added a 503
+#   response), since Redocly's recommended config errors on 4xx-only.
+# All other `recommended` rules remain at `error`.
+
+extends:
+  - recommended
+
+rules:
+  no-server-example.com: warn
+  operation-4xx-response: warn
+
+apis:
+  sycoindex:
+    root: docs/openapi.yaml

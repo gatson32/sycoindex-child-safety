@@ -73,7 +73,13 @@ module.exports = [
             },
         },
         rules: {
-            'no-unused-vars': 'warn',
+            // Allow `_foo` as a convention for intentionally-unused params/vars
+            // (common in (_req, res, next) signatures and catch(_err) blocks).
+            'no-unused-vars': ['warn', {
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_',
+                caughtErrorsIgnorePattern: '^_',
+            }],
             'no-undef': 'error',
             semi: ['warn', 'always'],
             'no-console': 'off',

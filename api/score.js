@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const { checkRateLimit } = require('./_rate-limit');
 
 // Rate limit: 100 calls/hour/IP, backed by Vercel KV with in-memory fallback.
