@@ -143,10 +143,47 @@ The calibration corpus was designed to include transcripts at every integer scor
 \section{Initial Results}
 \label{sec:results}
 
-% TODO: expand from methodology.html \S6 + data/leaderboard.json. Ten-model
-% PAI scores, by-dimension heatmap, cross-index plot against sycophancy.
+We report PAI scores for ten frontier models, scored against the full calibration corpus by the five-lab judge ensemble described in \S\ref{sec:pipeline}. Scores are snapshots of behavior as of the public leaderboard release date (\texttt{data/leaderboard.json}, 2026-04-17); the live leaderboard at \url{https://sycoindex.ai} is the authoritative source and may diverge as models are re-scored.
 
-\textit{[Ten-model PAI scores and per-dimension table to come from \texttt{data/leaderboard.json}.]}
+\subsection{PAI per-dimension scores}
+\label{sec:pai-heatmap}
+
+Figure~\ref{fig:pai-heatmap} reports per-dimension PAI scores for the ten evaluated models, sorted by composite risk (lowest at top). Claude Haiku~4.5 clears the low-risk threshold on every dimension; the Mistral family clusters in medium risk, driven primarily by EXL (exclusivity language) and DEP (dependency reinforcement). No evaluated model fell into the high-risk band ($>2.0$) on the composite, which we read as evidence that frontier-model RLHF is partially suppressing the most overtly parasocial patterns while leaving the subtler ones (EXL, DEP) intact.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.72\textwidth]{figures/dimension_heatmap_pai.pdf}
+  \caption{PAI per-dimension scores (0--10 scale, higher = worse) for ten frontier models. Dimensions: EMI (emotional mirroring), EXL (exclusivity language), BND (boundary dissolution), DEP (dependency reinforcement), AUD (authority displacement). Models sorted by composite risk (sum across dimensions), ascending.}
+  \label{fig:pai-heatmap}
+\end{figure}
+
+\subsection{Sycophancy per-dimension scores}
+\label{sec:syco-heatmap}
+
+For comparison we also publish per-dimension sycophancy scores (Figure~\ref{fig:syco-heatmap}) using the sister rubric described on the live site. Sycophancy is separately validated but shares the same 0--10 anchor structure, which lets us relate the two indices directly in \S\ref{sec:cross-index}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.72\textwidth]{figures/dimension_heatmap_syco.pdf}
+  \caption{Sycophancy per-dimension scores (0--10 scale, higher = worse) for ten frontier models. Dimensions: EV (evidence-based reasoning), ME (maintaining evaluation), IL (integrity on leading questions), IA (independent assessment), FA (factual accuracy under pressure). Note the much wider spread than Figure~\ref{fig:pai-heatmap}: sycophancy discriminates more sharply between frontier and mid-tier models than PAI does in the current corpus.}
+  \label{fig:syco-heatmap}
+\end{figure}
+
+\subsection{Cross-index association}
+\label{sec:cross-index}
+
+Figure~\ref{fig:cross-index} plots sycophancy honesty (\%) against PAI composite score across the six model families for which we have paired scores. The Pearson correlation is $r = -0.81$ ($n = 6$ families), consistent with the hypothesis that the two indices measure related-but-distinct behavioral tendencies: models that are more honest under social pressure (high sycophancy-honesty) also exhibit less parasocial reinforcement in extended child-like interactions. The correlation is far from unity, which is also consistent with our prior: refusing to flatter a user and refusing to foster exclusive attachment are separable skills, and we expect future models to dissociate these more as RLHF pressure against sycophancy intensifies without equivalent pressure on attachment dynamics.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.72\textwidth]{figures/cross_index_scatter.pdf}
+  \caption{Cross-index association between sycophancy and PAI. Each point is one model family (Claude Opus, Claude Sonnet, Claude Haiku, GPT-5, Gemini, Mistral). Family-level matching is used because the two indices were scored at slightly different model snapshots (e.g.\ Claude Sonnet~4.6 on sycophancy vs.\ Claude Sonnet~4 on PAI); this coarsening is disclosed and is the reason we report association at the family rather than model level.}
+  \label{fig:cross-index}
+\end{figure}
+
+\subsection{Data release}
+
+The numeric scores underlying Figures~\ref{fig:pai-heatmap}--\ref{fig:cross-index} are published in \texttt{data/leaderboard.json} in the project repository, and the figure-generation script (\texttt{preprint/figures/generate.py}) is deterministic --- re-running it against the leaderboard file reproduces all three figures exactly. This ensures the preprint cannot drift from the published scores.
 
 % ---------------------------------------------------------------------
 \section{Limitations}
