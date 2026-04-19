@@ -305,6 +305,14 @@ paths:
         Queues a model for evaluation by the judge ensemble. Submitters are
         contacted at `contact_email` when scoring completes. Target turnaround
         is 48 hours for frontier models.
+
+        **Side effects** (when `RESEND_API_KEY` is configured):
+        - Admin notification email to `ADMIN_EMAIL`
+        - Confirmation email to the submitter at `contact_email`
+
+        When the key is absent (self-hosted without email setup, or during
+        local development) the endpoint still returns 200 and the submission
+        is recorded — see `email_sent` in the response.
       operationId: submitModel
       x-rateLimit: { limit: 5, windowSeconds: 3600, scope: IP }
       requestBody:
@@ -335,6 +343,10 @@ paths:
         Emails are deduped case-insensitively. Returning a 200 with
         `message: "You're already on the list!"` is the expected flow for
         an already-signed-up email — clients should treat this as success.
+
+        **Side effects** (when `RESEND_API_KEY` is configured, new signups only):
+        - Admin notification email to `ADMIN_EMAIL`
+        - "You're on the list, position #N" confirmation to the signup address
       operationId: joinWaitlist
       x-rateLimit: { limit: 5, windowSeconds: 3600, scope: IP }
       requestBody:
@@ -715,6 +727,13 @@ components:
         success: { type: boolean }
         message: { type: string }
         id: { type: integer, description: Submission timestamp (ms). }
+        email_sent:
+          type: boolean
+          description: >
+            True if the admin notification email was dispatched successfully.
+            False when RESEND_API_KEY is unconfigured (self-hosted without SMTP
+            setup) or when the email provider returned an error. The submission
+            itself is still considered received regardless of email status.
 
     # --------------- Waitlist ---------------
     WaitlistRequest:
@@ -735,6 +754,12 @@ components:
         position:
           type: integer
           description: 1-based position on the waitlist. Omitted when position unknown.
+        email_sent:
+          type: boolean
+          description: >
+            True if the confirmation email to the signup address was dispatched
+            successfully. Omitted on the idempotent "already on the list" path
+            where no email is re-sent.
 
     # --------------- Keys ---------------
     CreateKeyRequest:

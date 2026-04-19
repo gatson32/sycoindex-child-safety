@@ -29,6 +29,8 @@ const nodeGlobals = {
     Response: 'readonly',
     Headers: 'readonly',
     crypto: 'readonly',
+    AbortController: 'readonly',
+    AbortSignal: 'readonly',
 };
 
 const browserGlobals = {

@@ -409,7 +409,7 @@
           "Submissions"
         ],
         "summary": "Submit a new model for PAI scoring.",
-        "description": "Queues a model for evaluation by the judge ensemble. Submitters are\ncontacted at `contact_email` when scoring completes. Target turnaround\nis 48 hours for frontier models.\n",
+        "description": "Queues a model for evaluation by the judge ensemble. Submitters are\ncontacted at `contact_email` when scoring completes. Target turnaround\nis 48 hours for frontier models.\n\n**Side effects** (when `RESEND_API_KEY` is configured):\n- Admin notification email to `ADMIN_EMAIL`\n- Confirmation email to the submitter at `contact_email`\n\nWhen the key is absent (self-hosted without email setup, or during\nlocal development) the endpoint still returns 200 and the submission\nis recorded — see `email_sent` in the response.\n",
         "operationId": "submitModel",
         "x-rateLimit": {
           "limit": 5,
@@ -458,7 +458,7 @@
           "Submissions"
         ],
         "summary": "Join the enterprise waitlist.",
-        "description": "Emails are deduped case-insensitively. Returning a 200 with\n`message: \"You're already on the list!\"` is the expected flow for\nan already-signed-up email — clients should treat this as success.\n",
+        "description": "Emails are deduped case-insensitively. Returning a 200 with\n`message: \"You're already on the list!\"` is the expected flow for\nan already-signed-up email — clients should treat this as success.\n\n**Side effects** (when `RESEND_API_KEY` is configured, new signups only):\n- Admin notification email to `ADMIN_EMAIL`\n- \"You're on the list, position #N\" confirmation to the signup address\n",
         "operationId": "joinWaitlist",
         "x-rateLimit": {
           "limit": 5,
@@ -1236,6 +1236,10 @@
           "id": {
             "type": "integer",
             "description": "Submission timestamp (ms)."
+          },
+          "email_sent": {
+            "type": "boolean",
+            "description": "True if the admin notification email was dispatched successfully. False when RESEND_API_KEY is unconfigured (self-hosted without SMTP setup) or when the email provider returned an error. The submission itself is still considered received regardless of email status.\n"
           }
         }
       },
@@ -1279,6 +1283,10 @@
           "position": {
             "type": "integer",
             "description": "1-based position on the waitlist. Omitted when position unknown."
+          },
+          "email_sent": {
+            "type": "boolean",
+            "description": "True if the confirmation email to the signup address was dispatched successfully. Omitted on the idempotent \"already on the list\" path where no email is re-sent.\n"
           }
         }
       },
