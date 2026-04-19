@@ -1,0 +1,44 @@
+{
+  "title": "The PAI Framework: Measuring Parasocial Attachment Patterns in AI-Child Interactions",
+  "description": "The Parasocial Attachment Indicators (PAI) framework is a five-dimension instrument for measuring parasocial attachment patterns in synthetic AI-child conversation transcripts. PAI scores are produced by a cross-lab ensemble of five frontier LLM judges (Anthropic, OpenAI, Mistral, Google, Meta) with a pre-registered Cohen's kappa >= 0.700 reliability gate. This release accompanies the v0.1 preprint and includes the rubric, scoring formulas, reliability methodology, audit-chain specification, and the publicly released judge-bias audit report (n=29 calibration transcripts + n=463 production transcripts, kappa_avg = 0.85 on calibration).",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "version": "0.1.0-preprint",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Gatson, Chris",
+      "affiliation": "Sycoindex Inc."
+    }
+  ],
+  "keywords": [
+    "AI safety",
+    "child safety",
+    "parasocial attachment",
+    "LLM-as-judge",
+    "inter-rater reliability",
+    "AI evaluation",
+    "chatbot safety",
+    "PAI"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://sycoindex.ai",
+      "relation": "isDocumentedBy",
+      "resource_type": "other"
+    },
+    {
+      "identifier": "https://sycoindex.ai/methodology.html",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other"
+    },
+    {
+      "identifier": "https://sycoindex.ai/judge-bias-audit.html",
+      "relation": "isSupplementedBy",
+      "resource_type": "other"
+    }
+  ],
+  "communities": []
+}
