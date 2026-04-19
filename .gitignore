@@ -62,6 +62,9 @@ scorecard-preview.jsx
 *.pyc
 __pycache__/
 
+# ── GITHUB ACTION OUTPUT ──
+sycoindex-report.json
+
 # ── SYSTEM ──
 .DS_Store
 .vercel

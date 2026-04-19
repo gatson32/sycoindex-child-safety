@@ -4,7 +4,7 @@
   "description": "SycoIndex Child Safety API — PAI and sycophancy scoring for AI models",
   "scripts": {
     "test": "node test/api.test.js",
-    "lint": "npx eslint api/ cli/ test/ server.js",
+    "lint": "npx eslint api/ cli/ test/ action/ server.js",
     "lint:openapi": "npx --yes @redocly/cli@latest lint docs/openapi.yaml",
     "build:openapi-json": "node -e \"const y=require('js-yaml'),f=require('fs');f.writeFileSync('docs/openapi.json',JSON.stringify(y.load(f.readFileSync('docs/openapi.yaml','utf8')),null,2))\"",
     "start": "node server.js",

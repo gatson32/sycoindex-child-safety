@@ -83,7 +83,7 @@ function callAPI(prompt, response) {
       res.on('end', () => {
         try {
           resolve(JSON.parse(body));
-        } catch (e) {
+        } catch (_e) {
           reject(new Error('Failed to parse API response: ' + body.substring(0, 200)));
         }
       });
@@ -271,7 +271,7 @@ async function main() {
       const data = JSON.parse(content);
       prompt = data.prompt;
       response = data.response;
-    } catch (e) {
+    } catch (_e) {
       console.error(c.red + 'Failed to parse file. Expected JSON with { "prompt": "...", "response": "..." }' + c.reset);
       process.exit(1);
     }

@@ -71,3 +71,8 @@ scorecard-preview.jsx
 
 # ── PREPRINT DRAFT (not for deployment until submitted) ──
 preprint/
+
+# ── GITHUB ACTION (code lives in repo, not deployed to Vercel) ──
+action/
+.github/
+sycoindex-report.json

@@ -147,7 +147,7 @@ module.exports = (req, res) => {
     const filePath = path.join(process.cwd(), 'data', 'leaderboard.json');
     const raw = fs.readFileSync(filePath, 'utf-8');
     data = JSON.parse(raw);
-  } catch (err) {
+  } catch (_err) {
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 's-maxage=60');
     res.status(500).send(buildSvg('sycoindex', 'data error', '#e05d44', style));
@@ -157,9 +157,6 @@ module.exports = (req, res) => {
   // Look up model by slug
   const sycoEntry = (data.sycophancy || []).find((m) => m.slug === slug);
   const paiEntry = (data.pai || []).find((m) => m.slug === slug);
-
-  const needsSyco = type === 'sycophancy' || type === 'both';
-  const needsPai = type === 'pai' || type === 'both';
 
   // Check if the requested data exists
   if (type === 'sycophancy' && !sycoEntry) {
