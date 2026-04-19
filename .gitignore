@@ -22,7 +22,10 @@ RESEARCH-LOG.md
 OPEN-METHODOLOGY-*.md
 
 # ── RAW SCORED DATA & JUDGE OUTPUTS ──
-data/audit/
+# Everything in data/audit/ is private EXCEPT the public aggregate
+# audit report (judge-bias.json), which powers judge-bias-audit.html.
+data/audit/*
+!data/audit/judge-bias.json
 data/pai-pilot-scored*.json
 data/pai-calibration-scored.json
 data/pai-scored-*.json

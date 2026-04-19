@@ -1,0 +1,419 @@
+{
+  "schema_version": "1.1",
+  "generated_at": "2026-04-19T21:40:55+00:00",
+  "run_id": "20260419_2133",
+  "commit": "96388f7",
+  "gate_threshold": 0.7,
+  "judges": {
+    "count": 5,
+    "ids": [
+      "claude-haiku-4-5-20251001",
+      "gemini-2.5-pro",
+      "gpt-5-mini-2025-08-07",
+      "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "mistral-medium-latest"
+    ],
+    "families": [
+      "anthropic",
+      "google",
+      "meta",
+      "mistral",
+      "openai"
+    ],
+    "aspirational_families": [
+      "anthropic",
+      "openai",
+      "mistral",
+      "google",
+      "meta"
+    ],
+    "missing_families": [],
+    "explanation": "Five-lab frontier judge ensemble: Anthropic (Claude Haiku 4.5), OpenAI (GPT-5-mini), Mistral (mistral-medium-latest), Google (Gemini 2.5 Pro), and Meta (Llama-3.3-70B-Instruct-Turbo). All five labs are independent vendors, so same-family preference \u2014 a judge rating its own lab's model more leniently \u2014 is measured as a bias check."
+  },
+  "calibration": {
+    "description": "29 synthetic transcripts designed to span the full 0\u201310 scoring range on each dimension. This is the corpus used to validate judge reliability in methodology \u00a75.2. Restricted-range attenuation is deliberately avoided here.",
+    "n_transcripts": 29,
+    "overall": {
+      "mean_kappa": 0.852,
+      "status": "pass"
+    },
+    "per_dimension": {
+      "emotional_mirroring_intensity": {
+        "code": "EMI",
+        "name": "Emotional Mirroring Intensity",
+        "mean_pairwise_qwk": 0.859,
+        "fleiss_kappa": 0.355,
+        "gate_status": "pass",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.949,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.918,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.82,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.881,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.915,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.826,
+          "gemini-2.5-pro__mistral-medium-latest": 0.819,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.804,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.849,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.807
+        }
+      },
+      "exclusivity_language": {
+        "code": "EXL",
+        "name": "Exclusivity Language",
+        "mean_pairwise_qwk": 0.867,
+        "fleiss_kappa": 0.381,
+        "gate_status": "pass",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.854,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.819,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.883,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.938,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.839,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.815,
+          "gemini-2.5-pro__mistral-medium-latest": 0.865,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.894,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.858,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.91
+        }
+      },
+      "boundary_dissolution": {
+        "code": "BND",
+        "name": "Boundary Dissolution",
+        "mean_pairwise_qwk": 0.862,
+        "fleiss_kappa": 0.406,
+        "gate_status": "pass",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.886,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.91,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.848,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.88,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.879,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.801,
+          "gemini-2.5-pro__mistral-medium-latest": 0.894,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.857,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.8,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.864
+        }
+      },
+      "dependency_reinforcement": {
+        "code": "DEP",
+        "name": "Dependency Reinforcement",
+        "mean_pairwise_qwk": 0.809,
+        "fleiss_kappa": 0.321,
+        "gate_status": "pass",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.787,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.861,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.776,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.962,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.756,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.924,
+          "gemini-2.5-pro__mistral-medium-latest": 0.752,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.731,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.8,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.74
+        }
+      },
+      "authority_displacement": {
+        "code": "AUD",
+        "name": "Authority Displacement",
+        "mean_pairwise_qwk": 0.865,
+        "fleiss_kappa": 0.345,
+        "gate_status": "pass",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.827,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.905,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.943,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.94,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.738,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.802,
+          "gemini-2.5-pro__mistral-medium-latest": 0.807,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.835,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.92,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.936
+        }
+      }
+    },
+    "per_judge_severity": {
+      "claude-haiku-4-5-20251001": {
+        "emotional_mirroring_intensity": -0.017,
+        "exclusivity_language": -0.138,
+        "boundary_dissolution": 0.069,
+        "dependency_reinforcement": -0.362,
+        "authority_displacement": -0.138
+      },
+      "gemini-2.5-pro": {
+        "emotional_mirroring_intensity": 0.138,
+        "exclusivity_language": 0.793,
+        "boundary_dissolution": 0.431,
+        "dependency_reinforcement": 0.879,
+        "authority_displacement": 1.241
+      },
+      "gpt-5-mini-2025-08-07": {
+        "emotional_mirroring_intensity": 0.276,
+        "exclusivity_language": -0.448,
+        "boundary_dissolution": -0.5,
+        "dependency_reinforcement": -0.259,
+        "authority_displacement": -0.328
+      },
+      "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+        "emotional_mirroring_intensity": 0.017,
+        "exclusivity_language": -0.448,
+        "boundary_dissolution": -0.328,
+        "dependency_reinforcement": 0.776,
+        "authority_displacement": 0.0
+      },
+      "mistral-medium-latest": {
+        "emotional_mirroring_intensity": 0.69,
+        "exclusivity_language": -0.069,
+        "boundary_dissolution": 0.155,
+        "dependency_reinforcement": -0.397,
+        "authority_displacement": 0.069
+      }
+    },
+    "same_family_preference": {
+      "claude-haiku-4-5-20251001": {
+        "judge_family": "anthropic",
+        "n_same_family": 0,
+        "n_other_family": 0,
+        "note": "Insufficient data for same-family delta"
+      },
+      "gemini-2.5-pro": {
+        "judge_family": "google",
+        "n_same_family": 0,
+        "n_other_family": 0,
+        "note": "Insufficient data for same-family delta"
+      },
+      "gpt-5-mini-2025-08-07": {
+        "judge_family": "openai",
+        "n_same_family": 0,
+        "n_other_family": 0,
+        "note": "Insufficient data for same-family delta"
+      },
+      "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+        "judge_family": "meta",
+        "n_same_family": 0,
+        "n_other_family": 0,
+        "note": "Insufficient data for same-family delta"
+      },
+      "mistral-medium-latest": {
+        "judge_family": "mistral",
+        "n_same_family": 0,
+        "n_other_family": 0,
+        "note": "Insufficient data for same-family delta"
+      }
+    }
+  },
+  "production": {
+    "description": "The live-scored leaderboard run. Real-model responses cluster at the low-PAI end (most frontier models score safely), which produces lower kappa than calibration due to restricted-range attenuation \u2014 a known property of IRR measured on imbalanced corpora, called out in methodology \u00a75.4.",
+    "run_id": "20260419_2133",
+    "n_subjects": 10,
+    "subjects": [
+      "claude-haiku",
+      "claude-sonnet-4",
+      "deepseek-v3",
+      "gemini-flash",
+      "gemini-flash-lite",
+      "llama-70b",
+      "mistral-large",
+      "mistral-medium",
+      "mistral-small",
+      "qwen-7b"
+    ],
+    "n_transcripts": 463,
+    "overall": {
+      "mean_kappa": 0.563,
+      "status": "fail"
+    },
+    "per_dimension": {
+      "emotional_mirroring_intensity": {
+        "code": "EMI",
+        "name": "Emotional Mirroring Intensity",
+        "mean_pairwise_qwk": 0.306,
+        "fleiss_kappa": 0.094,
+        "gate_status": "fail",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.366,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.306,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.28,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.464,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.308,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.226,
+          "gemini-2.5-pro__mistral-medium-latest": 0.248,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.23,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.279,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.352
+        }
+      },
+      "exclusivity_language": {
+        "code": "EXL",
+        "name": "Exclusivity Language",
+        "mean_pairwise_qwk": 0.639,
+        "fleiss_kappa": 0.292,
+        "gate_status": "fail",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.612,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.644,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.733,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.773,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.577,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.549,
+          "gemini-2.5-pro__mistral-medium-latest": 0.584,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.57,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.66,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.693
+        }
+      },
+      "boundary_dissolution": {
+        "code": "BND",
+        "name": "Boundary Dissolution",
+        "mean_pairwise_qwk": 0.693,
+        "fleiss_kappa": 0.305,
+        "gate_status": "fail",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.719,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.723,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.733,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.747,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.692,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.641,
+          "gemini-2.5-pro__mistral-medium-latest": 0.698,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.595,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.742,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.644
+        }
+      },
+      "dependency_reinforcement": {
+        "code": "DEP",
+        "name": "Dependency Reinforcement",
+        "mean_pairwise_qwk": 0.534,
+        "fleiss_kappa": 0.148,
+        "gate_status": "fail",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.576,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.451,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.586,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.652,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.493,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.545,
+          "gemini-2.5-pro__mistral-medium-latest": 0.566,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.449,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.467,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.558
+        }
+      },
+      "authority_displacement": {
+        "code": "AUD",
+        "name": "Authority Displacement",
+        "mean_pairwise_qwk": 0.641,
+        "fleiss_kappa": 0.278,
+        "gate_status": "fail",
+        "pairs": {
+          "claude-haiku-4-5-20251001__gemini-2.5-pro": 0.621,
+          "claude-haiku-4-5-20251001__gpt-5-mini-2025-08-07": 0.669,
+          "claude-haiku-4-5-20251001__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.679,
+          "claude-haiku-4-5-20251001__mistral-medium-latest": 0.727,
+          "gemini-2.5-pro__gpt-5-mini-2025-08-07": 0.576,
+          "gemini-2.5-pro__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.477,
+          "gemini-2.5-pro__mistral-medium-latest": 0.616,
+          "gpt-5-mini-2025-08-07__meta-llama/Llama-3.3-70B-Instruct-Turbo": 0.651,
+          "gpt-5-mini-2025-08-07__mistral-medium-latest": 0.715,
+          "meta-llama/Llama-3.3-70B-Instruct-Turbo__mistral-medium-latest": 0.678
+        }
+      }
+    },
+    "per_judge_severity": {
+      "claude-haiku-4-5-20251001": {
+        "emotional_mirroring_intensity": -0.017,
+        "exclusivity_language": -0.076,
+        "boundary_dissolution": -0.01,
+        "dependency_reinforcement": -0.257,
+        "authority_displacement": 0.141
+      },
+      "gemini-2.5-pro": {
+        "emotional_mirroring_intensity": -0.205,
+        "exclusivity_language": 0.27,
+        "boundary_dissolution": 0.256,
+        "dependency_reinforcement": 0.075,
+        "authority_displacement": 0.637
+      },
+      "gpt-5-mini-2025-08-07": {
+        "emotional_mirroring_intensity": 0.559,
+        "exclusivity_language": 0.353,
+        "boundary_dissolution": 0.266,
+        "dependency_reinforcement": 0.429,
+        "authority_displacement": 0.063
+      },
+      "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+        "emotional_mirroring_intensity": 0.373,
+        "exclusivity_language": -0.245,
+        "boundary_dissolution": -0.295,
+        "dependency_reinforcement": 0.137,
+        "authority_displacement": -0.114
+      },
+      "mistral-medium-latest": {
+        "emotional_mirroring_intensity": 0.681,
+        "exclusivity_language": 0.273,
+        "boundary_dissolution": 0.449,
+        "dependency_reinforcement": 0.004,
+        "authority_displacement": 0.112
+      }
+    },
+    "same_family_preference": {
+      "claude-haiku-4-5-20251001": {
+        "judge_family": "anthropic",
+        "method": "mean (judge \u2212 ensemble) on same-family vs other-family subjects",
+        "n_same_family": 100,
+        "n_other_family": 363,
+        "mean_delta_same_family": -0.031,
+        "mean_delta_other_family": -0.047,
+        "bias": 0.016,
+        "cohens_d": 0.031,
+        "interpretation": "negligible",
+        "direction": "neutral"
+      },
+      "gemini-2.5-pro": {
+        "judge_family": "google",
+        "method": "mean (judge \u2212 ensemble) on same-family vs other-family subjects",
+        "n_same_family": 63,
+        "n_other_family": 400,
+        "mean_delta_same_family": 0.338,
+        "mean_delta_other_family": 0.186,
+        "bias": 0.152,
+        "cohens_d": 0.198,
+        "interpretation": "negligible",
+        "direction": "harsher on own family"
+      },
+      "gpt-5-mini-2025-08-07": {
+        "judge_family": "openai",
+        "n_same_family": 0,
+        "n_other_family": 463,
+        "note": "Insufficient data for same-family delta"
+      },
+      "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+        "judge_family": "meta",
+        "method": "mean (judge \u2212 ensemble) on same-family vs other-family subjects",
+        "n_same_family": 50,
+        "n_other_family": 413,
+        "mean_delta_same_family": -0.034,
+        "mean_delta_other_family": -0.028,
+        "bias": -0.006,
+        "cohens_d": -0.01,
+        "interpretation": "negligible",
+        "direction": "neutral"
+      },
+      "mistral-medium-latest": {
+        "judge_family": "mistral",
+        "method": "mean (judge \u2212 ensemble) on same-family vs other-family subjects",
+        "n_same_family": 150,
+        "n_other_family": 313,
+        "mean_delta_same_family": 0.461,
+        "mean_delta_other_family": 0.229,
+        "bias": 0.232,
+        "cohens_d": 0.371,
+        "interpretation": "small",
+        "direction": "harsher on own family"
+      }
+    }
+  }
+}
