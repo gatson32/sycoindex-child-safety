@@ -875,7 +875,7 @@
         <!-- ══════════════════════════════════════════════ -->
         <div class="abstract">
             <div class="abstract-label">Abstract</div>
-            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a developmental instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.875) across a calibration corpus of 29 transcripts and present initial evaluation results for 10 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability. We treat the instrument as provisional pending expanded corpus validation; language throughout this paper reflects that scope and is paired with a proactive judge-bias audit (&sect;7.1).</p>
+            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a developmental instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.85) across a calibration corpus of 29 transcripts and present initial evaluation results for 10 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability. We treat the instrument as provisional pending expanded corpus validation; language throughout this paper reflects that scope and is paired with a proactive judge-bias audit (&sect;7.1). The current judge panel is all five aspirational labs (Anthropic, OpenAI, Mistral, Google, Meta).</p>
         </div>
 
         <!-- ══════════════════════════════════════════════ -->
@@ -1148,7 +1148,7 @@
 
         <h3 id="sec-irr">5.2 Inter-Rater Reliability</h3>
 
-        <p>Inter-rater reliability was assessed using Cohen&rsquo;s kappa (&kappa;), computed pairwise across all judge combinations and averaged. The following table reports per-dimension reliability:</p>
+        <p>Inter-rater reliability was assessed using Cohen&rsquo;s quadratic weighted kappa (&kappa;), computed pairwise across all judge combinations and averaged. The following table reports per-dimension reliability <strong>on the calibration corpus</strong>, which is designed to span the full 0&ndash;10 range on every dimension (&sect;5.4 explains why this matters). For live production-run kappa on real-model responses, see the <a href="judge-bias-audit.html" style="color:var(--accent);border-bottom:1px dotted var(--accent);">live judge-bias audit</a>.</p>
 
         <table class="kappa-table">
             <thead>
@@ -1163,42 +1163,42 @@
                 <tr>
                     <td>EMI</td>
                     <td>Emotional Mirroring Intensity</td>
-                    <td class="num kappa-pass">0.89</td>
+                    <td class="num kappa-pass">0.86</td>
                     <td class="num kappa-pass">PASS</td>
                 </tr>
                 <tr>
                     <td>EXL</td>
                     <td>Exclusivity Language</td>
-                    <td class="num kappa-pass">0.91</td>
+                    <td class="num kappa-pass">0.87</td>
                     <td class="num kappa-pass">PASS</td>
                 </tr>
                 <tr>
                     <td>BND</td>
                     <td>Boundary Dissolution</td>
-                    <td class="num kappa-pass">0.85</td>
+                    <td class="num kappa-pass">0.86</td>
                     <td class="num kappa-pass">PASS</td>
                 </tr>
                 <tr>
                     <td>DEP</td>
                     <td>Dependency Reinforcement</td>
-                    <td class="num kappa-pass">0.88</td>
+                    <td class="num kappa-pass">0.81</td>
                     <td class="num kappa-pass">PASS</td>
                 </tr>
                 <tr>
                     <td>AUD</td>
                     <td>Authority Displacement</td>
-                    <td class="num kappa-pass">0.84</td>
+                    <td class="num kappa-pass">0.87</td>
                     <td class="num kappa-pass">PASS</td>
                 </tr>
                 <tr style="border-top:2px solid var(--border);font-weight:700;">
                     <td colspan="2"><strong>Composite</strong></td>
-                    <td class="num kappa-pass"><strong>0.875</strong></td>
+                    <td class="num kappa-pass"><strong>0.85</strong></td>
                     <td class="num kappa-pass"><strong>PASS</strong></td>
                 </tr>
             </tbody>
         </table>
 
-        <p>All five dimensions exceed the &kappa; = 0.80 threshold conventionally interpreted as &ldquo;almost perfect agreement&rdquo; (Landis &amp; Koch, 1977). The highest reliability was observed for Exclusivity Language (&kappa; = 0.91), likely because exclusivity markers are lexically distinctive and less context-dependent. The lowest reliability was for Authority Displacement (&kappa; = 0.84), reflecting the greater interpretive ambiguity involved in assessing implicit authority undermining.</p>
+        <p>All five dimensions exceed the &kappa; = 0.80 threshold conventionally interpreted as &ldquo;almost perfect agreement&rdquo; (Landis &amp; Koch, 1977). Per-dimension values cluster tightly between &kappa;&nbsp;=&nbsp;0.81 (Dependency Reinforcement) and &kappa;&nbsp;=&nbsp;0.87 (Exclusivity Language and Authority Displacement), indicating that the five-lab panel agrees at a similar level across all rubric axes. Emotional Mirroring Intensity &mdash; historically the most subjective dimension &mdash; reaches &kappa;&nbsp;=&nbsp;0.86 on the full-range calibration corpus but attenuates sharply under restricted range on production data (see live <a href="judge-bias-audit.html" style="color:var(--accent);border-bottom:1px dotted var(--accent);">judge-bias audit</a>).</p>
 
         <h3 id="sec-hard-gate">5.3 Hard Gate</h3>
 
@@ -1386,6 +1386,8 @@
 
         <p>The five biases below are drawn from the LLM-as-judge literature (Zheng et al., 2023, "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena"; Wang et al., 2023, "Large Language Models are not Fair Evaluators"; Dubois et al., 2024, AlpacaEval). Each row lists the bias, how it could distort PAI scores, and the specific PAI design choice intended to mitigate it.</p>
 
+        <p style="background:var(--accent-dim);border-left:3px solid var(--accent);padding:0.85rem 1rem;margin:1rem 0;border-radius:0 4px 4px 0;"><strong>Live audit.</strong> The mitigations described in this section are measured every scoring run and published at <a href="judge-bias-audit.html" style="color:var(--accent);border-bottom:1px dotted var(--accent);">judge-bias-audit.html</a>. That page reports per-dimension kappa on both calibration and production corpora, per-judge severity vs. the ensemble, and a same-family preference test with effect sizes. Numbers below represent the <em>intended</em> mitigation; the audit page represents the <em>measured</em> state.</p>
+
         <table class="kappa-table" style="margin-top:1rem;">
             <thead>
                 <tr>
@@ -1398,7 +1400,7 @@
                 <tr>
                     <td><strong>Same-family preference</strong><br><em>(judges prefer outputs from their own model family)</em></td>
                     <td>A judge from Lab X scores a Lab X model more leniently than a Lab Y judge would score the same Lab X model.</td>
-                    <td>Five-lab judge ensemble (Anthropic, OpenAI, Mistral, Google, Meta). Scores are averaged across labs; same-family agreement is surfaced as a drift flag rather than accepted silently.</td>
+                    <td>Multi-lab judge ensemble with scores averaged across labs; same-family preference is measured every run and published in the <a href="judge-bias-audit.html" style="color:var(--accent);border-bottom:1px dotted var(--accent);">live audit</a> rather than accepted silently. <strong>Current panel:</strong> five labs — Claude Haiku 4.5 (Anthropic), GPT-5-mini (OpenAI), mistral-medium-latest (Mistral), Gemini 2.5 Pro (Google), and Llama-3.3-70B-Instruct-Turbo (Meta). Same-family deltas are reported per-judge on every scoring run.</td>
                 </tr>
                 <tr>
                     <td><strong>Length bias</strong><br><em>(judges prefer longer / more detailed responses)</em></td>

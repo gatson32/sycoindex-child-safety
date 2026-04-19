@@ -45,7 +45,7 @@
 
 % ---------------------------------------------------------------------
 \begin{abstract}
-The accelerating adoption of conversational AI among minors---46\% of U.S.\ teenagers report weekly chatbot use \citep{pew2025teens}---has outpaced existing AI safety benchmarks, which measure refusal rates on explicitly harmful inputs rather than the subtler relational dynamics that precede unhealthy attachment. Drawing on parasocial interaction theory \citep{horton1956} and the child grooming literature \citep{oconnell2003,winters2017}, we introduce the Parasocial Attachment Indicators (PAI) framework: a five-dimension, continuous-scale instrument evaluated by a cross-lab ensemble of five frontier LLMs acting as judges. We report initial validation results across ten frontier models, with inter-rater reliability assessed by Cohen's $\kappa$ on a 29-transcript calibration corpus spanning the full 0--10 range on each dimension. All five dimensions cleared a pre-registered $\kappa \geq 0.700$ reliability gate ($\kappa_{\mathrm{avg}} = 0.875$). We treat PAI as a developmental instrument rather than a psychometrically finalized one: corpus breadth, language coverage, and multi-session temporal validity are all known limitations, and we publish a judge-bias audit section proactively. The rubric, scoring formulas, and reliability methodology are released openly; the evaluation corpus, verbatim judge prompts, and scoring pipeline are retained as trade secrets to prevent evaluation-set contamination.
+The accelerating adoption of conversational AI among minors---46\% of U.S.\ teenagers report weekly chatbot use \citep{pew2025teens}---has outpaced existing AI safety benchmarks, which measure refusal rates on explicitly harmful inputs rather than the subtler relational dynamics that precede unhealthy attachment. Drawing on parasocial interaction theory \citep{horton1956} and the child grooming literature \citep{oconnell2003,winters2017}, we introduce the Parasocial Attachment Indicators (PAI) framework: a five-dimension, continuous-scale instrument evaluated by a cross-lab ensemble of five frontier LLMs acting as judges. We report initial validation results across ten frontier models, with inter-rater reliability assessed by Cohen's $\kappa$ on a 29-transcript calibration corpus spanning the full 0--10 range on each dimension. All five dimensions cleared a pre-registered $\kappa \geq 0.700$ reliability gate ($\kappa_{\mathrm{avg}} = 0.85$). We treat PAI as a developmental instrument rather than a psychometrically finalized one: corpus breadth, language coverage, and multi-session temporal validity are all known limitations, and we publish a judge-bias audit section proactively. The rubric, scoring formulas, and reliability methodology are released openly; the evaluation corpus, verbatim judge prompts, and scoring pipeline are retained as trade secrets to prevent evaluation-set contamination.
 \end{abstract}
 
 % ---------------------------------------------------------------------
@@ -123,13 +123,13 @@ Reliability was assessed using Cohen's $\kappa$, computed pairwise across all ju
     \toprule
     \textbf{Dimension} & \textbf{Cohen's $\kappa$} & \textbf{Gate ($\kappa \geq 0.700$)} \\
     \midrule
-    Emotional Mirroring (EMI)       & 0.89 & PASS \\
-    Exclusivity Language (EXL)      & 0.91 & PASS \\
-    Boundary Dissolution (BND)      & 0.85 & PASS \\
-    Dependency Reinforcement (DEP)  & 0.88 & PASS \\
-    Authority Displacement (AUD)    & 0.84 & PASS \\
+    Emotional Mirroring (EMI)       & 0.86 & PASS \\
+    Exclusivity Language (EXL)      & 0.87 & PASS \\
+    Boundary Dissolution (BND)      & 0.86 & PASS \\
+    Dependency Reinforcement (DEP)  & 0.81 & PASS \\
+    Authority Displacement (AUD)    & 0.87 & PASS \\
     \midrule
-    \textbf{Average}                & \textbf{0.875} & \textbf{PASS} \\
+    \textbf{Average}                & \textbf{0.85} & \textbf{PASS} \\
     \bottomrule
   \end{tabular}
   \caption{Per-dimension inter-rater reliability on the calibration corpus.}

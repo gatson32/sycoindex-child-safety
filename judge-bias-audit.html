@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judge-Bias Audit — Sycoindex</title>
+    <meta name="description" content="Live inter-rater reliability and judge-bias audit for the PAI child-safety scoring pipeline. Calibration kappa, production kappa, per-judge severity, and same-family preference are reported honestly for every scoring run.">
+    <meta property="og:title" content="Judge-Bias Audit — Sycoindex">
+    <meta property="og:description" content="Live inter-rater reliability and judge-bias numbers for every PAI scoring run, published before critics find them.">
+    <meta property="og:type" content="article">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-elevated: #f5f5f5;
+            --bg-surface: #ebebeb;
+            --border: #d4d4d4;
+            --border-subtle: #e5e5e5;
+            --text: #111111;
+            --text-secondary: #555555;
+            --text-dim: #999999;
+            --accent: #0055FF;
+            --accent-dim: rgba(0, 85, 255, 0.08);
+            --red: #dc2626;
+            --orange: #d97706;
+            --green: #16a34a;
+            --mono: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --serif: Georgia, 'Times New Roman', Times, serif;
+            --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; font-weight: 400; font-size: 15px; margin: 0; }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        body.dark {
+            --bg: #0a0a0a; --bg-elevated: #161616; --bg-surface: #222222;
+            --border: #333333; --border-subtle: #282828;
+            --text: #e5e5e5; --text-secondary: #a0a0a0; --text-dim: #666666;
+            --accent-dim: rgba(0, 85, 255, 0.15);
+        }
+
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        body.dark nav { background: rgba(10, 10, 10, 0.92); }
+
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            height: 52px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .wordmark img { height: 44px; width: auto; vertical-align: middle; }
+        .nav-links { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+        .nav-links a {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+            text-transform: uppercase; color: var(--text-secondary);
+            padding: 0.4rem 0.75rem; border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--bg-surface); }
+
+        .dark-toggle {
+            font-family: var(--mono); font-size: 11px; background: none;
+            border: 1px solid var(--border); padding: 0.3rem 0.75rem;
+            border-radius: 4px; cursor: pointer; color: var(--text-secondary);
+        }
+
+        .paper { max-width: 880px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .kicker {
+            font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: var(--serif);
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 700; margin: 0 0 0.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-family: var(--serif);
+            font-size: 1.35rem; font-weight: 700;
+            margin: 2.5rem 0 0.85rem;
+            padding-bottom: 0.4rem; border-bottom: 1px solid var(--border-subtle);
+        }
+
+        h3 {
+            font-family: var(--sans); font-size: 1rem; font-weight: 700;
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        p { margin: 0 0 0.85rem; color: var(--text); }
+        p.lead { color: var(--text-secondary); font-size: 15px; }
+        a.inline { color: var(--accent); border-bottom: 1px dotted var(--accent); }
+        a.inline:hover { border-bottom-style: solid; }
+
+        code {
+            font-family: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
+            font-size: 0.85em;
+            background: var(--bg-elevated);
+            padding: 1px 4px; border-radius: 3px;
+        }
+
+        /* ── Status banner ── */
+        .status-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.4rem 1.5rem;
+            margin: 1.5rem 0 2rem;
+            background: var(--bg-elevated);
+            display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
+        }
+        .status-main { flex: 1 1 260px; }
+        .status-label {
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-dim); margin-bottom: 4px;
+        }
+        .status-value {
+            font-family: var(--mono); font-size: 20px; font-weight: 700;
+            color: var(--text);
+        }
+        .status-value.pass { color: var(--green); }
+        .status-value.fail { color: var(--red); }
+        .status-meta {
+            color: var(--text-secondary); font-size: 13px;
+            display: flex; gap: 1.25rem; flex-wrap: wrap;
+        }
+        .status-meta .k {
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
+            display: block; margin-bottom: 2px;
+        }
+        .status-meta .v { font-family: var(--mono); font-size: 12px; color: var(--text); }
+
+        /* ── Tables ── */
+        table.kappa-table {
+            width: 100%; border-collapse: collapse;
+            font-family: var(--sans); font-size: 14px;
+            margin: 1rem 0 1.5rem;
+        }
+        table.kappa-table thead th {
+            font-family: var(--mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--text-secondary); text-align: left;
+            padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border);
+        }
+        table.kappa-table thead th.num { text-align: right; }
+        table.kappa-table tbody td {
+            padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+        table.kappa-table tbody td.num {
+            text-align: right; font-family: var(--mono);
+            font-size: 13px; font-weight: 600; color: var(--text);
+        }
+        table.kappa-table tbody tr:last-child td { border-bottom: none; }
+        .kappa-pass { color: var(--green); }
+        .kappa-fail { color: var(--red); }
+        .kappa-marginal { color: var(--orange); }
+
+        /* ── Dual table layout ── */
+        .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media (max-width: 700px) { .dual { grid-template-columns: 1fr; } }
+        .dual h3 { margin-top: 0.5rem; }
+
+        /* ── Judge panel card ── */
+        .judge-card {
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+        }
+        .judge-id {
+            font-family: var(--mono); font-size: 12px; color: var(--text);
+            font-weight: 600;
+        }
+        .judge-family {
+            display: inline-block;
+            font-family: var(--mono); font-size: 9px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 1px 5px; border-radius: 2px;
+            background: var(--accent-dim); color: var(--accent);
+            margin-left: 6px; vertical-align: middle;
+        }
+
+        /* ── Disclosure callout ── */
+        .callout {
+            border-left: 3px solid var(--orange);
+            background: color-mix(in srgb, var(--orange) 8%, transparent);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            font-size: 14px;
+            border-radius: 0 4px 4px 0;
+        }
+        .callout.info {
+            border-left-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .callout strong { color: var(--text); }
+
+        /* ── Provenance footer ── */
+        .provenance {
+            margin-top: 3rem; padding-top: 1.25rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: var(--mono); font-size: 11px;
+            color: var(--text-dim); display: flex; flex-wrap: wrap; gap: 1.25rem;
+        }
+        .provenance a { color: var(--accent); }
+
+        /* ── Loading / error states ── */
+        .skeleton {
+            color: var(--text-dim); font-style: italic; padding: 1rem 0;
+        }
+        .error-box {
+            border: 1px solid var(--red); color: var(--red);
+            padding: 1rem; border-radius: 4px; margin: 1rem 0;
+            font-family: var(--mono); font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="wordmark"><img src="logo.png" alt="Sycoindex" height="44"></a>
+            <ul class="nav-links">
+                <li><a href="index.html#leaderboard">Leaderboard</a></li>
+                <li><a href="explorer.html">Explorer</a></li>
+                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="api-docs.html">API</a></li>
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="https://github.com/sycoindex" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+            <button class="dark-toggle" onclick="document.body.classList.toggle('dark');this.textContent=document.body.classList.contains('dark')?'☀ Light':'☾ Dark'">☾ Dark</button>
+        </div>
+    </nav>
+
+    <div class="paper">
+        <div class="kicker">Transparency · Live Audit</div>
+        <h1>Judge-Bias Audit</h1>
+        <p class="lead">Inter-rater reliability, per-judge severity, and same-family preference for every PAI scoring run — published before critics find them. See <a class="inline" href="methodology.html#sec-judge-bias-audit">methodology §7.1</a> for the bias taxonomy and mitigations this page measures.</p>
+
+        <div id="root">
+            <div class="skeleton">Loading audit report…</div>
+        </div>
+
+        <div class="provenance" id="provenance" hidden>
+            <span><span class="k" style="display:inline">Data</span> <a href="data/audit/judge-bias.json">judge-bias.json</a></span>
+            <span><span class="k" style="display:inline">Source</span> <a href="https://github.com/gatson32/sycoindex-child-safety/blob/main/scripts/judge_bias_audit.py">judge_bias_audit.py</a></span>
+            <span id="prov-commit"></span>
+            <span id="prov-generated"></span>
+        </div>
+    </div>
+
+<script>
+(function() {
+    'use strict';
+
+    const ROOT = document.getElementById('root');
+    const PROV = document.getElementById('provenance');
+
+    const PAI_DIM_ORDER = [
+        ['emotional_mirroring_intensity', 'EMI'],
+        ['exclusivity_language', 'EXL'],
+        ['boundary_dissolution', 'BND'],
+        ['dependency_reinforcement', 'DEP'],
+        ['authority_displacement', 'AUD'],
+    ];
+
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function fmt(n) {
+        if (n === null || n === undefined) return '—';
+        if (typeof n !== 'number') return esc(n);
+        return n.toFixed(3);
+    }
+
+    function kappaClass(k, gate) {
+        if (k === null || k === undefined) return '';
+        if (k >= gate) return 'kappa-pass';
+        if (k >= gate - 0.05) return 'kappa-marginal';
+        return 'kappa-fail';
+    }
+
+    function kappaLabel(k, gate) {
+        if (k === null || k === undefined) return '—';
+        if (k >= gate) return 'pass';
+        if (k >= gate - 0.05) return 'marginal';
+        return 'fail';
+    }
+
+    function renderDimTable(corpus, gate) {
+        if (!corpus) return '<p class="skeleton">No data for this corpus.</p>';
+        const rows = PAI_DIM_ORDER.map(([dim, code]) => {
+            const d = corpus.per_dimension[dim];
+            const k = d.mean_pairwise_qwk;
+            const cls = kappaClass(k, gate);
+            return `
+                <tr>
+                    <td><strong>${esc(code)}</strong></td>
+                    <td>${esc(d.name)}</td>
+                    <td class="num ${cls}">${fmt(k)}</td>
+                    <td class="num"><span class="${cls}">${kappaLabel(k, gate)}</span></td>
+                </tr>`;
+        }).join('');
+        const ov = corpus.overall;
+        const ovCls = kappaClass(ov.mean_kappa, gate);
+        return `
+            <table class="kappa-table">
+                <thead>
+                    <tr><th>Code</th><th>Dimension</th><th class="num">Mean κ</th><th class="num">Gate</th></tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                    <tr style="border-top:2px solid var(--border);">
+                        <td colspan="2"><strong>Overall</strong> <span style="color:var(--text-dim);">(n=${corpus.n_transcripts})</span></td>
+                        <td class="num ${ovCls}"><strong>${fmt(ov.mean_kappa)}</strong></td>
+                        <td class="num"><span class="${ovCls}"><strong>${kappaLabel(ov.mean_kappa, gate)}</strong></span></td>
+                    </tr>
+                </tbody>
+            </table>`;
+    }
+
+    function renderSeverity(corpus) {
+        if (!corpus || !corpus.per_judge_severity) return '';
+        const judges = Object.keys(corpus.per_judge_severity);
+        if (!judges.length) return '';
+        const cells = PAI_DIM_ORDER.map(([dim, code]) =>
+            `<th class="num" title="${dim}">${code}</th>`
+        ).join('');
+        const body = judges.map(j => {
+            const row = corpus.per_judge_severity[j];
+            const vals = PAI_DIM_ORDER.map(([dim, _]) => {
+                const v = row[dim];
+                if (v === null || v === undefined) return '<td class="num">—</td>';
+                const color = v > 0.15 ? 'color:var(--red);' : v < -0.15 ? 'color:var(--accent);' : '';
+                return `<td class="num" style="${color}">${v >= 0 ? '+' : ''}${v.toFixed(2)}</td>`;
+            }).join('');
+            return `<tr><td><code>${esc(j)}</code></td>${vals}</tr>`;
+        }).join('');
+        return `
+            <table class="kappa-table">
+                <thead><tr><th>Judge</th>${cells}</tr></thead>
+                <tbody>${body}</tbody>
+            </table>
+            <p style="color:var(--text-dim);font-size:13px;margin-top:-0.5rem;">
+                Mean delta vs. ensemble. Positive = judge scores harsher than consensus; negative = more lenient. Values &gt; ±0.15 highlighted.
+            </p>`;
+    }
+
+    function renderSameFamily(corpus) {
+        if (!corpus || !corpus.same_family_preference) return '';
+        const judges = Object.keys(corpus.same_family_preference).sort();
+        if (!judges.length) return '';
+        const rows = judges.map(j => {
+            const r = corpus.same_family_preference[j];
+            if (r.note) {
+                return `<tr>
+                    <td><code>${esc(j)}</code></td>
+                    <td>${esc(r.judge_family)}</td>
+                    <td class="num" colspan="4" style="color:var(--text-dim);">${esc(r.note)}</td>
+                </tr>`;
+            }
+            const dcls = Math.abs(r.cohens_d) < 0.2 ? 'kappa-pass'
+                       : Math.abs(r.cohens_d) < 0.5 ? 'kappa-marginal' : 'kappa-fail';
+            return `<tr>
+                <td><code>${esc(j)}</code></td>
+                <td>${esc(r.judge_family)}</td>
+                <td class="num">${r.n_same_family} / ${r.n_other_family}</td>
+                <td class="num">${r.bias >= 0 ? '+' : ''}${r.bias.toFixed(3)}</td>
+                <td class="num ${dcls}">${r.cohens_d >= 0 ? '+' : ''}${r.cohens_d.toFixed(3)}</td>
+                <td><span class="${dcls}">${esc(r.interpretation)}</span> · ${esc(r.direction)}</td>
+            </tr>`;
+        }).join('');
+        return `
+            <table class="kappa-table">
+                <thead>
+                    <tr>
+                        <th>Judge</th>
+                        <th>Family</th>
+                        <th class="num" title="same-family / other-family records">n (s/o)</th>
+                        <th class="num" title="mean(judge − ensemble) delta: same minus other">Bias</th>
+                        <th class="num" title="standardized effect size">Cohen's d</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>`;
+    }
+
+    function renderJudges(j) {
+        const panelRows = j.ids.map(id => `
+            <div class="judge-card">
+                <span class="judge-id">${esc(id)}</span>
+                <span class="judge-family">${esc(window.__lab(id))}</span>
+            </div>`).join('');
+        const missing = j.missing_families && j.missing_families.length
+            ? `<div class="callout">
+                 <strong>Gap vs. aspiration:</strong> the published target is a five-lab ensemble
+                 (${j.aspirational_families.map(esc).join(', ')}).
+                 Missing: <strong>${j.missing_families.map(esc).join(', ')}</strong>. Tracked as a
+                 live remediation item.
+               </div>`
+            : `<div class="callout info">
+                 <strong>Full five-lab panel seated.</strong> All five target families — Anthropic,
+                 OpenAI, Mistral, Google, Meta — are represented. Same-family preference (§4 below)
+                 is measured as a live bias check against this panel on every scoring run.
+               </div>`;
+        return panelRows + missing;
+    }
+
+    // Simple client-side lab-family mapper (mirrors the Python version).
+    window.__lab = function(s) {
+        const low = String(s).toLowerCase();
+        if (low.includes('claude')) return 'anthropic';
+        if (low.includes('llama') || low.includes('meta-llama')) return 'meta';
+        if (low.includes('mistral')) return 'mistral';
+        if (low.includes('gpt') || low.includes('openai')) return 'openai';
+        if (low.includes('gemini')) return 'google';
+        if (low.includes('deepseek')) return 'deepseek';
+        if (low.includes('qwen')) return 'alibaba';
+        return 'other';
+    };
+
+    function render(data) {
+        const gate = data.gate_threshold;
+        const cal = data.calibration;
+        const prod = data.production;
+
+        const calStatus = cal && cal.overall.status === 'pass';
+        const prodStatus = prod && prod.overall.status === 'pass';
+
+        const html = `
+            <div class="status-card">
+                <div class="status-main">
+                    <div class="status-label">Calibration gate · κ ≥ ${gate}</div>
+                    <div class="status-value ${calStatus ? 'pass' : 'fail'}">
+                        ${cal ? fmt(cal.overall.mean_kappa) : '—'} ${calStatus ? 'PASS' : 'FAIL'}
+                    </div>
+                </div>
+                <div class="status-meta">
+                    <div><span class="k">Run</span><span class="v">${esc(data.run_id)}</span></div>
+                    <div><span class="k">Judges</span><span class="v">${data.judges.count} (${data.judges.families.map(esc).join(', ')})</span></div>
+                    <div><span class="k">Calibration n</span><span class="v">${cal ? cal.n_transcripts : '—'}</span></div>
+                    <div><span class="k">Production n</span><span class="v">${prod ? prod.n_transcripts : '—'}</span></div>
+                </div>
+            </div>
+
+            <h2>1. Per-dimension agreement</h2>
+            <p>Reliability is gated on the synthetic <strong>calibration corpus</strong>, which is
+            designed to span the full 0–10 range on every dimension — this mitigates
+            <a class="inline" href="methodology.html#sec-attenuation">restricted-range attenuation</a>
+            and is the corpus referenced in <a class="inline" href="methodology.html#sec-irr">methodology §5.2</a>.
+            The <strong>production run</strong> κ is reported for transparency but is expected to be
+            lower: real-model responses cluster at the low-PAI end, compressing variance and
+            depressing kappa.</p>
+
+            <div class="dual">
+                <div>
+                    <h3>Calibration corpus <span style="color:var(--text-dim);font-weight:400;">· n=${cal ? cal.n_transcripts : 0}</span></h3>
+                    ${renderDimTable(cal, gate)}
+                </div>
+                <div>
+                    <h3>Production run <span style="color:var(--text-dim);font-weight:400;">· n=${prod ? prod.n_transcripts : 0}</span></h3>
+                    ${renderDimTable(prod, gate)}
+                </div>
+            </div>
+
+            <h2>2. Judge panel</h2>
+            <p>Current scoring panel for run <code>${esc(data.run_id)}</code>:</p>
+            ${renderJudges(data.judges)}
+
+            <h2>3. Per-judge severity (production)</h2>
+            <p>For each judge, the mean delta between the judge's score and the ensemble score,
+            per dimension, on the live production run. A persistently positive row means the judge
+            is systematically harsher than consensus; negative means lenient.</p>
+            ${renderSeverity(prod)}
+
+            <h2>4. Same-family preference test (production)</h2>
+            <p>Does a judge from lab <em>X</em> score subjects from lab <em>X</em> differently than
+            subjects from other labs? The test isolates bias from subject-level variance by
+            measuring the <em>judge-minus-ensemble delta</em>, not raw scores.</p>
+            ${renderSameFamily(prod)}
+            <div class="callout info">
+                <strong>Interpretation.</strong> Cohen's d thresholds (Cohen, 1988):
+                |d|&nbsp;&lt;&nbsp;0.2 negligible; 0.2–0.5 small; 0.5–0.8 medium;
+                &gt;&nbsp;0.8 large. Published bias values of ~±0.05 or less are indistinguishable
+                from noise at the current corpus size.
+            </div>
+
+            <h2>5. What this measures, and what it doesn't</h2>
+            <p><strong>It measures:</strong> inter-rater agreement of the five-judge cross-lab
+            panel on both a full-range calibration corpus and the live production scoring run;
+            per-judge severity vs. consensus; and whether any judge is systematically
+            lenient or harsh on its own lab family.</p>
+            <p><strong>It does not measure:</strong> alignment with human expert rating
+            (that's <a class="inline" href="methodology.html#sec-cal-corpus">§5.1</a>),
+            test-retest stability (tracked separately under self-consistency drift), or
+            adversarial robustness to prompt injection. These are scoped as future audit additions.</p>
+
+            <h2>6. Known gaps (asymmetric disclosure)</h2>
+            <p>Consistent with methodology <a class="inline" href="methodology.html#sec-judge-bias-audit">§7.1</a>,
+            the following limitations are published alongside the numbers:</p>
+            <ul>
+                <li><strong>Production-run kappa is lower than calibration.</strong> This is a direct
+                consequence of restricted-range attenuation on real-model data — which is exactly why
+                reliability is gated on calibration, not on production. We report both numbers so
+                readers can verify this claim rather than take it on faith.</li>
+                <li><strong>EMI is the weakest dimension.</strong> Emotional mirroring is the most
+                subjective dimension of the rubric and the one most vulnerable to judge-prior
+                differences. Calibration κ is substantially higher than production κ on EMI
+                (see the per-dimension table above). The instrument is reliable at full range;
+                real-model data compresses the range and judges diverge more on subtle cases.
+                Rubric anchor tightening on EMI is scoped for the next rubric revision.</li>
+                <li><strong>Sample size.</strong> The calibration corpus is n=29; production is n=463.
+                Both are adequate for current claims but a larger calibration corpus would tighten
+                confidence intervals.</li>
+                <li><strong>Judges are LLMs, not humans.</strong> This is a methodological choice
+                (scale + cost) and is called out explicitly in
+                <a class="inline" href="methodology.html#sec-irr">§5.2</a>. A human-expert
+                calibration slice is on the roadmap.</li>
+            </ul>
+
+            <h2>7. Reproducibility</h2>
+            <p>Everything on this page is generated from <a class="inline" href="https://github.com/gatson32/sycoindex-child-safety/blob/main/scripts/judge_bias_audit.py">scripts/judge_bias_audit.py</a>
+            against the audit JSONLs in <a class="inline" href="https://github.com/gatson32/sycoindex-child-safety/tree/main/data/audit">data/audit/</a>.
+            To reproduce locally:</p>
+            <p><code>git clone https://github.com/gatson32/sycoindex-child-safety &amp;&amp; cd sycoindex-child-safety &amp;&amp; pip install numpy &amp;&amp; python3 scripts/judge_bias_audit.py</code></p>
+            <p>Replication discrepancies are welcomed — see <a class="inline" href="methodology.html#sec-judge-bias-audit">methodology §7.1</a> for our stance on adversarial replication.</p>
+        `;
+
+        ROOT.innerHTML = html;
+
+        // Provenance
+        document.getElementById('prov-commit').innerHTML =
+            `<span class="k" style="display:inline">Commit</span> <code>${esc(data.commit)}</code>`;
+        document.getElementById('prov-generated').innerHTML =
+            `<span class="k" style="display:inline">Generated</span> <span>${esc(data.generated_at)}</span>`;
+        PROV.hidden = false;
+    }
+
+    fetch('data/audit/judge-bias.json', { cache: 'no-cache' })
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        })
+        .then(render)
+        .catch(err => {
+            ROOT.innerHTML = `<div class="error-box">
+                Failed to load audit data: ${esc(err.message)}.<br>
+                The raw JSON is at <a href="data/audit/judge-bias.json">data/audit/judge-bias.json</a>.
+            </div>`;
+        });
+})();
+</script>
+</body>
+</html>
