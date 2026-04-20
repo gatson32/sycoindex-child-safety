@@ -1555,6 +1555,303 @@
                 flex: 0 0 100%;
             }
         }
+
+        /* ── RED-FLAG RESPONSES ── */
+        .redflag-section {
+            max-width: 1200px;
+            margin: 2.5rem auto 0;
+            padding: 0 2rem;
+        }
+        .redflag-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+        .redflag-title {
+            font-family: var(--serif);
+            font-size: clamp(1.4rem, 2vw, 1.8rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin: 0;
+        }
+        .redflag-title .rf-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--red);
+            margin-right: 0.55rem;
+            vertical-align: middle;
+            animation: rf-pulse 2.2s infinite;
+        }
+        @keyframes rf-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.45); }
+            50% { box-shadow: 0 0 0 7px rgba(220,38,38,0); }
+        }
+        .redflag-subtitle {
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+        }
+        .redflag-lede {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            max-width: 760px;
+            margin: 0 0 1.25rem 0;
+        }
+        .redflag-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 960px) { .redflag-grid { grid-template-columns: 1fr; } }
+        .rf-card {
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.25rem 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .rf-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 3px;
+            background: var(--red);
+        }
+        .rf-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+        .rf-age-badge {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: var(--bg-elevated);
+            color: var(--text);
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+        .rf-dim-pill {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--red);
+            border: 1px solid var(--red);
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+        .rf-prompt {
+            font-size: 14.5px;
+            line-height: 1.5;
+            color: var(--text);
+            padding: 0.75rem 0.9rem;
+            background: var(--bg-elevated);
+            border-radius: 5px;
+            margin: 0 0 0.85rem 0;
+            position: relative;
+            font-style: italic;
+        }
+        .rf-prompt::before {
+            content: "Child prompt";
+            display: block;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-style: normal;
+            margin-bottom: 0.3rem;
+        }
+        .rf-model-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+        .rf-model-label {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.005em;
+        }
+        .rf-model-vendor {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .rf-composite {
+            text-align: right;
+            line-height: 1;
+        }
+        .rf-composite-num {
+            font-family: var(--mono);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--red);
+            letter-spacing: -0.02em;
+        }
+        .rf-composite-label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .rf-response {
+            font-size: 14px;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            padding: 0.7rem 0.9rem;
+            background: rgba(220, 38, 38, 0.04);
+            border: 1px solid rgba(220, 38, 38, 0.18);
+            border-radius: 5px;
+            margin: 0 0 0.85rem 0;
+            white-space: pre-wrap;
+            max-height: 260px;
+            overflow: hidden;
+            position: relative;
+        }
+        .rf-response::before {
+            content: "AI response";
+            display: block;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 0.35rem;
+            font-weight: 700;
+        }
+        .rf-response.truncated::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 48px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.98));
+            pointer-events: none;
+        }
+        .rf-response.expanded {
+            max-height: none;
+        }
+        .rf-response.expanded::after { display: none; }
+        .rf-expand-btn {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 0;
+            margin-top: -0.5rem;
+            margin-bottom: 0.8rem;
+            align-self: flex-start;
+        }
+        .rf-expand-btn:hover { text-decoration: underline; }
+        .rf-breakdown {
+            margin-top: auto;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .rf-breakdown-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        .rf-bar-row {
+            display: grid;
+            grid-template-columns: 38px 1fr 28px;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 4px;
+        }
+        .rf-bar-key {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 0.04em;
+            font-weight: 700;
+        }
+        .rf-bar-track {
+            background: var(--bg-elevated);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .rf-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .rf-bar-fill.lo { background: var(--green); }
+        .rf-bar-fill.md { background: var(--orange); }
+        .rf-bar-fill.hi { background: var(--red); }
+        .rf-bar-val {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            color: var(--text);
+            text-align: right;
+            font-weight: 700;
+        }
+        .redflag-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: var(--mono);
+            font-size: 11.5px;
+            color: var(--text-dim);
+            letter-spacing: 0.04em;
+        }
+        .redflag-footer a {
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .redflag-footer a:hover { text-decoration: underline; }
+        .rf-loading {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text-dim);
+            padding: 2rem;
+            grid-column: 1 / -1;
+        }
     </style>
     <noscript>
       <style>
@@ -1730,6 +2027,22 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             <span style="color:var(--text);"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#16a34a);margin-right:0.5rem;vertical-align:middle;"></span>Last updated <strong style="color:var(--text);">Apr 20 2026</strong> &middot; 513 transcripts &middot; 5-judge ensemble &middot; &kappa;=0.85 calibration</span>
         </div>
     </div>
+
+    <!-- ── RED-FLAG RESPONSES: actual failure evidence ── -->
+    <section class="redflag-section" id="redflag" aria-label="Worst child-safety failures">
+        <div class="redflag-header">
+            <h2 class="redflag-title"><span class="rf-dot" aria-hidden="true"></span>What failure looks like</h2>
+            <span class="redflag-subtitle">Live from our scored transcript corpus &middot; <a href="explorer.html" style="color:var(--accent);">Explorer &rarr;</a></span>
+        </div>
+        <p class="redflag-lede">Averages abstract the harm. Here are three real responses from our 550-transcript corpus &mdash; the highest-composite (worst) PAI score we recorded for each of three risk dimensions. The child prompt is a real benchmark probe; the response is what the model actually returned; the breakdown is how the 5-judge ensemble scored it on a 0&ndash;10 scale (lower = safer).</p>
+        <div class="redflag-grid" id="redflag-grid">
+            <div class="rf-loading">Loading worst-case evidence&hellip;</div>
+        </div>
+        <div class="redflag-footer">
+            <span>550 scored responses &middot; 11 models &middot; 50 age-calibrated prompts &middot; 5 PAI dimensions</span>
+            <a href="explorer.html">Browse all responses &rarr;</a>
+        </div>
+    </section>
 
     <div class="tab-bar">
         <button class="tab active" onclick="switchTab('syco', this)">Sycophancy</button>
@@ -2548,6 +2861,129 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             })
             .catch(function(err) {
                 console.error('Failed to load leaderboard data:', err);
+            });
+
+        // ── RED-FLAG RESPONSES LOADER ──
+        var DIM_LABELS = {
+            emotional_mirroring_intensity: 'Emotional Mirroring',
+            exclusivity_language: 'Exclusivity',
+            boundary_dissolution: 'Boundary Dissolution',
+            dependency_reinforcement: 'Dependency',
+            authority_displacement: 'Authority Displacement'
+        };
+        var DIM_SHORT = {
+            emotional_mirroring_intensity: 'EMI',
+            exclusivity_language: 'EXL',
+            boundary_dissolution: 'BND',
+            dependency_reinforcement: 'DEP',
+            authority_displacement: 'AUD'
+        };
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+        function severityClass(v) {
+            if (v >= 5) return 'hi';
+            if (v >= 3) return 'md';
+            return 'lo';
+        }
+        function renderRedflagCard(entry) {
+            var prompt = escapeHtml(entry.child_prompt || '');
+            var response = escapeHtml(entry.response || '');
+            var age = escapeHtml(entry.age_context || '');
+            var dimLabel = DIM_LABELS[entry.dimension] || entry.dimension;
+            var modelLabel = escapeHtml(entry.label || entry.model_key || '');
+            var vendor = escapeHtml(entry.vendor || '');
+            var composite = (entry.composite == null ? 0 : entry.composite).toFixed(2);
+            var needsTruncate = response.length > 380;
+            var bars = ['emotional_mirroring_intensity','exclusivity_language','boundary_dissolution','dependency_reinforcement','authority_displacement'].map(function(k) {
+                var v = (entry.scores && entry.scores[k] != null) ? entry.scores[k] : 0;
+                var pct = Math.min(100, (v / 10) * 100);
+                return '<div class="rf-bar-row">' +
+                    '<span class="rf-bar-key">' + DIM_SHORT[k] + '</span>' +
+                    '<div class="rf-bar-track"><div class="rf-bar-fill ' + severityClass(v) + '" style="width:' + pct.toFixed(1) + '%"></div></div>' +
+                    '<span class="rf-bar-val">' + v.toFixed(1) + '</span>' +
+                '</div>';
+            }).join('');
+            return '<article class="rf-card">' +
+                '<div class="rf-card-top">' +
+                    '<span class="rf-age-badge">Age ' + age.replace(/\s*years old/i,'') + '</span>' +
+                    '<span class="rf-dim-pill">' + escapeHtml(dimLabel) + '</span>' +
+                '</div>' +
+                '<div class="rf-prompt">&ldquo;' + prompt + '&rdquo;</div>' +
+                '<div class="rf-model-row">' +
+                    '<div><div class="rf-model-label">' + modelLabel + '</div><div class="rf-model-vendor">' + vendor + '</div></div>' +
+                    '<div class="rf-composite"><span class="rf-composite-num">' + composite + '</span><span class="rf-composite-label">Composite &middot; 0&ndash;10</span></div>' +
+                '</div>' +
+                '<div class="rf-response' + (needsTruncate ? ' truncated' : '') + '">' + response + '</div>' +
+                (needsTruncate ? '<button class="rf-expand-btn" type="button">Show full response &darr;</button>' : '') +
+                '<div class="rf-breakdown">' +
+                    '<div class="rf-breakdown-label">Per-dimension breakdown (judge ensemble)</div>' +
+                    bars +
+                '</div>' +
+            '</article>';
+        }
+        function bindRedflagExpanders(root) {
+            root.querySelectorAll('.rf-expand-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var resp = btn.previousElementSibling;
+                    if (resp && resp.classList.contains('rf-response')) {
+                        var isExpanded = resp.classList.toggle('expanded');
+                        resp.classList.toggle('truncated', !isExpanded);
+                        btn.innerHTML = isExpanded ? 'Collapse response &uarr;' : 'Show full response &darr;';
+                    }
+                });
+            });
+        }
+        function buildRedflagSection(explorerData) {
+            var grid = document.getElementById('redflag-grid');
+            if (!grid) return;
+            // Flatten every (pai_id, model) pair into a scored entry
+            var flat = [];
+            Object.keys(explorerData).forEach(function(pid) {
+                var e = explorerData[pid];
+                Object.keys(e.models || {}).forEach(function(mk) {
+                    var m = e.models[mk];
+                    flat.push({
+                        pai_id: pid,
+                        dimension: e.dimension,
+                        age_context: e.age_context,
+                        child_prompt: e.child_prompt,
+                        model_key: mk,
+                        label: m.label,
+                        vendor: m.vendor,
+                        response: m.response,
+                        composite: m.composite,
+                        scores: m.scores
+                    });
+                });
+            });
+            flat.sort(function(a, b) { return (b.composite || 0) - (a.composite || 0); });
+            // Dedupe by dimension to show diversity of failure modes
+            var picked = [];
+            var seenDims = {};
+            for (var i = 0; i < flat.length && picked.length < 3; i++) {
+                var d = flat[i].dimension;
+                if (seenDims[d]) continue;
+                seenDims[d] = true;
+                picked.push(flat[i]);
+            }
+            grid.innerHTML = picked.map(renderRedflagCard).join('');
+            bindRedflagExpanders(grid);
+        }
+        fetch('data/explorer-data.json')
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(buildRedflagSection)
+            .catch(function(err) {
+                console.error('Failed to load explorer-data.json for red-flag section:', err);
+                var grid = document.getElementById('redflag-grid');
+                if (grid) {
+                    grid.innerHTML = '<div class="rf-loading">Unable to load failure evidence. <a href="explorer.html" style="color:var(--accent);">Browse explorer &rarr;</a></div>';
+                }
             });
     })();
     </script>
