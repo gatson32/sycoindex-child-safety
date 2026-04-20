@@ -397,6 +397,7 @@
         .delta.down { color: var(--red); }
         .delta.flat { color: var(--text-dim); }
         .delta.improved { color: var(--green); }
+        .delta.worsened { color: var(--red); }
 
         .sparkline { vertical-align: middle; }
 
@@ -915,10 +916,14 @@
         }
 
         .board thead th.sortable::after {
-            content: '⇅';
+            content: '↕';
+            display: inline-block;
             margin-left: 4px;
-            font-size: 9px;
-            opacity: 0.4;
+            font-size: 10px;
+            line-height: 1;
+            opacity: 0.35;
+            vertical-align: middle;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         .board thead th.sortable.sort-asc::after {
@@ -952,7 +957,7 @@
             border-bottom: 1px dotted var(--text-dim);
         }
 
-        .dim-tip::after {
+        .dim-tip::before {
             content: attr(data-tip);
             position: absolute;
             bottom: 100%;
@@ -973,7 +978,7 @@
             z-index: 10;
         }
 
-        .dim-tip:hover::after {
+        .dim-tip:hover::before {
             opacity: 1;
         }
 
@@ -2320,15 +2325,19 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
         function makeSparkline(history, higherIsBetter) {
             if (!history || history.length < 2) return '';
             var pts = history.slice(-3);
-            var min = Math.min.apply(null, pts);
-            var max = Math.max.apply(null, pts);
+            // Plot "goodness" on Y so improvement always slopes UP regardless of metric direction.
+            // For lower-is-better metrics (PAI), invert values; for higher-is-better (honesty), plot as-is.
+            var plotPts = higherIsBetter ? pts : pts.map(function(v) { return -v; });
+            var min = Math.min.apply(null, plotPts);
+            var max = Math.max.apply(null, plotPts);
             var range = max - min || 1;
-            var coords = pts.map(function(v, i) {
-                var x = (i / (pts.length - 1)) * 48;
+            var coords = plotPts.map(function(v, i) {
+                var x = (i / (plotPts.length - 1)) * 48;
                 var y = 16 - ((v - min) / range) * 16;
                 return x.toFixed(1) + ',' + y.toFixed(1);
             }).join(' ');
 
+            // Delta is still based on the original metric values
             var latest = pts[pts.length - 1];
             var prev = pts[pts.length - 2];
             var delta = latest - prev;
@@ -2337,9 +2346,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
 
             var deltaAbs = Math.abs(delta).toFixed(Math.abs(delta) < 1 ? 2 : 1);
             var deltaSign = delta > 0 ? '+' : '-';
-            var deltaClass = higherIsBetter
-                ? (delta > 0 ? 'up' : 'down')
-                : (delta < 0 ? 'improved' : 'down');
+            var deltaClass = improved ? 'improved' : 'worsened';
 
             return '<svg class="sparkline" width="48" height="16" viewBox="0 0 48 16">' +
                 '<polyline points="' + coords + '" fill="none" stroke="' + stroke + '" stroke-width="1.5"/>' +

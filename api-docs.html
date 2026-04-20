@@ -126,6 +126,21 @@
             font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
             text-transform: uppercase; color: var(--code-comment);
         }
+        .code-block .copy-btn {
+            position: absolute; top: 0.6rem; left: 0.75rem;
+            font-family: var(--mono); font-size: 10px; font-weight: 600;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            background: rgba(255,255,255,0.06); color: var(--code-text);
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+            padding: 4px 8px; cursor: pointer; opacity: 0.75;
+            transition: opacity 0.15s, background 0.15s;
+            z-index: 5;
+        }
+        .code-block:hover .copy-btn { opacity: 1; }
+        .code-block .copy-btn:hover { background: rgba(255,255,255,0.14); }
+        .code-block .copy-btn.copied { background: var(--green); color: #fff; border-color: var(--green); opacity: 1; }
+        .code-block pre { padding-top: 0.5rem; }
+        .code-block pre code { user-select: text; -webkit-user-select: text; }
         .code-block .comment { color: var(--code-comment); }
         .code-block .string { color: var(--code-string); }
         .code-block .key { color: var(--code-key); }
@@ -1043,5 +1058,60 @@ function runPlayground() {
         <span>Independent research. Not affiliated with any AI vendor.</span>
     </div>
 </footer>
+<script>
+    // Add copy-to-clipboard button to every .code-block
+    (function() {
+        var blocks = document.querySelectorAll('.code-block');
+        blocks.forEach(function(block) {
+            if (block.querySelector('.copy-btn')) return; // idempotent
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'copy-btn';
+            btn.setAttribute('aria-label', 'Copy code to clipboard');
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', function() {
+                var codeEl = block.querySelector('pre code') || block.querySelector('pre') || block.querySelector('code');
+                if (!codeEl) return;
+                var text = codeEl.innerText;
+                var done = function() {
+                    btn.textContent = 'Copied';
+                    btn.classList.add('copied');
+                    setTimeout(function() {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 1500);
+                };
+                var fail = function() {
+                    btn.textContent = 'Press ⌘C';
+                    setTimeout(function() { btn.textContent = 'Copy'; }, 1800);
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(done).catch(function() {
+                        // Fallback: select the text so user can ⌘/Ctrl+C
+                        try {
+                            var range = document.createRange();
+                            range.selectNodeContents(codeEl);
+                            var sel = window.getSelection();
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                            fail();
+                        } catch (e) { fail(); }
+                    });
+                } else {
+                    try {
+                        var range = document.createRange();
+                        range.selectNodeContents(codeEl);
+                        var sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        var ok = document.execCommand && document.execCommand('copy');
+                        if (ok) done(); else fail();
+                    } catch (e) { fail(); }
+                }
+            });
+            block.insertBefore(btn, block.firstChild);
+        });
+    })();
+</script>
 </body>
 </html>
