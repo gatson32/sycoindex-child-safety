@@ -2034,12 +2034,12 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             <h2 class="redflag-title"><span class="rf-dot" aria-hidden="true"></span>What failure looks like</h2>
             <span class="redflag-subtitle">Live from our scored transcript corpus &middot; <a href="explorer.html" style="color:var(--accent);">Explorer &rarr;</a></span>
         </div>
-        <p class="redflag-lede">Averages abstract the harm. Here are three real responses from our 550-transcript corpus &mdash; the highest-composite (worst) PAI score we recorded for each of three risk dimensions. The child prompt is a real benchmark probe; the response is what the model actually returned; the breakdown is how the 5-judge ensemble scored it on a 0&ndash;10 scale (lower = safer).</p>
+        <p class="redflag-lede" id="redflag-lede">Averages abstract the harm. Here are three real responses from our scored transcript corpus &mdash; the highest-composite (worst) PAI score we recorded for each of three risk dimensions. The child prompt is a real benchmark probe; the response is what the model actually returned; the breakdown is how the 5-judge ensemble scored it on a 0&ndash;10 scale (lower = safer).</p>
         <div class="redflag-grid" id="redflag-grid">
             <div class="rf-loading">Loading worst-case evidence&hellip;</div>
         </div>
         <div class="redflag-footer">
-            <span>550 scored responses &middot; 11 models &middot; 50 age-calibrated prompts &middot; 5 PAI dimensions</span>
+            <span id="redflag-footer-stats">Loading corpus stats&hellip;</span>
             <a href="explorer.html">Browse all responses &rarr;</a>
         </div>
     </section>
@@ -2941,10 +2941,16 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             if (!grid) return;
             // Flatten every (pai_id, model) pair into a scored entry
             var flat = [];
+            var modelSet = {};
+            var dimSet = {};
             Object.keys(explorerData).forEach(function(pid) {
                 var e = explorerData[pid];
+                if (e.dimension) dimSet[e.dimension] = true;
                 Object.keys(e.models || {}).forEach(function(mk) {
                     var m = e.models[mk];
+                    // Only count cells that are actually scored (composite is a number)
+                    if (typeof m.composite !== 'number') return;
+                    modelSet[mk] = true;
                     flat.push({
                         pai_id: pid,
                         dimension: e.dimension,
@@ -2971,6 +2977,20 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             }
             grid.innerHTML = picked.map(renderRedflagCard).join('');
             bindRedflagExpanders(grid);
+
+            // Inject real corpus stats into footer + lede (no more hardcoded counts)
+            var nTranscripts = flat.length;
+            var nModels = Object.keys(modelSet).length;
+            var nPrompts = Object.keys(explorerData).length;
+            var nDims = Object.keys(dimSet).length || 5;
+            var footer = document.getElementById('redflag-footer-stats');
+            if (footer) {
+                footer.textContent = nTranscripts + ' scored responses · ' + nModels + ' models · ' + nPrompts + ' age-calibrated prompts · ' + nDims + ' PAI dimensions';
+            }
+            var lede = document.getElementById('redflag-lede');
+            if (lede) {
+                lede.innerHTML = 'Averages abstract the harm. Here are three real responses from our ' + nTranscripts + '-transcript corpus &mdash; the highest-composite (worst) PAI score we recorded for each of three risk dimensions. The child prompt is a real benchmark probe; the response is what the model actually returned; the breakdown is how the 5-judge ensemble scored it on a 0&ndash;10 scale (lower = safer).';
+            }
         }
         fetch('data/explorer-data.json')
             .then(function(res) {
