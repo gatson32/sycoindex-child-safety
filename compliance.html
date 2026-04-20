@@ -394,6 +394,12 @@
 <!-- ── COMPLIANCE MATRIX ── -->
 <section class="matrix-section">
     <div class="section-label">Compliance Matrix</div>
+    <p style="font-size:12.5px;color:var(--text-dim);max-width:900px;margin:0 0 1rem;line-height:1.6;">
+        <strong>How to read this table.</strong> &ldquo;Relevance&rdquo; describes whether PAI evidence is useful
+        in meeting a disclosure or safety-testing requirement &mdash; not that Sycoindex is certified, endorsed, or
+        required by the regulator. Sycoindex is an independent benchmark. Buyers should consult counsel before
+        relying on any third-party evidence for regulatory filings.
+    </p>
     <table class="matrix-table">
         <thead>
             <tr>
@@ -401,7 +407,7 @@
                 <th>Jurisdiction</th>
                 <th>Status</th>
                 <th>Key Requirement</th>
-                <th>Sycoindex Coverage</th>
+                <th>Relevance of PAI evidence</th>
             </tr>
         </thead>
         <tbody>
@@ -410,35 +416,35 @@
                 <td>US Federal</td>
                 <td>Active</td>
                 <td>Child data protection + AI interaction safety</td>
-                <td><span style="color: var(--green); font-weight: 700;">Full</span> &mdash; PAI scoring</td>
+                <td><span style="color: var(--green); font-weight: 700;">High</span> &mdash; PAI scoring supports safety-assessment evidence</td>
             </tr>
             <tr>
                 <td>EU AI Act</td>
                 <td>European Union</td>
                 <td>Active 2025</td>
                 <td>High-risk AI transparency + safety testing</td>
-                <td><span style="color: var(--green); font-weight: 700;">Full</span> &mdash; 5-judge ensemble</td>
+                <td><span style="color: var(--green); font-weight: 700;">High</span> &mdash; 5-judge ensemble informs Art. 9 / Art. 13 documentation</td>
             </tr>
             <tr>
                 <td>CA AB-2885</td>
                 <td>California</td>
                 <td>Proposed</td>
                 <td>AI chatbot child safety standards</td>
-                <td><span style="color: var(--green); font-weight: 700;">Full</span> &mdash; PAI + Sycophancy</td>
+                <td><span style="color: var(--green); font-weight: 700;">High</span> &mdash; PAI + Sycophancy align with bill&rsquo;s scoring anticipations</td>
             </tr>
             <tr>
                 <td>KOSA</td>
                 <td>US Federal</td>
                 <td>Active</td>
                 <td>Duty of care for minors online</td>
-                <td><span style="color: var(--orange); font-weight: 700;">Partial</span> &mdash; scoring only</td>
+                <td><span style="color: var(--orange); font-weight: 700;">Partial</span> &mdash; scoring only; duty-of-care is broader</td>
             </tr>
             <tr>
                 <td>IL SB-2979</td>
                 <td>Illinois</td>
                 <td>Proposed</td>
                 <td>AI transparency in education</td>
-                <td><span style="color: var(--green); font-weight: 700;">Full</span> &mdash; School reports</td>
+                <td><span style="color: var(--green); font-weight: 700;">High</span> &mdash; school reports address disclosure needs</td>
             </tr>
         </tbody>
     </table>
@@ -458,8 +464,9 @@
                 <li><span class="label">Sycoindex</span><span class="value">PAI scoring provides per-model, per-prompt evidence of child safety compliance</span></li>
             </ul>
             <div class="reg-threshold">
-                <div class="threshold-label">Recommended PAI Threshold</div>
+                <div class="threshold-label">Sycoindex-recommended threshold <span style="font-size:10px;color:var(--text-dim);font-weight:500;">(not a regulatory requirement)</span></div>
                 <div class="threshold-value">PAI &le; 3.0 <span class="unit">for child-facing deployments</span></div>
+                <div style="font-size:11px;color:var(--text-dim);margin-top:0.5rem;line-height:1.5;">Our suggestion based on internal calibration. COPPA 2.0 does not specify a numeric PAI value; regulators set their own criteria.</div>
             </div>
         </div>
         <div class="reg-card primary" id="eu-ai-act">
@@ -472,8 +479,9 @@
                 <li><span class="label">Sycoindex</span><span class="value">5-judge ensemble scoring maps directly to Article 9 risk management and Article 13 transparency requirements</span></li>
             </ul>
             <div class="reg-threshold">
-                <div class="threshold-label">Recommended PAI Threshold</div>
+                <div class="threshold-label">Sycoindex-recommended threshold <span style="font-size:10px;color:var(--text-dim);font-weight:500;">(not a regulatory requirement)</span></div>
                 <div class="threshold-value">PAI &le; 2.5 <span class="unit">for high-risk classification</span></div>
+                <div style="font-size:11px;color:var(--text-dim);margin-top:0.5rem;line-height:1.5;">Our suggestion based on internal calibration. The EU AI Act does not specify a numeric PAI value; conformity assessments are determined by the notified body.</div>
             </div>
         </div>
         <div class="reg-card">
@@ -524,7 +532,7 @@
             <h4>Research</h4>
             <ul>
                 <li><a href="index.html">Leaderboard</a></li>
-                <li><a href="methodology.html">Methodology</a></li>
+                <li><a href="methodology.html">Methodology</a></li><li><a href="https://doi.org/10.5281/zenodo.19656141" target="_blank" rel="noopener">Preprint (Zenodo)</a></li>
                 <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
                 <li><a href="verify.html">Verify Report</a></li>
             </ul>

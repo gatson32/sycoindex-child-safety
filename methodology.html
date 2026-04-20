@@ -932,6 +932,11 @@
 
         <p>The Parasocial Attachment Indicators (PAI) framework fills this gap. PAI is a developmental instrument comprising five dimensions, each scored on a continuous 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. This paper describes the instrument design, evaluation pipeline, calibration methodology, and initial validation results across 10 frontier models. We report inter-rater reliability on a 29-transcript calibration set and treat the instrument as provisional pending expanded corpus validation; the language throughout this paper reflects that scope.</p>
 
+        <div style="background:var(--bg-elevated,#f5f5f5);border-left:3px solid var(--accent,#0055FF);padding:1.1rem 1.35rem;margin:1.5rem 0;border-radius:2px;">
+            <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent,#0055FF);font-weight:700;margin-bottom:0.55rem;">What PAI is NOT</div>
+            <p style="font-size:13.5px;line-height:1.6;color:var(--text-secondary);margin:0;">PAI is not a substitute for HarmBench, TruthfulQA, or any refusal-rate benchmark. It does not measure whether a model refuses explicitly harmful instructions (see HarmBench), it does not measure factual accuracy (see TruthfulQA), and it does not grade content-policy compliance. PAI measures a dimension no existing benchmark covers: the <em>relational dynamics</em> that precede unhealthy attachment &mdash; emotional mirroring, exclusivity framing, boundary erosion, dependency cultivation, and authority displacement &mdash; in synthetic AI&ndash;child transcripts. It is complementary to, not a replacement for, existing safety benchmarks.</p>
+        </div>
+
         <!-- ══════════════════════════════════════════════ -->
         <!-- 2. RELATED WORK                                -->
         <!-- ══════════════════════════════════════════════ -->
@@ -1382,6 +1387,8 @@
 
         <h3 id="sec-judge-bias-audit">7.1 Judge-bias audit (known weaknesses and mitigations)</h3>
 
+        <p><strong>The sycophantic-judge objection.</strong> The most common objection to LLM-as-judge pipelines in this domain is: <em>if the models under test are sycophantic, aren&rsquo;t the judge models also sycophantic, and doesn&rsquo;t that render the scores meaningless?</em> It is a legitimate concern. Our response has three parts. (1) Judges score against structured rubric anchors, not free-form holistic judgment &mdash; each score must be tied to a specific linguistic marker defined at the integer-anchor level, which constrains sycophantic drift. (2) The five judges come from five competing laboratories; a shared sycophancy failure mode would have to be common across Anthropic, OpenAI, Mistral, Google, and Meta training regimes simultaneously for it to move the ensemble mean. The same-family preference audit (see table below) measures how much each judge deviates from the four-lab median. (3) A scheduled Q3 2026 deliverable is a <em>judge-adversarial audit</em>: we will construct a corpus of transcripts deliberately designed to trigger sycophantic responses from the judges themselves (emotionally loaded framing, authority pressure, flattery), score them with the full ensemble, and publish the results as an open technical note. That is the correct adversarial test of the pipeline; we commit to publishing it whether or not the numbers are flattering.</p>
+
         <p>LLM-as-judge evaluation has documented systematic biases. Rather than wave these away, we catalog them here and describe how each is mitigated in the PAI pipeline. Our position is that asymmetric disclosure &mdash; publishing known weaknesses before critics find them &mdash; is a prerequisite for the instrument to be taken seriously by academics, regulators, and insurers.</p>
 
         <p>The five biases below are drawn from the LLM-as-judge literature (Zheng et al., 2023, "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena"; Wang et al., 2023, "Large Language Models are not Fair Evaluators"; Dubois et al., 2024, AlpacaEval). Each row lists the bias, how it could distort PAI scores, and the specific PAI design choice intended to mitigate it.</p>
@@ -1508,7 +1515,7 @@ attachment patterns in AI-child interactions (Version 0.1.0-preprint)
                     <li><a href="index.html">Leaderboard</a></li>
                     <li><a href="explorer.html">Transcript Explorer</a></li>
                     <li><a href="index.html#insights">Insights</a></li>
-                    <li><a href="methodology.html">Methodology</a></li>
+                    <li><a href="methodology.html">Methodology</a></li><li><a href="https://doi.org/10.5281/zenodo.19656141" target="_blank" rel="noopener">Preprint (Zenodo)</a></li>
                     <li><a href="state-of-ai-safety.html">State of AI Safety</a></li>
                     <li><a href="verify.html">Verify Report</a></li>
                 </ul>
