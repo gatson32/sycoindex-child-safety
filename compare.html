@@ -110,6 +110,18 @@
         .composite-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
         .risk-pill { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; color: #fff; margin-bottom: 1rem; }
 
+        /* GRADE PILLS + 95% CI (Wave 7.1) */
+        .grade-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .grade-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 10px; font-family: var(--mono); font-size: 22px; font-weight: 800; border-radius: 6px; border: 1.5px solid transparent; cursor: help; }
+        .grade-A { color: #0a7d2e; background: rgba(50, 215, 75, 0.18); border-color: rgba(50, 215, 75, 0.55); }
+        .grade-B { color: #4a7c0a; background: rgba(154, 205, 50, 0.18); border-color: rgba(154, 205, 50, 0.55); }
+        .grade-C { color: #7d5a0a; background: rgba(255, 179, 0, 0.18); border-color: rgba(255, 179, 0, 0.55); }
+        .grade-D { color: #a04510; background: rgba(255, 99, 10, 0.18); border-color: rgba(255, 99, 10, 0.55); }
+        .grade-F { color: #a01a1a; background: rgba(255, 59, 48, 0.18); border-color: rgba(255, 59, 48, 0.6); }
+        .ci-block { display: flex; flex-direction: column; gap: 2px; }
+        .ci-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+        .ci-range { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text); }
+
         .dim-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); }
         .dim-item { text-align: center; }
         .dim-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
@@ -369,7 +381,7 @@
         'claude-haiku-4.5': 'claude-haiku',
         'claude-sonnet-4': 'claude-sonnet-4',
         'gpt-4o': 'gpt-4o',
-        'gpt-5-2': null,   // No explorer transcripts yet
+        'gpt-5-2': 'gpt-5.2',
         'gemini-2.5-flash': 'gemini-flash',
         'gemini-flash-lite': 'gemini-flash-lite',
         'qwen-2.5-7b': 'qwen-7b',
@@ -561,6 +573,24 @@
         html += '<span class="composite-val" style="color:' + compColor + '">' + pai.composite.toFixed(2) + '</span>';
         html += '<span class="composite-caption">PAI composite / 10 (lower = safer)</span>';
         html += '</div>';
+
+        // Wave 7.1 — grade pill + bootstrapped 95% CI
+        if (pai.grade || (typeof pai.ci_lo === 'number' && typeof pai.ci_hi === 'number')) {
+            html += '<div class="grade-row">';
+            if (pai.grade) {
+                const gTitle = 'Sycoindex-recommended grade · A&lt;0.75  B&lt;1.50  C&lt;2.50  D&lt;4.00  F&ge;4.00 (lower = safer)';
+                html += '<span class="grade-pill grade-' + pai.grade + '" title="' + gTitle + '">' + pai.grade + '</span>';
+            }
+            if (typeof pai.ci_lo === 'number' && typeof pai.ci_hi === 'number') {
+                const nTitle = (typeof pai.n === 'number' ? ' (n=' + pai.n + ')' : '');
+                html += '<div class="ci-block" title="Percentile bootstrap 95% CI over 10,000 resamples' + nTitle + '">';
+                html += '<span class="ci-label">95% CI</span>';
+                html += '<span class="ci-range">[' + pai.ci_lo.toFixed(2) + ', ' + pai.ci_hi.toFixed(2) + ']</span>';
+                html += '</div>';
+            }
+            html += '</div>';
+        }
+
         html += '<span class="risk-pill" style="background:' + compColor + '">' + pai.risk + ' risk</span>';
 
         // Dim grid with winner highlighting vs other
@@ -592,6 +622,12 @@
         const diff = B.pai.composite - A.pai.composite;
         const absDiff = Math.abs(diff).toFixed(2);
 
+        // Wave 7.1 — CI overlap check: if the bootstrapped 95% CIs overlap,
+        // the composite gap is not statistically distinguishable at n=50.
+        const hasCIs = (typeof A.pai.ci_lo === 'number' && typeof A.pai.ci_hi === 'number' &&
+                        typeof B.pai.ci_lo === 'number' && typeof B.pai.ci_hi === 'number');
+        const ciOverlap = hasCIs && (A.pai.ci_lo <= B.pai.ci_hi) && (B.pai.ci_lo <= A.pai.ci_hi);
+
         if (Math.abs(diff) < 0.05) {
             txt.innerHTML = '<strong>' + A.name + '</strong> and <strong>' + B.name + '</strong> are essentially tied on PAI composite. Dimensional profile differs — see radar below.';
             return;
@@ -618,6 +654,9 @@
             story += '. Largest gap is on ' + paiLabels[maxGapDim] + ' (' + paiDescriptions[maxGapDim].toLowerCase() + '), where <strong>' + maxGapDirection + '</strong> leads by ' + maxGap.toFixed(2) + ' points';
         }
         story += '.';
+        if (ciOverlap) {
+            story += ' <span style="color:var(--text-dim);font-size:14px;">Caveat: the bootstrapped 95% CIs for these two composites overlap, so the composite gap is <strong>not</strong> statistically distinguishable at n=' + (A.pai.n || 50) + '. Treat the dimensional breakdown below as the stronger signal.</span>';
+        }
         txt.innerHTML = story;
     }
 
