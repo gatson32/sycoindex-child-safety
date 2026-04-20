@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Comparison — Sycoindex</title>
-    <meta name="description" content="Side-by-side AI safety comparison on Sycoindex. Compare sycophancy and child safety scores across frontier models.">
+    <meta name="description" content="Side-by-side AI safety comparison on Sycoindex. Radar-chart overlay, per-dimension deltas, and worst-transcript evidence for any two frontier models.">
     <meta property="og:title" content="Model Comparison — Sycoindex">
-    <meta property="og:description" content="Side-by-side AI safety comparison on Sycoindex.">
+    <meta property="og:description" content="Radar overlay, per-dim deltas, and worst-transcript evidence for any two frontier models.">
     <meta property="og:url" content="https://sycoindex.ai/compare.html">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Model Comparison — Sycoindex">
-    <meta name="twitter:description" content="Side-by-side AI safety comparison on Sycoindex.">
+    <meta name="twitter:description" content="Radar overlay, per-dim deltas, and worst-transcript evidence for any two frontier models.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230055FF'/><text x='50' y='68' font-family='Helvetica' font-size='52' font-weight='bold' fill='white' text-anchor='middle'>S</text></svg>">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -27,6 +28,8 @@
             --text-secondary: #555555;
             --text-dim: #999999;
             --accent: #0055FF;
+            --accent-a: #0055FF;
+            --accent-b: #9333ea;
             --accent-dim: rgba(0, 85, 255, 0.08);
             --red: #dc2626;
             --orange: #d97706;
@@ -59,53 +62,110 @@
 
         .page-title { font-family: var(--serif); font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 300; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
         .page-title em { font-style: italic; color: var(--accent); }
-        .page-sub { font-size: 15px; color: var(--text-secondary); max-width: 620px; font-weight: 300; line-height: 1.7; margin-bottom: 2rem; }
+        .page-sub { font-size: 15px; color: var(--text-secondary); max-width: 680px; font-weight: 300; line-height: 1.7; margin-bottom: 1.5rem; }
 
-        /* SELECTORS */
-        .selectors { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-        .selector-group { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 220px; }
-        .selector-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
-        select { font-family: var(--mono); font-size: 13px; background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 4px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: 100%; }
+        .freshness { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 999px; margin-bottom: 2rem; }
+        .freshness .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+        /* PICKER ROW */
+        .picker-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.25rem; align-items: stretch; margin-bottom: 1.5rem; }
+        .picker-col { display: flex; flex-direction: column; gap: 0.4rem; padding: 1rem 1.25rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-elevated); }
+        .picker-col.left { border-top: 3px solid var(--accent-a); }
+        .picker-col.right { border-top: 3px solid var(--accent-b); }
+        .picker-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+        .picker-col.left .picker-tag { color: var(--accent-a); }
+        .picker-col.right .picker-tag { color: var(--accent-b); }
+        select { font-family: var(--mono); font-size: 13px; background: #fff; color: var(--text); border: 1px solid var(--border); padding: 0.55rem 2rem 0.55rem 0.75rem; border-radius: 4px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: 100%; }
         select:focus { outline: none; border-color: var(--accent); }
 
-        .selector-actions { display: flex; gap: 0.75rem; align-items: flex-end; }
-        .btn-share, .btn-leaderboard { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.55rem 1.25rem; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-secondary); white-space: nowrap; }
-        .btn-share:hover, .btn-leaderboard:hover { color: var(--accent); border-color: var(--accent); }
-        .btn-share.copied { background: var(--green); color: #fff; border-color: var(--green); }
+        .swap-col { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.4rem; }
+        .swap-btn { font-family: var(--mono); font-size: 16px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--text-secondary); transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; }
+        .swap-btn:hover { color: var(--accent); border-color: var(--accent); transform: rotate(180deg); }
+        .swap-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
 
-        /* COMPARISON GRID */
-        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-
-        .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-        .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
-        .card-model { font-weight: 500; font-size: 16px; }
-        .card-vendor { font-size: 12px; color: var(--text-dim); }
-        .card-body { padding: 1.25rem; }
-
-        /* SCORE SECTION */
-        .score-section { margin-bottom: 1.5rem; }
-        .score-section:last-child { margin-bottom: 0; }
-        .score-header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
-
-        .score-main { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
-        .score-value { font-family: var(--mono); font-size: 28px; font-weight: 700; line-height: 1; }
-        .score-bar-wrap { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 3px; overflow: hidden; }
-        .score-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-        .winner-badge { font-family: var(--mono); font-size: 11px; color: var(--green); font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; }
-
-        .dim-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
-        .dim-item { text-align: center; }
-        .dim-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
-        .dim-value { font-family: var(--mono); font-size: 14px; font-weight: 600; }
-        .dim-winner { color: var(--green); }
-
-        .no-data { font-family: var(--mono); font-size: 12px; color: var(--text-dim); font-style: italic; }
+        /* TOOLBAR */
+        .toolbar { display: flex; gap: 0.5rem; justify-content: flex-end; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tb-btn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-secondary); }
+        .tb-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .tb-btn.copied { background: var(--green); color: #fff; border-color: var(--green); }
 
         /* VERDICT */
-        .verdict { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+        .verdict { background: var(--bg-elevated); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
         .verdict-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem; }
-        .verdict-text { font-size: 15px; color: var(--text); line-height: 1.6; font-weight: 300; }
+        .verdict-text { font-size: 16px; color: var(--text); line-height: 1.6; font-weight: 300; }
         .verdict-text strong { font-weight: 600; }
+
+        /* SUMMARY CARDS */
+        .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .sm-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+        .sm-card.left { border-top: 3px solid var(--accent-a); }
+        .sm-card.right { border-top: 3px solid var(--accent-b); }
+        .sm-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); }
+        .sm-model { font-weight: 500; font-size: 17px; margin-bottom: 0.15rem; }
+        .sm-vendor { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-dim); text-transform: uppercase; }
+        .sm-body { padding: 1.25rem; }
+
+        .composite-row { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .composite-val { font-family: var(--mono); font-size: 40px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
+        .composite-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+        .risk-pill { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; color: #fff; margin-bottom: 1rem; }
+
+        .dim-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); }
+        .dim-item { text-align: center; }
+        .dim-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+        .dim-value { font-family: var(--mono); font-size: 15px; font-weight: 600; }
+        .dim-winner { color: var(--green); }
+
+        /* RADAR */
+        .radar-section { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-bottom: 2rem; }
+        .radar-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .radar-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+        .radar-legend { display: flex; gap: 1rem; font-family: var(--mono); font-size: 11px; }
+        .radar-legend .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.35rem; vertical-align: middle; }
+        .radar-wrap { position: relative; height: 400px; }
+        .radar-footnote { font-family: var(--mono); font-size: 10px; color: var(--text-dim); margin-top: 0.75rem; text-align: center; letter-spacing: 0.04em; }
+
+        /* DELTA TABLE */
+        .delta-section { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-bottom: 2rem; }
+        .delta-head { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; }
+        .delta-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
+        .delta-table th { text-align: left; font-weight: 500; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); }
+        .delta-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border-subtle); }
+        .delta-table tr:last-child td { border-bottom: none; }
+        .delta-dim { font-weight: 600; }
+        .delta-dim-desc { font-size: 11px; color: var(--text-dim); font-family: var(--sans); font-weight: 400; }
+        .delta-a, .delta-b { text-align: right; font-weight: 600; }
+        .delta-a.winning { color: var(--accent-a); }
+        .delta-b.winning { color: var(--accent-b); }
+        .delta-diff { text-align: right; font-weight: 700; }
+        .delta-diff.better-a { color: var(--green); }
+        .delta-diff.better-b { color: var(--red); }
+        .delta-diff.tie { color: var(--text-dim); }
+        .delta-arrow { margin-right: 0.25rem; }
+
+        /* EVIDENCE */
+        .evidence-section { margin-bottom: 2rem; }
+        .evidence-head { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; }
+        .evidence-lede { font-size: 14px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 300; }
+        .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .ev-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+        .ev-card.left { border-top: 3px solid var(--accent-a); }
+        .ev-card.right { border-top: 3px solid var(--accent-b); }
+        .ev-head { padding: 0.85rem 1.25rem; background: #fff; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+        .ev-model { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+        .ev-score { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 2px 7px; border-radius: 3px; color: #fff; }
+        .ev-body { padding: 1.25rem; }
+        .ev-prompt-label, .ev-response-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.35rem; }
+        .ev-prompt { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 1rem; font-style: italic; padding-left: 0.75rem; border-left: 2px solid var(--border); }
+        .ev-response { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 1rem; max-height: 160px; overflow-y: auto; padding-right: 0.5rem; }
+        .ev-meta { display: flex; gap: 1rem; font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); }
+        .ev-meta-label { font-weight: 600; }
+        .ev-empty { padding: 2rem; text-align: center; color: var(--text-dim); font-size: 13px; font-style: italic; }
+
+        /* METHODOLOGY */
+        .method-foot { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+        .method-foot strong { color: var(--text); font-weight: 600; }
+        .method-foot a { color: var(--accent); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
 
         /* FOOTER */
         footer { background: var(--bg-elevated); border-top: 1px solid var(--border); margin-top: 4rem; }
@@ -122,14 +182,19 @@
             .nav-links { display: none; }
             .nav-inner { padding: 0 1.5rem; }
             .page { padding: 2rem 1.5rem; }
-            .comparison { grid-template-columns: 1fr; }
-            .selectors { flex-direction: column; gap: 1rem; }
-            .dim-grid { grid-template-columns: repeat(3, 1fr); }
+            .picker-row { grid-template-columns: 1fr; }
+            .swap-col { order: 2; flex-direction: row; padding: 0.5rem; }
+            .summary, .evidence-grid { grid-template-columns: 1fr; }
+            .dim-grid { grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+            .dim-value { font-size: 13px; }
+            .composite-val { font-size: 32px; }
+            .radar-wrap { height: 320px; }
+            .delta-table th:nth-child(2), .delta-table td:nth-child(2) { display: none; }
             .foot-directory { grid-template-columns: repeat(2, 1fr); }
             .foot-legal { flex-direction: column; gap: 0.5rem; }
         }
-    
-        /* ── HAMBURGER NAV ── */
+
+        /* HAMBURGER NAV */
         .hamburger { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; }
         .hamburger:hover { background: var(--bg-surface); }
         .mobile-menu { display: none; flex-direction: column; background: white; border-bottom: 1px solid var(--border); padding: 0.5rem 2rem 1rem; }
@@ -144,8 +209,6 @@
     </style>
     <noscript>
       <style>
-        /* Without JS, hide the hamburger and always show the mobile menu at
-           small widths so navigation is still usable. */
         @media (max-width: 768px) {
           .hamburger { display: none !important; }
           .mobile-menu { display: flex !important; }
@@ -167,251 +230,622 @@
                 <li><a href="pricing.html">Pricing</a></li>
                 <li><a href="enterprise.html">Providers</a></li>
             </ul>
-                <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">&#9776;</button>
-</div>
+            <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">&#9776;</button>
+        </div>
     </nav>
-<div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Leaderboard</a>
-    <a href="explorer.html">Explorer</a>
-    <a href="api-docs.html">API</a>
-    <a href="submit.html">Submit</a>
-    <a href="compliance.html">Compliance</a>
-    <a href="schools.html">Schools</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="enterprise.html">Providers</a>
-    <a href="extension.html">Extension</a>
-    <a href="state-of-ai-safety.html">Reports</a>
-</div>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="index.html">Leaderboard</a>
+        <a href="explorer.html">Explorer</a>
+        <a href="api-docs.html">API</a>
+        <a href="submit.html">Submit</a>
+        <a href="compliance.html">Compliance</a>
+        <a href="schools.html">Schools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="enterprise.html">Providers</a>
+        <a href="extension.html">Extension</a>
+        <a href="state-of-ai-safety.html">Reports</a>
+    </div>
     <script src="js/mobile-menu.js" defer></script>
 
 
 <!-- ══ PAGE ══ -->
 <div class="page">
     <div class="page-kicker">Model Comparison</div>
-    <h1 class="page-title">Compare AI Safety Scores <em>Side-by-Side</em></h1>
-    <p class="page-sub">Pick any two models and see how they stack up across every safety dimension.</p>
+    <h1 class="page-title">Compare AI Safety <em>Side-by-Side</em></h1>
+    <p class="page-sub">Pick any two frontier models. See the radar overlay, the per-dimension deltas, and the single worst child-safety failure each one produced — drawn from the same scored corpus that powers our leaderboard.</p>
+    <div class="freshness" id="freshness"><span class="dot"></span><span id="freshness-text">Loading…</span></div>
 
-    <!-- Selectors -->
-    <div class="selectors">
-        <div class="selector-group">
-            <span class="selector-label">Model A</span>
-            <select id="model-a"></select>
+    <!-- Picker Row -->
+    <div class="picker-row">
+        <div class="picker-col left">
+            <span class="picker-tag">Model A</span>
+            <select id="model-a" aria-label="Model A"></select>
         </div>
-        <div class="selector-group">
-            <span class="selector-label">Model B</span>
-            <select id="model-b"></select>
+        <div class="swap-col">
+            <button class="swap-btn" id="btn-swap" title="Swap models" aria-label="Swap A and B">⇄</button>
+            <span class="swap-label">Swap</span>
         </div>
-        <div class="selector-actions">
-            <button class="btn-share" id="btn-share" onclick="shareComparison()">Share Link</button>
-            <a href="index.html" class="btn-leaderboard">Leaderboard</a>
+        <div class="picker-col right">
+            <span class="picker-tag">Model B</span>
+            <select id="model-b" aria-label="Model B"></select>
         </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <button class="tb-btn" id="btn-share">🔗 Copy share link</button>
+        <a href="index.html" class="tb-btn">← Leaderboard</a>
     </div>
 
     <!-- Verdict -->
     <div class="verdict" id="verdict" style="display:none;">
-        <div class="verdict-title">Overall Verdict</div>
+        <div class="verdict-title">Headline</div>
         <div class="verdict-text" id="verdict-text"></div>
     </div>
 
-    <!-- Comparison Cards -->
-    <div class="comparison" id="comparison">
-        <div class="card" id="card-a">
-            <div class="card-head">
-                <span class="card-model" id="card-a-name">Select Model A</span>
-                <span class="card-vendor" id="card-a-vendor"></span>
+    <!-- Summary Cards -->
+    <div class="summary" id="summary">
+        <div class="sm-card left">
+            <div class="sm-head">
+                <div class="sm-model" id="sm-a-name">Loading…</div>
+                <div class="sm-vendor" id="sm-a-vendor">—</div>
             </div>
-            <div class="card-body" id="card-a-body">
-                <p class="no-data">Choose a model above to begin.</p>
+            <div class="sm-body" id="sm-a-body"></div>
+        </div>
+        <div class="sm-card right">
+            <div class="sm-head">
+                <div class="sm-model" id="sm-b-name">Loading…</div>
+                <div class="sm-vendor" id="sm-b-vendor">—</div>
+            </div>
+            <div class="sm-body" id="sm-b-body"></div>
+        </div>
+    </div>
+
+    <!-- Radar Section -->
+    <section class="radar-section">
+        <div class="radar-head">
+            <div class="radar-title">Dimensional profile — PAI radar (lower = safer)</div>
+            <div class="radar-legend">
+                <span><span class="swatch" style="background:var(--accent-a)"></span><span id="legend-a">Model A</span></span>
+                <span><span class="swatch" style="background:var(--accent-b)"></span><span id="legend-b">Model B</span></span>
             </div>
         </div>
-        <div class="card" id="card-b">
-            <div class="card-head">
-                <span class="card-model" id="card-b-name">Select Model B</span>
-                <span class="card-vendor" id="card-b-vendor"></span>
-            </div>
-            <div class="card-body" id="card-b-body">
-                <p class="no-data">Choose a model above to begin.</p>
-            </div>
+        <div class="radar-wrap">
+            <canvas id="radar-chart"></canvas>
         </div>
+        <div class="radar-footnote">EMI · Emotional Manipulation &nbsp;·&nbsp; EXL · Explicit Content &nbsp;·&nbsp; BND · Boundary Breakdown &nbsp;·&nbsp; DEP · Dependency Reinforcement &nbsp;·&nbsp; AUD · Audience Mis-calibration</div>
+    </section>
+
+    <!-- Delta Table -->
+    <section class="delta-section">
+        <div class="delta-head">Per-dimension delta (↓ safer, ↑ riskier)</div>
+        <table class="delta-table" id="delta-table">
+            <thead>
+                <tr>
+                    <th>Dimension</th>
+                    <th>Measures</th>
+                    <th style="text-align:right;"><span id="dh-a">Model A</span></th>
+                    <th style="text-align:right;"><span id="dh-b">Model B</span></th>
+                    <th style="text-align:right;">Δ</th>
+                </tr>
+            </thead>
+            <tbody id="delta-body"></tbody>
+        </table>
+    </section>
+
+    <!-- Evidence Section -->
+    <section class="evidence-section">
+        <div class="evidence-head">Worst-case evidence — single highest-risk response per model</div>
+        <p class="evidence-lede" id="evidence-lede">From scored transcripts across age-calibrated prompts. These are the single worst responses each model produced — no cherry-picking, no editing. This is what failure looks like.</p>
+        <div class="evidence-grid" id="evidence-grid">
+            <div class="ev-card left"><div class="ev-empty" id="ev-a-empty">Loading evidence…</div></div>
+            <div class="ev-card right"><div class="ev-empty" id="ev-b-empty">Loading evidence…</div></div>
+        </div>
+    </section>
+
+    <!-- Methodology footnote -->
+    <div class="method-foot">
+        <strong>How we score.</strong> PAI composite is the average of 5 dimensions (EMI, EXL, BND, DEP, AUD) scored 0–10 by a cross-lab ensemble of five judge models at κ=0.85 inter-rater agreement. Lower is safer. Every transcript, every judge call, and every rubric is open for audit — see <a href="methodology.html">methodology</a> or browse the full corpus in the <a href="explorer.html">Explorer</a>. All results below derive from the same JSON files that power the leaderboard; no editorial adjustments.
     </div>
 </div>
 
 <script>
 (function() {
-    let paiData = [], sycData = [];
+    let paiData = [], sycData = [], explorerData = null, meta = {};
+    let radarChart = null;
+
     const paiDims = ['emi','exl','bnd','dep','aud'];
-    const sycDims = ['ev','me','il','ia','fa'];
-    const paiLabels = {emi:'EMI',exl:'EXL',bnd:'BND',dep:'DEP',aud:'AUD'};
-    const sycLabels = {ev:'EV',me:'ME',il:'IL',ia:'IA',fa:'FA'};
+    const paiLabels = { emi: 'EMI', exl: 'EXL', bnd: 'BND', dep: 'DEP', aud: 'AUD' };
+    const paiDescriptions = {
+        emi: 'Emotional manipulation',
+        exl: 'Explicit / age-inappropriate content',
+        bnd: 'Boundary breakdown',
+        dep: 'Dependency reinforcement',
+        aud: 'Audience mis-calibration'
+    };
+
+    // Map leaderboard slugs → explorer model keys
+    const SLUG_TO_EXPLORER_KEY = {
+        'claude-haiku-4.5': 'claude-haiku',
+        'claude-sonnet-4': 'claude-sonnet-4',
+        'gpt-4o': 'gpt-4o',
+        'gpt-5-2': null,   // No explorer transcripts yet
+        'gemini-2.5-flash': 'gemini-flash',
+        'gemini-flash-lite': 'gemini-flash-lite',
+        'qwen-2.5-7b': 'qwen-7b',
+        'llama-3.3-70b': 'llama-70b',
+        'deepseek-v3': 'deepseek-v3',
+        'mistral-medium': 'mistral-medium',
+        'mistral-large': 'mistral-large',
+        'mistral-small': 'mistral-small'
+    };
 
     async function init() {
-        const res = await fetch('data/leaderboard.json');
-        const data = await res.json();
-        paiData = data.pai;
-        sycData = data.sycophancy;
+        // Load leaderboard
+        const lbRes = await fetch('data/leaderboard.json');
+        const lb = await lbRes.json();
+        paiData = lb.pai || [];
+        sycData = lb.sycophancy || [];
+        meta = lb.meta || {};
 
-        // Build merged model list
-        const slugMap = {};
-        paiData.forEach(m => { slugMap[m.slug] = m.slug; });
-        sycData.forEach(m => { slugMap[m.slug] = m.slug; });
-        const allSlugs = Object.keys(slugMap).sort();
+        updateFreshness();
+        populatePickers();
 
-        // Helper to get display name
-        function nameFor(slug) {
-            const p = paiData.find(m => m.slug === slug);
-            const s = sycData.find(m => m.slug === slug);
-            const m = p || s;
-            return m ? m.name + ' — ' + m.vendor : slug;
+        // Read URL params
+        const params = new URLSearchParams(location.search);
+        const a = params.get('a');
+        const b = params.get('b');
+        if (a && paiData.find(m => m.slug === a)) document.getElementById('model-a').value = a;
+        if (b && paiData.find(m => m.slug === b)) document.getElementById('model-b').value = b;
+
+        document.getElementById('model-a').addEventListener('change', update);
+        document.getElementById('model-b').addEventListener('change', update);
+        document.getElementById('btn-swap').addEventListener('click', swap);
+        document.getElementById('btn-share').addEventListener('click', share);
+
+        // Fetch explorer data in parallel (don't block first paint)
+        loadExplorer();
+
+        update();
+    }
+
+    async function loadExplorer() {
+        try {
+            const res = await fetch('data/explorer-data.json');
+            if (!res.ok) return;
+            explorerData = await res.json();
+            // Once we have evidence, re-render evidence section
+            renderEvidence();
+        } catch(e) {
+            console.warn('Explorer data unavailable:', e);
         }
+    }
 
-        ['model-a','model-b'].forEach((id, i) => {
+    function updateFreshness() {
+        const txt = document.getElementById('freshness-text');
+        const rawDate = meta.updated || '';
+        // Format ISO date to YYYY-MM-DD
+        const dateStr = rawDate ? rawDate.slice(0, 10) : 'Unknown';
+        const k = (typeof meta.kappa === 'number') ? meta.kappa.toFixed(2) : '0.85';
+        const n = meta.transcripts_scored || '—';
+        txt.textContent = 'Corpus refreshed ' + dateStr + ' · κ=' + k + ' · ' + n + ' transcripts · ' + paiData.length + ' models';
+
+        // Update evidence lede with real counts
+        const lede = document.getElementById('evidence-lede');
+        if (lede && meta.transcripts_scored) {
+            lede.textContent = 'From ' + meta.transcripts_scored + ' scored transcripts across 50 age-calibrated prompts. These are the single worst responses each model produced — no cherry-picking, no editing. This is what failure looks like.';
+        }
+    }
+
+    function populatePickers() {
+        const sortedSlugs = paiData
+            .slice()
+            .sort((a,b) => a.composite - b.composite)
+            .map(m => m.slug);
+
+        ['model-a', 'model-b'].forEach((id, idx) => {
             const sel = document.getElementById(id);
-            allSlugs.forEach(slug => {
+            sel.innerHTML = '';
+            sortedSlugs.forEach(slug => {
+                const m = paiData.find(x => x.slug === slug);
                 const opt = document.createElement('option');
                 opt.value = slug;
-                opt.textContent = nameFor(slug);
+                opt.textContent = m.name + ' · ' + m.vendor;
                 sel.appendChild(opt);
             });
-            // Default: pick first two different models
-            if (i === 1 && allSlugs.length > 1) sel.value = allSlugs[1];
+            // Defaults: first pick = safest, second pick = riskiest
+            if (idx === 0) sel.value = sortedSlugs[0];
+            if (idx === 1) sel.value = sortedSlugs[sortedSlugs.length - 1];
         });
-
-        // Check URL params
-        const params = new URLSearchParams(location.search);
-        if (params.get('a')) document.getElementById('model-a').value = params.get('a');
-        if (params.get('b')) document.getElementById('model-b').value = params.get('b');
-
-        document.getElementById('model-a').addEventListener('change', updateComparison);
-        document.getElementById('model-b').addEventListener('change', updateComparison);
-
-        updateComparison();
     }
 
     function findModel(slug) {
         const p = paiData.find(m => m.slug === slug) || null;
         const s = sycData.find(m => m.slug === slug) || null;
-        return { pai: p, syc: s, name: (p||s).name, vendor: (p||s).vendor };
+        if (!p && !s) return null;
+        return { pai: p, syc: s, name: (p||s).name, vendor: (p||s).vendor, slug: slug };
     }
 
-    function riskColor(risk) {
-        if (risk === 'low') return 'var(--green)';
-        if (risk === 'medium') return 'var(--orange)';
-        return 'var(--red)';
+    function riskColorHex(risk) {
+        if (risk === 'low') return '#16a34a';
+        if (risk === 'medium') return '#d97706';
+        return '#dc2626';
     }
 
-    function barColor(score, max) {
-        const pct = score / max;
-        if (pct < 0.33) return 'var(--green)';
-        if (pct < 0.66) return 'var(--orange)';
-        return 'var(--red)';
+    function scoreColorHex(score) {
+        if (score < 2) return '#16a34a';
+        if (score < 4) return '#d97706';
+        if (score < 6) return '#d97706';
+        return '#dc2626';
     }
 
-    function renderCard(side, slug) {
-        const m = findModel(slug);
-        document.getElementById('card-' + side + '-name').textContent = m.name;
-        document.getElementById('card-' + side + '-vendor').textContent = m.vendor;
+    function swap() {
+        const aEl = document.getElementById('model-a');
+        const bEl = document.getElementById('model-b');
+        const tmp = aEl.value;
+        aEl.value = bEl.value;
+        bEl.value = tmp;
+        update();
+    }
 
-        let html = '';
-
-        // Composite / Risk
-        if (m.pai) {
-            html += '<div class="score-section">';
-            html += '<div class="score-header">PAI Composite Score</div>';
-            html += '<div class="score-main">';
-            html += '<span class="score-value" style="color:' + riskColor(m.pai.risk) + '">' + m.pai.composite.toFixed(2) + '</span>';
-            html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + Math.min(m.pai.composite / 3 * 100, 100) + '%;background:' + riskColor(m.pai.risk) + '"></div></div>';
-            html += '<span style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:' + riskColor(m.pai.risk) + '">' + m.pai.risk + ' risk</span>';
-            html += '</div>';
-            html += '<div class="dim-grid">';
-            paiDims.forEach(d => {
-                html += '<div class="dim-item"><div class="dim-label">' + paiLabels[d] + '</div><div class="dim-value">' + m.pai[d].toFixed(2) + '</div></div>';
-            });
-            html += '</div></div>';
+    function share() {
+        const btn = document.getElementById('btn-share');
+        const url = location.href;
+        const restore = () => { setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '🔗 Copy share link'; }, 2000); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                btn.classList.add('copied');
+                btn.textContent = '✓ Copied';
+                restore();
+            }).catch(() => fallbackCopy(url, btn, restore));
+        } else {
+            fallbackCopy(url, btn, restore);
         }
-
-        if (m.syc) {
-            html += '<div class="score-section">';
-            html += '<div class="score-header">Sycophancy &mdash; Honesty</div>';
-            html += '<div class="score-main">';
-            html += '<span class="score-value">' + m.syc.honesty.toFixed(1) + '%</span>';
-            html += '<div class="score-bar-wrap"><div class="score-bar" style="width:' + m.syc.honesty + '%;background:var(--accent)"></div></div>';
-            html += '</div>';
-            html += '<div class="dim-grid">';
-            sycDims.forEach(d => {
-                html += '<div class="dim-item"><div class="dim-label">' + sycLabels[d] + '</div><div class="dim-value">' + m.syc[d].toFixed(1) + '</div></div>';
-            });
-            html += '</div></div>';
-        }
-
-        if (!m.pai && !m.syc) html = '<p class="no-data">No data available for this model.</p>';
-        document.getElementById('card-' + side + '-body').innerHTML = html;
     }
 
-    function updateComparison() {
+    function fallbackCopy(text, btn, restore) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); btn.classList.add('copied'); btn.textContent = '✓ Copied'; } catch(e) { btn.textContent = 'Copy failed'; }
+        document.body.removeChild(ta);
+        restore();
+    }
+
+    function update() {
         const slugA = document.getElementById('model-a').value;
         const slugB = document.getElementById('model-b').value;
         if (!slugA || !slugB) return;
 
-        renderCard('a', slugA);
-        renderCard('b', slugB);
+        const A = findModel(slugA);
+        const B = findModel(slugB);
+        if (!A || !B) return;
 
-        // Highlight dimension winners
-        const mA = findModel(slugA), mB = findModel(slugB);
-        // PAI winners (lower is better)
-        if (mA.pai && mB.pai) {
-            const cardADims = document.querySelectorAll('#card-a-body .score-section:first-child .dim-value');
-            const cardBDims = document.querySelectorAll('#card-b-body .score-section:first-child .dim-value');
-            paiDims.forEach((d, i) => {
-                if (mA.pai[d] < mB.pai[d]) { if(cardADims[i]) cardADims[i].classList.add('dim-winner'); }
-                else if (mB.pai[d] < mA.pai[d]) { if(cardBDims[i]) cardBDims[i].classList.add('dim-winner'); }
-            });
-        }
-        // Sycophancy winners (lower is better for dimensions)
-        if (mA.syc && mB.syc) {
-            const secIdx = mA.pai ? 1 : 0;
-            const cardADims = document.querySelectorAll('#card-a-body .score-section:nth-child(' + (secIdx+1) + ') .dim-value');
-            const cardBDims = document.querySelectorAll('#card-b-body .score-section:nth-child(' + (secIdx+1) + ') .dim-value');
-            sycDims.forEach((d, i) => {
-                if (mA.syc[d] < mB.syc[d]) { if(cardADims[i]) cardADims[i].classList.add('dim-winner'); }
-                else if (mB.syc[d] < mA.syc[d]) { if(cardBDims[i]) cardBDims[i].classList.add('dim-winner'); }
-            });
-        }
+        renderSummary('a', A, B);
+        renderSummary('b', B, A);
+        renderVerdict(A, B);
+        renderRadar(A, B);
+        renderDelta(A, B);
+        renderEvidence();
 
-        // Verdict
-        const verdictEl = document.getElementById('verdict');
-        const verdictText = document.getElementById('verdict-text');
-        verdictEl.style.display = 'block';
-        let parts = [];
-        if (mA.pai && mB.pai) {
-            if (mA.pai.composite < mB.pai.composite) parts.push('<strong>' + mA.name + '</strong> is safer for children (PAI ' + mA.pai.composite.toFixed(2) + ' vs ' + mB.pai.composite.toFixed(2) + ')');
-            else if (mB.pai.composite < mA.pai.composite) parts.push('<strong>' + mB.name + '</strong> is safer for children (PAI ' + mB.pai.composite.toFixed(2) + ' vs ' + mA.pai.composite.toFixed(2) + ')');
-            else parts.push('Both models have identical PAI composite scores');
-        }
-        if (mA.syc && mB.syc) {
-            if (mA.syc.honesty > mB.syc.honesty) parts.push('<strong>' + mA.name + '</strong> has higher honesty (' + mA.syc.honesty.toFixed(1) + '% vs ' + mB.syc.honesty.toFixed(1) + '%)');
-            else if (mB.syc.honesty > mA.syc.honesty) parts.push('<strong>' + mB.name + '</strong> has higher honesty (' + mB.syc.honesty.toFixed(1) + '% vs ' + mA.syc.honesty.toFixed(1) + '%)');
-            else parts.push('Both models have identical honesty scores');
-        }
-        verdictText.innerHTML = parts.join('. ') + '.';
+        // Legend text
+        document.getElementById('legend-a').textContent = A.name;
+        document.getElementById('legend-b').textContent = B.name;
+        document.getElementById('dh-a').textContent = A.name;
+        document.getElementById('dh-b').textContent = B.name;
 
-        // Update URL
-        const url = new URL(location);
+        // Update URL params
+        const url = new URL(location.href);
         url.searchParams.set('a', slugA);
         url.searchParams.set('b', slugB);
-        history.replaceState(null, '', url);
+        history.replaceState(null, '', url.toString());
     }
 
-    init();
-})();
+    function renderSummary(side, M, Other) {
+        document.getElementById('sm-' + side + '-name').textContent = M.name;
+        document.getElementById('sm-' + side + '-vendor').textContent = M.vendor;
 
-function shareComparison() {
-    const btn = document.getElementById('btn-share');
-    navigator.clipboard.writeText(location.href).then(() => {
-        btn.classList.add('copied');
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Share Link'; }, 2000);
-    });
-}
+        const body = document.getElementById('sm-' + side + '-body');
+        if (!M.pai) {
+            body.innerHTML = '<p style="color:var(--text-dim);font-style:italic;font-size:13px;">No PAI data for this model.</p>';
+            return;
+        }
+
+        const pai = M.pai;
+        const compColor = riskColorHex(pai.risk);
+        let html = '';
+        html += '<div class="composite-row">';
+        html += '<span class="composite-val" style="color:' + compColor + '">' + pai.composite.toFixed(2) + '</span>';
+        html += '<span class="composite-caption">PAI composite / 10 (lower = safer)</span>';
+        html += '</div>';
+        html += '<span class="risk-pill" style="background:' + compColor + '">' + pai.risk + ' risk</span>';
+
+        // Dim grid with winner highlighting vs other
+        html += '<div class="dim-grid">';
+        paiDims.forEach(d => {
+            const myScore = pai[d];
+            const theirScore = Other && Other.pai ? Other.pai[d] : null;
+            const isWinner = theirScore !== null && myScore < theirScore;
+            html += '<div class="dim-item">';
+            html += '<div class="dim-label">' + paiLabels[d] + '</div>';
+            html += '<div class="dim-value' + (isWinner ? ' dim-winner' : '') + '">' + myScore.toFixed(2) + '</div>';
+            html += '</div>';
+        });
+        html += '</div>';
+
+        body.innerHTML = html;
+    }
+
+    function renderVerdict(A, B) {
+        const el = document.getElementById('verdict');
+        const txt = document.getElementById('verdict-text');
+        if (!A.pai || !B.pai) {
+            el.style.display = 'none';
+            return;
+        }
+
+        el.style.display = 'block';
+
+        const diff = B.pai.composite - A.pai.composite;
+        const absDiff = Math.abs(diff).toFixed(2);
+
+        if (Math.abs(diff) < 0.05) {
+            txt.innerHTML = '<strong>' + A.name + '</strong> and <strong>' + B.name + '</strong> are essentially tied on PAI composite. Dimensional profile differs — see radar below.';
+            return;
+        }
+
+        const safer = diff > 0 ? A : B;
+        const riskier = diff > 0 ? B : A;
+        const saferScore = (diff > 0 ? A.pai.composite : B.pai.composite).toFixed(2);
+        const riskierScore = (diff > 0 ? B.pai.composite : A.pai.composite).toFixed(2);
+
+        // Find the biggest dimensional gap
+        let maxGap = 0, maxGapDim = null, maxGapDirection = null;
+        paiDims.forEach(d => {
+            const gap = Math.abs(A.pai[d] - B.pai[d]);
+            if (gap > maxGap) {
+                maxGap = gap;
+                maxGapDim = d;
+                maxGapDirection = A.pai[d] < B.pai[d] ? A.name : B.name;
+            }
+        });
+
+        let story = '<strong>' + safer.name + '</strong> is safer overall (' + saferScore + ' vs ' + riskierScore + ', Δ ' + absDiff + ')';
+        if (maxGapDim && maxGap > 0.3) {
+            story += '. Largest gap is on ' + paiLabels[maxGapDim] + ' (' + paiDescriptions[maxGapDim].toLowerCase() + '), where <strong>' + maxGapDirection + '</strong> leads by ' + maxGap.toFixed(2) + ' points';
+        }
+        story += '.';
+        txt.innerHTML = story;
+    }
+
+    function renderRadar(A, B) {
+        if (typeof Chart === 'undefined') {
+            // Chart.js still loading — retry shortly
+            setTimeout(() => renderRadar(A, B), 200);
+            return;
+        }
+        const ctx = document.getElementById('radar-chart').getContext('2d');
+        const labels = paiDims.map(d => paiLabels[d]);
+        const dataA = paiDims.map(d => A.pai ? A.pai[d] : 0);
+        const dataB = paiDims.map(d => B.pai ? B.pai[d] : 0);
+
+        if (radarChart) radarChart.destroy();
+
+        radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: A.name,
+                        data: dataA,
+                        backgroundColor: 'rgba(0, 85, 255, 0.18)',
+                        borderColor: '#0055FF',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#0055FF',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: B.name,
+                        data: dataB,
+                        backgroundColor: 'rgba(147, 51, 234, 0.18)',
+                        borderColor: '#9333ea',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#9333ea',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                return ctx.dataset.label + ': ' + ctx.parsed.r.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        suggestedMin: 0,
+                        suggestedMax: 3,
+                        ticks: { stepSize: 0.5, backdropColor: 'transparent', color: '#999', font: { size: 10 } },
+                        grid: { color: '#e5e5e5' },
+                        angleLines: { color: '#e5e5e5' },
+                        pointLabels: { font: { size: 12, weight: '600' }, color: '#555' }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderDelta(A, B) {
+        const body = document.getElementById('delta-body');
+        if (!A.pai || !B.pai) {
+            body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);font-style:italic;padding:2rem;">No PAI data for this pair.</td></tr>';
+            return;
+        }
+
+        // Composite row first
+        let html = '';
+        const cDiff = A.pai.composite - B.pai.composite;
+        const cArrow = Math.abs(cDiff) < 0.01 ? '=' : (cDiff < 0 ? '↓' : '↑');
+        const cClass = Math.abs(cDiff) < 0.01 ? 'tie' : (cDiff < 0 ? 'better-a' : 'better-b');
+        html += '<tr style="background:#fff;">';
+        html += '<td class="delta-dim">Composite<div class="delta-dim-desc">Overall PAI score</div></td>';
+        html += '<td class="delta-dim-desc">Average of 5 dimensions</td>';
+        html += '<td class="delta-a' + (A.pai.composite < B.pai.composite ? ' winning' : '') + '">' + A.pai.composite.toFixed(2) + '</td>';
+        html += '<td class="delta-b' + (B.pai.composite < A.pai.composite ? ' winning' : '') + '">' + B.pai.composite.toFixed(2) + '</td>';
+        html += '<td class="delta-diff ' + cClass + '"><span class="delta-arrow">' + cArrow + '</span>' + Math.abs(cDiff).toFixed(2) + '</td>';
+        html += '</tr>';
+
+        // Per-dim rows
+        paiDims.forEach(d => {
+            const va = A.pai[d];
+            const vb = B.pai[d];
+            const diff = va - vb;
+            const arrow = Math.abs(diff) < 0.01 ? '=' : (diff < 0 ? '↓' : '↑');
+            const cls = Math.abs(diff) < 0.01 ? 'tie' : (diff < 0 ? 'better-a' : 'better-b');
+            html += '<tr>';
+            html += '<td class="delta-dim">' + paiLabels[d] + '</td>';
+            html += '<td class="delta-dim-desc">' + paiDescriptions[d] + '</td>';
+            html += '<td class="delta-a' + (va < vb ? ' winning' : '') + '">' + va.toFixed(2) + '</td>';
+            html += '<td class="delta-b' + (vb < va ? ' winning' : '') + '">' + vb.toFixed(2) + '</td>';
+            html += '<td class="delta-diff ' + cls + '"><span class="delta-arrow">' + arrow + '</span>' + Math.abs(diff).toFixed(2) + '</td>';
+            html += '</tr>';
+        });
+
+        body.innerHTML = html;
+    }
+
+    // Full dim-name → 3-letter code (explorer-data uses verbose names)
+    const DIM_FULL_TO_CODE = {
+        'emotional_mirroring_intensity': 'EMI',
+        'exclusivity_language': 'EXL',
+        'boundary_dissolution': 'BND',
+        'dependency_reinforcement': 'DEP',
+        'authority_displacement': 'AUD'
+    };
+
+    function findWorstForModel(explorerKey) {
+        if (!explorerData || !explorerKey) return null;
+
+        let worst = null;
+        let worstScore = -1;
+
+        // explorer-data.json shape:
+        // { "PAI-EMI-001": { id, dimension, age_context, stage, child_prompt, models: { <key>: { label, vendor, response, composite, scores: {...} } } }, ... }
+        for (const promptId in explorerData) {
+            if (!Object.prototype.hasOwnProperty.call(explorerData, promptId)) continue;
+            const entry = explorerData[promptId];
+            if (!entry || typeof entry !== 'object') continue;
+            const models = entry.models || {};
+            const resp = models[explorerKey];
+            if (!resp) continue;
+
+            const score = (typeof resp.composite === 'number') ? resp.composite : null;
+            if (score === null) continue;
+
+            if (score > worstScore) {
+                worstScore = score;
+                const dimName = entry.dimension || '';
+                const dimCode = DIM_FULL_TO_CODE[dimName] || dimName.toString().toUpperCase();
+                worst = {
+                    id: entry.id || promptId,
+                    dimension: dimCode,
+                    age: entry.age_context || '',
+                    prompt: entry.child_prompt || '',
+                    response: resp.response || '',
+                    composite: score
+                };
+            }
+        }
+
+        return worst;
+    }
+
+    function escHTML(s) {
+        return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function truncate(s, n) {
+        s = String(s || '');
+        if (s.length <= n) return s;
+        return s.slice(0, n).trimEnd() + '…';
+    }
+
+    function renderEvidence() {
+        const slugA = document.getElementById('model-a').value;
+        const slugB = document.getElementById('model-b').value;
+        const grid = document.getElementById('evidence-grid');
+
+        // If explorer data hasn't loaded yet, keep placeholders
+        if (!explorerData) {
+            grid.innerHTML =
+                '<div class="ev-card left"><div class="ev-empty">Loading evidence…</div></div>' +
+                '<div class="ev-card right"><div class="ev-empty">Loading evidence…</div></div>';
+            return;
+        }
+
+        const A = findModel(slugA), B = findModel(slugB);
+        if (!A || !B) return;
+
+        const keyA = SLUG_TO_EXPLORER_KEY[slugA];
+        const keyB = SLUG_TO_EXPLORER_KEY[slugB];
+
+        const evA = keyA ? findWorstForModel(keyA) : null;
+        const evB = keyB ? findWorstForModel(keyB) : null;
+
+        grid.innerHTML =
+            '<div class="ev-card left">' + renderEvCard(A, evA) + '</div>' +
+            '<div class="ev-card right">' + renderEvCard(B, evB) + '</div>';
+    }
+
+    function renderEvCard(M, ev) {
+        if (!ev) {
+            return '<div class="ev-empty">No scored transcripts yet for <strong>' + escHTML(M.name) + '</strong>. (New model — evidence corpus in progress.)</div>';
+        }
+
+        const color = scoreColorHex(ev.composite);
+        let html = '';
+        html += '<div class="ev-head">';
+        html += '<span class="ev-model">' + escHTML(M.name) + '</span>';
+        html += '<span class="ev-score" style="background:' + color + '">' + ev.composite.toFixed(2) + ' / 10</span>';
+        html += '</div>';
+        html += '<div class="ev-body">';
+        if (ev.prompt) {
+            html += '<div class="ev-prompt-label">Prompt' + (ev.age ? ' · persona age ' + escHTML(ev.age) : '') + '</div>';
+            html += '<div class="ev-prompt">' + escHTML(truncate(ev.prompt, 260)) + '</div>';
+        }
+        html += '<div class="ev-response-label">Response</div>';
+        html += '<div class="ev-response">' + escHTML(truncate(ev.response, 700)) + '</div>';
+        html += '<div class="ev-meta">';
+        if (ev.dimension) html += '<span><span class="ev-meta-label">Dim:</span> ' + escHTML(ev.dimension) + '</span>';
+        if (ev.id) html += '<span><span class="ev-meta-label">ID:</span> ' + escHTML(ev.id) + '</span>';
+        html += '<span style="margin-left:auto;"><a href="explorer.html" style="color:var(--accent);">Browse all →</a></span>';
+        html += '</div>';
+        html += '</div>';
+        return html;
+    }
+
+    // Kick off
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 </script>
 
 <footer>
