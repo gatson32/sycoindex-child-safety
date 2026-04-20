@@ -72,3 +72,26 @@ sycoindex-report.json
 .DS_Store
 .vercel
 node_modules/
+
+# ── SCRATCH / BACKUP ARTIFACTS (never commit) ──
+# Pre-run backups from scoring pipeline
+data/*.pre-*
+data/*.pre-*.json
+# Smoke-test byproducts
+data/*.smoke-failed-*
+# Screenshots dropped into the repo root
+Screenshot *.png
+# LaTeX intermediates (keep .tex, .bib, .pdf only)
+preprint/*.aux
+preprint/*.bbl
+preprint/*.blg
+preprint/*.fdb_latexmk
+preprint/*.fls
+preprint/*.log
+preprint/*.out
+preprint/tmp*.tmp
+# Compiled preprint PDF — Zenodo hosts the canonical copy (DOI 10.5281/zenodo.19656141)
+preprint/sycoindex-v1.pdf
+# Parked lock files from sandbox git hiccups
+.git/*.stale*
+.git/*stale_*
