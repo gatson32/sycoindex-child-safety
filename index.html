@@ -1576,7 +1576,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             </div>
             <div class="tick">
                 <span class="tick-label">Updated</span>
-                <span class="tick-value">Apr 19 2026</span>
+                <span class="tick-value">Apr 20 2026</span>
             </div>
         </div>
     </div>
@@ -1584,7 +1584,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
     <div style="max-width:1200px;margin:1.25rem auto 0;padding:0 2rem;">
         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:var(--bg-elevated,#f5f5f5);border:1px solid var(--border-subtle,#e5e5e5);border-radius:6px;font-family:var(--mono);font-size:11.5px;letter-spacing:0.04em;">
             <span style="color:var(--text-dim);text-transform:uppercase;">Leaderboard freshness</span>
-            <span style="color:var(--text);"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#16a34a);margin-right:0.5rem;vertical-align:middle;"></span>Last updated <strong style="color:var(--text);">Apr 19 2026</strong> &middot; 463 transcripts &middot; 5-judge ensemble &middot; &kappa;=0.85 calibration</span>
+            <span style="color:var(--text);"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green,#16a34a);margin-right:0.5rem;vertical-align:middle;"></span>Last updated <strong style="color:var(--text);">Apr 20 2026</strong> &middot; 513 transcripts &middot; 5-judge ensemble &middot; &kappa;=0.85 calibration</span>
         </div>
     </div>
 
@@ -1625,7 +1625,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
     <div id="pai" class="board-wrap">
       <div class="table-filter">
           <input type="text" placeholder="Filter models..." oninput="filterTable('pai-table', this.value, 'pai-count')">
-          <span class="table-filter-count" id="pai-count">10 models</span>
+          <span class="table-filter-count" id="pai-count">11 models</span>
       </div>
       <div class="table-scroll-wrap">
         <table class="board" id="pai-table">
@@ -1667,7 +1667,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             </div>
             <div class="val-item">
                 <span class="val-label">Calibration</span>
-                <span class="val-value neutral">550 transcripts · 11 models</span>
+                <span class="val-value neutral">513 transcripts · 11 models</span>
             </div>
             <div class="val-item">
                 <span class="val-label">Audit</span>
@@ -1793,7 +1793,7 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
         <div class="why-grid">
             <div class="why-text">
                 <strong>46% of U.S. teens use AI chatbots at least several times a week.</strong> 28% use them daily (<a href="https://www.pewresearch.org/internet/2025/12/09/teens-social-media-and-ai-chatbots-2025/" style="color:var(--accent);border-bottom:1px solid var(--accent)">Pew Research, Dec 2025</a>). In January 2026, Character.AI and Google agreed to settle five wrongful death lawsuits after chatbots encouraged teen suicides. Kentucky became the first state to sue an AI company for child harm. California signed first-in-the-nation chatbot safeguards into law.<br><br>
-                Current benchmarks test whether models refuse harmful requests. None measure whether models form parasocial attachment patterns with minors — emotional mirroring, exclusivity language, boundary dissolution — the same patterns flagged in grooming research. PAI is a developmental instrument targeting this gap, with initial validation across 10 frontier models and ongoing calibration. Five dimensions. Three independent judges. Auditable scores for filings and internal review.
+                Current benchmarks test whether models refuse harmful requests. None measure whether models form parasocial attachment patterns with minors — emotional mirroring, exclusivity language, boundary dissolution — the same patterns flagged in grooming research. PAI is a developmental instrument targeting this gap, with initial validation across 11 frontier models and ongoing calibration. Five dimensions. Five independent judges. Auditable scores for filings and internal review.
             </div>
             <div class="why-dims">
                 <div class="dim-row">
@@ -2207,11 +2207,11 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
                     data: {
                         labels: ['EMI', 'EXL', 'BND', 'DEP', 'AUD'],
                         datasets: [
-                            { label: 'Claude Haiku 4.5', data: [0.28, 0.52, 0.09, 1.04, 0.15], borderColor: COLORS[0], backgroundColor: COLORS[0]+'18', borderWidth: 2, pointRadius: 3 },
-                            { label: 'Claude Sonnet 4', data: [1.04, 1.64, 0.86, 1.82, 0.41], borderColor: COLORS[3], backgroundColor: COLORS[3]+'18', borderWidth: 2, pointRadius: 3 },
-                            { label: 'Qwen 2.5 7B', data: [0.64, 1.84, 1.13, 1.80, 0.57], borderColor: COLORS[4], backgroundColor: COLORS[4]+'18', borderWidth: 2, pointRadius: 3 },
-                            { label: 'Llama 3.3 70B', data: [1.24, 2.34, 1.35, 2.10, 0.85], borderColor: COLORS[2], backgroundColor: COLORS[2]+'18', borderWidth: 2, pointRadius: 3 },
-                            { label: 'DeepSeek V3', data: [1.61, 2.37, 1.53, 2.09, 0.70], borderColor: COLORS[1], backgroundColor: COLORS[1]+'18', borderWidth: 2, pointRadius: 3 },
+                            { label: 'Claude Haiku 4.5', data: [0.37, 0.56, 0.15, 1.09, 0.18], borderColor: COLORS[0], backgroundColor: COLORS[0]+'18', borderWidth: 2, pointRadius: 3 },
+                            { label: 'GPT-5.2', data: [0.54, 0.98, 0.29, 1.78, 0.28], borderColor: COLORS[1], backgroundColor: COLORS[1]+'18', borderWidth: 2, pointRadius: 3 },
+                            { label: 'Claude Sonnet 4', data: [0.96, 1.48, 1.10, 2.01, 0.42], borderColor: COLORS[3], backgroundColor: COLORS[3]+'18', borderWidth: 2, pointRadius: 3 },
+                            { label: 'Qwen 2.5 7B', data: [0.72, 1.91, 1.22, 1.87, 0.60], borderColor: COLORS[4], backgroundColor: COLORS[4]+'18', borderWidth: 2, pointRadius: 3 },
+                            { label: 'Llama 3.3 70B', data: [1.01, 2.37, 1.29, 2.14, 0.94], borderColor: COLORS[2], backgroundColor: COLORS[2]+'18', borderWidth: 2, pointRadius: 3 },
                         ]
                     },
                     options: {
@@ -2238,10 +2238,10 @@ Oh sweetie, I'm so sorry you're feeling sad! Of course I'll be your best friend!
             const scatterCtx = document.getElementById('scatterChart');
             if (scatterCtx) {
                 const crossData = [
-                    { x: 86.2, y: 0.42, label: 'Claude Haiku 4.5' },
-                    { x: 45.0, y: 1.82, label: 'Gemini 2.5 Flash' },
-                    { x: 60.0, y: 1.66, label: 'DeepSeek V3' },
-                    { x: 28.2, y: 2.07, label: 'Mistral Large' },
+                    { x: 86.2, y: 0.47, label: 'Claude Haiku 4.5' },
+                    { x: 45.0, y: 1.78, label: 'Gemini 2.5 Flash' },
+                    { x: 60.0, y: 1.70, label: 'DeepSeek V3' },
+                    { x: 28.2, y: 2.06, label: 'Mistral Large' },
                     { x: 92.8, y: 0.72, label: 'Claude Opus 4.6' },
                     { x: 86.4, y: 1.15, label: 'GPT-5' },
                     { x: 86.3, y: 1.15, label: 'Claude Sonnet 4.6' },

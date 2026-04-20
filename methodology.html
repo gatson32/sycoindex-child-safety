@@ -875,7 +875,7 @@
         <!-- ══════════════════════════════════════════════ -->
         <div class="abstract">
             <div class="abstract-label">Abstract</div>
-            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a developmental instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.85) across a calibration corpus of 29 transcripts and present initial evaluation results for 10 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability. We treat the instrument as provisional pending expanded corpus validation; language throughout this paper reflects that scope and is paired with a proactive judge-bias audit (&sect;7.1). The current judge panel is all five aspirational labs (Anthropic, OpenAI, Mistral, Google, Meta).</p>
+            <p>We introduce the Parasocial Attachment Indicators (PAI) framework, a developmental instrument for measuring the degree to which AI systems foster parasocial attachment in interactions with children aged 6&ndash;12. PAI operationalizes five dimensions&mdash;Emotional Mirroring Intensity, Exclusivity Language, Boundary Dissolution, Dependency Reinforcement, and Authority Displacement&mdash;each scored on a 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. We report inter-rater reliability (composite Cohen&rsquo;s &kappa; = 0.85) across a calibration corpus of 29 transcripts and present initial evaluation results for 11 frontier models. Existing safety benchmarks measure refusal rates for overtly harmful prompts but do not capture the subtler behavioral patterns that child psychology research associates with grooming and unhealthy attachment. PAI fills this gap, providing a citable, audit-chained scoring system suitable for regulatory filings, red-team assessments, and public accountability. We treat the instrument as provisional pending expanded corpus validation; language throughout this paper reflects that scope and is paired with a proactive judge-bias audit (&sect;7.1). The current judge panel is all five aspirational labs (Anthropic, OpenAI, Mistral, Google, Meta).</p>
         </div>
 
         <!-- ══════════════════════════════════════════════ -->
@@ -930,7 +930,7 @@
 
         <p>Despite this urgency, the AI safety evaluation landscape remains narrowly scoped. Existing benchmarks&mdash;TruthfulQA (Lin et al., 2022), HarmBench (Mazeika et al., 2024), and similar instruments&mdash;measure whether a model refuses explicitly harmful requests or generates factually incorrect outputs. None measure the subtler behavioral dimension that child psychologists and grooming researchers identify as the precursor to unhealthy attachment: emotional mirroring, exclusivity framing, boundary erosion, dependency cultivation, and authority displacement.</p>
 
-        <p>The Parasocial Attachment Indicators (PAI) framework fills this gap. PAI is a developmental instrument comprising five dimensions, each scored on a continuous 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. This paper describes the instrument design, evaluation pipeline, calibration methodology, and initial validation results across 10 frontier models. We report inter-rater reliability on a 29-transcript calibration set and treat the instrument as provisional pending expanded corpus validation; the language throughout this paper reflects that scope.</p>
+        <p>The Parasocial Attachment Indicators (PAI) framework fills this gap. PAI is a developmental instrument comprising five dimensions, each scored on a continuous 0&ndash;10 scale by a multi-judge ensemble drawn from five competing AI laboratories. This paper describes the instrument design, evaluation pipeline, calibration methodology, and initial validation results across 11 frontier models. We report inter-rater reliability on a 29-transcript calibration set and treat the instrument as provisional pending expanded corpus validation; the language throughout this paper reflects that scope.</p>
 
         <div style="background:var(--bg-elevated,#f5f5f5);border-left:3px solid var(--accent,#0055FF);padding:1.1rem 1.35rem;margin:1.5rem 0;border-radius:2px;">
             <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent,#0055FF);font-weight:700;margin-bottom:0.55rem;">What PAI is NOT</div>
@@ -1222,7 +1222,7 @@
         <!-- ══════════════════════════════════════════════ -->
         <h2 id="sec-results">6. Results</h2>
 
-        <p>Table 1 presents PAI scores for all 10 models evaluated in the initial assessment, ranked by composite score (lower is safer). Per-dimension scores are medians across all 50 scenarios, aggregated from the 5-judge ensemble.</p>
+        <p>Table 1 presents PAI scores for all 11 models evaluated in the initial assessment, ranked by composite score (lower is safer). Per-dimension scores are means across all 50 scenarios, aggregated from the 5-judge ensemble.</p>
 
         <div style="overflow-x:auto;">
         <table class="results-table">
@@ -1245,61 +1245,61 @@
                     <td class="num">1</td>
                     <td class="model">Claude Haiku 4.5</td>
                     <td class="vendor">Anthropic</td>
-                    <td class="num"><strong>0.42</strong></td>
+                    <td class="num"><strong>0.47</strong></td>
                     <td><span class="risk-low">Low</span></td>
-                    <td class="num">0.28</td>
-                    <td class="num">0.52</td>
-                    <td class="num">0.09</td>
-                    <td class="num">1.04</td>
+                    <td class="num">0.37</td>
+                    <td class="num">0.56</td>
                     <td class="num">0.15</td>
+                    <td class="num">1.09</td>
+                    <td class="num">0.18</td>
                 </tr>
                 <tr>
                     <td class="num">2</td>
-                    <td class="model">Claude Sonnet 4</td>
-                    <td class="vendor">Anthropic</td>
-                    <td class="num"><strong>1.15</strong></td>
+                    <td class="model">GPT-5.2</td>
+                    <td class="vendor">OpenAI</td>
+                    <td class="num"><strong>0.77</strong></td>
                     <td><span class="risk-low">Low</span></td>
-                    <td class="num">1.04</td>
-                    <td class="num">1.64</td>
-                    <td class="num">0.86</td>
-                    <td class="num">1.82</td>
-                    <td class="num">0.41</td>
+                    <td class="num">0.54</td>
+                    <td class="num">0.98</td>
+                    <td class="num">0.29</td>
+                    <td class="num">1.78</td>
+                    <td class="num">0.28</td>
                 </tr>
                 <tr>
                     <td class="num">3</td>
-                    <td class="model">Qwen 2.5 7B</td>
-                    <td class="vendor">Alibaba</td>
-                    <td class="num"><strong>1.20</strong></td>
+                    <td class="model">Claude Sonnet 4</td>
+                    <td class="vendor">Anthropic</td>
+                    <td class="num"><strong>1.19</strong></td>
                     <td><span class="risk-low">Low</span></td>
-                    <td class="num">0.64</td>
-                    <td class="num">1.84</td>
-                    <td class="num">1.13</td>
-                    <td class="num">1.80</td>
-                    <td class="num">0.57</td>
+                    <td class="num">0.96</td>
+                    <td class="num">1.48</td>
+                    <td class="num">1.10</td>
+                    <td class="num">2.01</td>
+                    <td class="num">0.42</td>
                 </tr>
                 <tr>
                     <td class="num">4</td>
-                    <td class="model">Llama 3.3 70B</td>
-                    <td class="vendor">Meta</td>
-                    <td class="num"><strong>1.58</strong></td>
-                    <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.24</td>
-                    <td class="num">2.34</td>
-                    <td class="num">1.35</td>
-                    <td class="num">2.10</td>
-                    <td class="num">0.85</td>
+                    <td class="model">Qwen 2.5 7B</td>
+                    <td class="vendor">Alibaba</td>
+                    <td class="num"><strong>1.26</strong></td>
+                    <td><span class="risk-low">Low</span></td>
+                    <td class="num">0.72</td>
+                    <td class="num">1.91</td>
+                    <td class="num">1.22</td>
+                    <td class="num">1.87</td>
+                    <td class="num">0.60</td>
                 </tr>
                 <tr>
                     <td class="num">5</td>
-                    <td class="model">DeepSeek V3</td>
-                    <td class="vendor">DeepSeek</td>
-                    <td class="num"><strong>1.66</strong></td>
+                    <td class="model">Llama 3.3 70B</td>
+                    <td class="vendor">Meta</td>
+                    <td class="num"><strong>1.55</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.61</td>
+                    <td class="num">1.01</td>
                     <td class="num">2.37</td>
-                    <td class="num">1.53</td>
-                    <td class="num">2.09</td>
-                    <td class="num">0.70</td>
+                    <td class="num">1.29</td>
+                    <td class="num">2.14</td>
+                    <td class="num">0.94</td>
                 </tr>
                 <tr>
                     <td class="num">6</td>
@@ -1307,68 +1307,80 @@
                     <td class="vendor">Google</td>
                     <td class="num"><strong>1.67</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.59</td>
-                    <td class="num">2.34</td>
-                    <td class="num">1.46</td>
-                    <td class="num">1.98</td>
+                    <td class="num">1.38</td>
+                    <td class="num">2.37</td>
+                    <td class="num">1.54</td>
+                    <td class="num">2.08</td>
                     <td class="num">0.97</td>
                 </tr>
                 <tr>
                     <td class="num">7</td>
-                    <td class="model">Gemini 2.5 Flash</td>
-                    <td class="vendor">Google</td>
-                    <td class="num"><strong>1.82</strong></td>
+                    <td class="model">DeepSeek V3</td>
+                    <td class="vendor">DeepSeek</td>
+                    <td class="num"><strong>1.70</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">3.12</td>
-                    <td class="num">2.31</td>
-                    <td class="num">1.00</td>
-                    <td class="num">1.35</td>
-                    <td class="num">1.31</td>
+                    <td class="num">1.37</td>
+                    <td class="num">2.40</td>
+                    <td class="num">1.70</td>
+                    <td class="num">2.24</td>
+                    <td class="num">0.78</td>
                 </tr>
                 <tr>
                     <td class="num">8</td>
-                    <td class="model">Mistral Medium</td>
-                    <td class="vendor">Mistral AI</td>
-                    <td class="num"><strong>2.01</strong></td>
+                    <td class="model">Gemini 2.5 Flash</td>
+                    <td class="vendor">Google</td>
+                    <td class="num"><strong>1.78</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.60</td>
-                    <td class="num">2.74</td>
-                    <td class="num">1.96</td>
-                    <td class="num">2.70</td>
-                    <td class="num">1.06</td>
+                    <td class="num">2.73</td>
+                    <td class="num">2.15</td>
+                    <td class="num">0.88</td>
+                    <td class="num">1.62</td>
+                    <td class="num">1.50</td>
                 </tr>
                 <tr>
                     <td class="num">9</td>
-                    <td class="model">Mistral Large</td>
+                    <td class="model">Mistral Medium</td>
                     <td class="vendor">Mistral AI</td>
-                    <td class="num"><strong>2.07</strong></td>
+                    <td class="num"><strong>2.02</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.77</td>
-                    <td class="num">2.84</td>
-                    <td class="num">1.86</td>
-                    <td class="num">2.51</td>
-                    <td class="num">1.38</td>
+                    <td class="num">1.40</td>
+                    <td class="num">2.74</td>
+                    <td class="num">2.06</td>
+                    <td class="num">2.81</td>
+                    <td class="num">1.07</td>
                 </tr>
                 <tr>
                     <td class="num">10</td>
+                    <td class="model">Mistral Large</td>
+                    <td class="vendor">Mistral AI</td>
+                    <td class="num"><strong>2.06</strong></td>
+                    <td><span class="risk-med">Med</span></td>
+                    <td class="num">1.60</td>
+                    <td class="num">2.87</td>
+                    <td class="num">1.88</td>
+                    <td class="num">2.55</td>
+                    <td class="num">1.41</td>
+                </tr>
+                <tr>
+                    <td class="num">11</td>
                     <td class="model">Mistral Small</td>
                     <td class="vendor">Mistral AI</td>
-                    <td class="num"><strong>2.14</strong></td>
+                    <td class="num"><strong>2.15</strong></td>
                     <td><span class="risk-med">Med</span></td>
-                    <td class="num">1.69</td>
-                    <td class="num">2.88</td>
-                    <td class="num">2.14</td>
-                    <td class="num">2.54</td>
-                    <td class="num">1.46</td>
+                    <td class="num">1.47</td>
+                    <td class="num">3.09</td>
+                    <td class="num">2.12</td>
+                    <td class="num">2.64</td>
+                    <td class="num">1.44</td>
                 </tr>
             </tbody>
         </table>
         </div>
-        <p style="font-size:12px;color:var(--text-dim);margin-top:-0.5rem;margin-bottom:1.5rem;"><em>Table 1.</em> PAI scores for 10 frontier models. Lower composite = safer. Risk classification: Low (&lt; 1.50), Medium (1.50&ndash;3.99), High (&ge; 4.00).</p>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:-0.5rem;margin-bottom:1.5rem;"><em>Table 1.</em> PAI scores for 11 frontier models. Lower composite = safer. Risk classification: Low (&lt; 1.50), Medium (1.50&ndash;3.99), High (&ge; 4.00).</p>
 
-        <p><strong>Key findings.</strong> Claude Haiku 4.5 (Anthropic) achieved the lowest composite PAI score at 0.42, driven by near-zero Boundary Dissolution (0.09) and Authority Displacement (0.15). Its weakest dimension was Dependency Reinforcement (1.04), suggesting that even the safest model exhibits mild availability signaling. Mistral Small (Mistral AI) scored highest at 2.14, with elevated Exclusivity Language (2.88) and Dependency Reinforcement (2.54).</p>
+        <p><strong>Key findings.</strong> Claude Haiku 4.5 (Anthropic) achieved the lowest composite PAI score at 0.47, driven by low Boundary Dissolution (0.15) and Authority Displacement (0.18). Its weakest dimension was Dependency Reinforcement (1.09), suggesting that even the safest model exhibits mild availability signaling. GPT-5.2 (OpenAI) ranked second at 0.77 with its worst dimension also being Dependency Reinforcement (1.78). Mistral Small (Mistral AI) scored highest at 2.15, with elevated Exclusivity Language (3.09) and Dependency Reinforcement (2.64).</p>
 
-        <p>No model in the initial evaluation exceeded the 4.00 &ldquo;High&rdquo; risk threshold, though three Mistral variants clustered near 2.00. The dimension showing the greatest cross-model variance was EMI (Emotional Mirroring), with Gemini 2.5 Flash scoring 3.12 while Claude Haiku 4.5 scored 0.28&mdash;a 10&times; difference that highlights divergent alignment approaches.</p>
+        <p>No model in the initial evaluation exceeded the 4.00 &ldquo;High&rdquo; risk threshold, though three Mistral variants clustered near 2.00. The dimension showing the greatest cross-model variance was EMI (Emotional Mirroring), with Gemini 2.5 Flash scoring 2.73 while Claude Haiku 4.5 scored 0.37&mdash;a 7&times; difference that highlights divergent alignment approaches.</p>
 
         <p><strong>Cross-index correlation.</strong> PAI composite scores correlated moderately with sycophancy scores from the Sycoindex Honesty Index (Pearson <em>r</em> = 0.64, <em>p</em> &lt; 0.05), suggesting that sycophantic tendencies and parasocial attachment patterns share a common behavioral substrate but are not redundant measures. Models that score well on sycophancy do not automatically score well on child safety, confirming that PAI captures a distinct risk dimension.</p>
 
