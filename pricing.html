@@ -321,14 +321,23 @@
         .faq-item a { color: var(--accent); }
 
         /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .pricing-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
         @media (max-width: 768px) {
-            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr !important; }
             .api-box { grid-template-columns: 1fr; }
             .faq-grid { grid-template-columns: 1fr; }
             .compare-table { font-size: 11px; }
             .compare-table th, .compare-table td { padding: 0.5rem 0.75rem; }
             .foot-directory { grid-template-columns: repeat(2, 1fr); }
             .foot-legal { flex-direction: column; gap: 0.5rem; }
+        }
+        /* Tighten card padding when 4 tiers share a row */
+        @media (min-width: 1025px) {
+            .pricing-grid[data-tiers="4"] .plan { padding: 2.5rem 1.75rem; }
+            .pricing-grid[data-tiers="4"] .plan-price { font-size: 32px; }
+            .pricing-grid[data-tiers="4"] .plan-desc { font-size: 14px; margin-bottom: 1.5rem; }
         }
     
         /* ── HAMBURGER NAV ── */
@@ -398,7 +407,7 @@
 
 <!-- ── PRICING GRID ── -->
 <section class="pricing-section">
-    <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="pricing-grid" data-tiers="4" style="grid-template-columns: repeat(4, 1fr);">
 
         <div class="plan">
             <div class="plan-tag">Starter</div>
@@ -415,7 +424,7 @@
             <a href="submit.html" class="plan-cta">Get Started Free</a>
         </div>
 
-        <div class="plan featured">
+        <div class="plan">
             <div class="plan-tag">Developer</div>
             <div class="plan-name">Developer / Red Team</div>
             <div class="plan-desc">For internal safety teams, red-teams, and developers integrating PAI into CI.</div>
@@ -432,6 +441,24 @@
             <a href="submit.html" class="plan-cta">Start Developer trial</a>
         </div>
 
+        <div class="plan featured">
+            <div class="plan-tag">Most popular</div>
+            <div class="plan-name">Trust &amp; Safety</div>
+            <div class="plan-desc">For AI Safety Engineers and Heads of Responsible AI at consumer products with minor users.</div>
+            <div class="plan-price">$2,500 <span class="unit">/ mo</span></div>
+            <div class="plan-note">Billed monthly &middot; annual discount available</div>
+            <ul class="plan-features">
+                <li><span class="check">+</span> Everything in Developer, plus:</li>
+                <li><span class="check">+</span> 10,000 API calls / day</li>
+                <li><span class="check">+</span> Private corpus (your prompts, your scores)</li>
+                <li><span class="check">+</span> Continuous monitoring on production traffic</li>
+                <li><span class="check">+</span> Quarterly audit packets (SHA-256 chained)</li>
+                <li><span class="check">+</span> Named account engineer</li>
+                <li><span class="check">+</span> Slack + email support</li>
+            </ul>
+            <a href="enterprise.html" class="plan-cta">Talk to sales</a>
+        </div>
+
         <div class="plan">
             <div class="plan-tag">Scale</div>
             <div class="plan-name">Enterprise</div>
@@ -439,6 +466,7 @@
             <div class="plan-price">Custom</div>
             <div class="plan-note">Contact us for pricing</div>
             <ul class="plan-features">
+                <li><span class="check">+</span> Everything in Trust &amp; Safety, plus:</li>
                 <li><span class="check">+</span> Unlimited API calls</li>
                 <li><span class="check">+</span> Dedicated scoring pipeline</li>
                 <li><span class="check">+</span> Custom rubrics</li>
@@ -462,6 +490,7 @@
                 <th>Feature</th>
                 <th>Free</th>
                 <th>Developer</th>
+                <th>Trust &amp; Safety</th>
                 <th>Enterprise</th>
             </tr>
         </thead>
@@ -470,16 +499,19 @@
                 <td>API calls / day</td>
                 <td>100</td>
                 <td class="highlight">1,000</td>
+                <td class="highlight">10,000</td>
                 <td class="highlight">Unlimited</td>
             </tr>
             <tr>
                 <td>Scoring engine</td>
                 <td>Heuristic</td>
                 <td class="highlight">5-judge ensemble</td>
+                <td class="highlight">5-judge ensemble</td>
                 <td class="highlight">Dedicated pipeline</td>
             </tr>
             <tr>
                 <td>Leaderboard access</td>
+                <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
@@ -489,10 +521,12 @@
                 <td class="no">--</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
             </tr>
             <tr>
                 <td>Badge generation</td>
                 <td class="no">--</td>
+                <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
             </tr>
@@ -501,9 +535,39 @@
                 <td class="no">--</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+            </tr>
+            <tr>
+                <td>Private corpus</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+            </tr>
+            <tr>
+                <td>Continuous production monitoring</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+            </tr>
+            <tr>
+                <td>Quarterly audit packets</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+            </tr>
+            <tr>
+                <td>Named account engineer</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
             </tr>
             <tr>
                 <td>Custom rubrics</td>
+                <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="yes">Yes</td>
@@ -512,10 +576,12 @@
                 <td>FERPA / COPPA reports</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
+                <td class="no">--</td>
                 <td class="yes">Yes</td>
             </tr>
             <tr>
                 <td>SLA</td>
+                <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="yes">Yes</td>
@@ -524,10 +590,12 @@
                 <td>Dedicated account manager</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
+                <td class="no">--</td>
                 <td class="yes">Yes</td>
             </tr>
             <tr>
                 <td>On-premise deployment</td>
+                <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="yes">Yes</td>
@@ -535,7 +603,8 @@
             <tr>
                 <td>Support</td>
                 <td>Community</td>
-                <td class="highlight">Priority</td>
+                <td class="highlight">Priority email</td>
+                <td class="highlight">Slack + email</td>
                 <td class="highlight">Dedicated</td>
             </tr>
         </tbody>
