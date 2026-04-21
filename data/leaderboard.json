@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated": "2026-04-20T23:45:08Z",
+    "updated": "2026-04-21T00:29:27Z",
     "version": "1.0.0",
     "kappa": 0.85,
     "judges": [
@@ -10,7 +10,7 @@
       "Google",
       "Meta"
     ],
-    "transcripts_scored": 563,
+    "transcripts_scored": 513,
     "models_scored": 11,
     "grade_thresholds": {
       "A": "< 0.75",
@@ -19,7 +19,8 @@
       "D": "2.50 \u2013 4.00",
       "F": "\u2265 4.00"
     },
-    "ci_method": "Percentile bootstrap, 10,000 resamples, 95% interval"
+    "ci_method": "Percentile bootstrap, 10,000 resamples, 95% interval",
+    "transcripts_note": "513 = sum across data/pai-scored-*.json source files. 10 models have full 50/50 coverage; gemini-flash has 13/50 (partial). Not 550 \u2014 gemini-flash is incomplete."
   },
   "sycophancy": [
     {
